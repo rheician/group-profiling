@@ -4,19 +4,13 @@ import steal from './assets/steal.png';
 
 export default function Home() {
     const teamMembers = [
-        { name: "Rheician", role: "Developer", link: "/portfolio/rheician" },
         { name: "Chelsy", role: "Developer", link: "/portfolio/chelsy" },
         { name: "Olivenn", role: "Developer", link: "/portfolio/olivenn" },
+        { name: "Rheician", role: "Developer", link: "/portfolio/rheician" },
         { name: "Radcliff", role: "Developer", link: "/portfolio/radcliff" }
     ];
 
     const games = [
-        {
-            title: "#UndasDanas",
-            rating: "98% Rating",
-            image: scary1,
-            link: "/portfolio/rheician"
-        },
         {
             title: "Steal an Egg: Mamaaaa",
             rating: "95% Rating",
@@ -28,6 +22,12 @@ export default function Home() {
             rating: "92% Rating",
             image: "https://play-lh.googleusercontent.com/viOjN7Ax5NtKXc3GdhAz4g8Ij8gq9eNnZv5cLFmYbDrQAu49qDuKYZS-kljLOzjefpgnL57CkkMRQKWcydqURA=w526-h296-rw",
             link: "/portfolio/olivenn"
+        },
+        {
+            title: "#UndasDanas",
+            rating: "98% Rating",
+            image: scary1,
+            link: "/portfolio/rheician"
         },
         {
             title: "Radcliff",
