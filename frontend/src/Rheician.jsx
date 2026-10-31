@@ -150,7 +150,6 @@ export default function Rheician() {
                 </div>
             )}
 
-            {/* QUICK HUMOR POP-UP */}
             {showQuickPop && (
                 <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 pointer-events-none">
                     <div className="bg-amber-500/10 border border-amber-500/50 px-8 py-6 rounded-2xl text-center shadow-[0_0_60px_rgba(245,158,11,0.2)] animate-pulse">
@@ -161,8 +160,6 @@ export default function Rheician() {
 
             {/* MAIN PORTFOLIO CONTENT */}
             <div className={`transition-opacity duration-1000 ${portfolioUnlocked ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-
-                {/* ADDED: Back to Home Button */}
                 <div className="max-w-7xl mx-auto pt-3 pb-3">
                     <a
                         href="/"
@@ -359,7 +356,7 @@ export default function Rheician() {
                     </div>
                 </div>
 
-                {/* 5. CONTACT FORM (Minimalist Frame with Desperate Button) */}
+                {/* CONTACT FORM */}
                 <section className="px-6 py-32 bg-zinc-900/30 border-b border-zinc-900">
                     <div className="max-w-xl mx-auto font-mono">
                         <div className="mb-16">
