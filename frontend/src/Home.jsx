@@ -7,7 +7,7 @@ export default function Home() {
         { name: "Rheician", role: "Developer", link: "/portfolio/rheician" },
         { name: "Chelsy", role: "Developer", link: "/portfolio/chelsy" },
         { name: "Olivenn", role: "Developer", link: "/portfolio/olivenn" },
-        { name: "Radcliff", role: "Developer", link: "/portfolio/rad" }
+        { name: "Radcliff", role: "Developer", link: "/portfolio/radcliff" }
     ];
 
     const games = [
@@ -33,7 +33,7 @@ export default function Home() {
             title: "Radcliff",
             rating: "96% Rating",
             image: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?auto=format&fit=crop&w=600&q=80",
-            link: "/portfolio/rad"
+            link: "/portfolio/radcliff"
         }
     ];
 

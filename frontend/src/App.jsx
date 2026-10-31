@@ -4,6 +4,7 @@ import Home from './Home'
 import Chelsy from './Chelsy'
 import Rheician from './Rheician'
 import Olivenn from './Olivenn'
+import Radcliff from './Radcliff'
 
 function App() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
@@ -24,6 +25,10 @@ function App() {
 
   if (currentPath === '/portfolio/olivenn') {
     return <Olivenn />
+  }
+
+  if (currentPath === '/portfolio/radcliff') {
+    return <Radcliff />
   }
 
   const [isLoading, setIsLoading] = useState(true);
