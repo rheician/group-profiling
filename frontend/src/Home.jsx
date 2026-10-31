@@ -6,7 +6,7 @@ export default function Home() {
     const teamMembers = [
         { name: "Rheician", role: "Developer", link: "/portfolio/rheician" },
         { name: "Chelsy", role: "Developer", link: "/portfolio/chelsy" },
-        { name: "Olivenn", role: "Developer", link: "/portfolio/oli" },
+        { name: "Olivenn", role: "Developer", link: "/portfolio/olivenn" },
         { name: "Radcliff", role: "Developer", link: "/portfolio/rad" }
     ];
 
@@ -24,10 +24,10 @@ export default function Home() {
             link: "/portfolio/chelsy"
         },
         {
-            title: "Olivenn",
+            title: "99 Nights ng Pagdurusa",
             rating: "92% Rating",
-            image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80",
-            link: "/portfolio/oli"
+            image: "https://play-lh.googleusercontent.com/viOjN7Ax5NtKXc3GdhAz4g8Ij8gq9eNnZv5cLFmYbDrQAu49qDuKYZS-kljLOzjefpgnL57CkkMRQKWcydqURA=w526-h296-rw",
+            link: "/portfolio/olivenn"
         },
         {
             title: "Radcliff",
