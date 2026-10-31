@@ -23,13 +23,6 @@ export default function Home() {
             image: "https://play-lh.googleusercontent.com/viOjN7Ax5NtKXc3GdhAz4g8Ij8gq9eNnZv5cLFmYbDrQAu49qDuKYZS-kljLOzjefpgnL57CkkMRQKWcydqURA=w526-h296-rw",
             link: "/portfolio/olivenn"
         },
-
-        {
-            title: "#UndasDanas",
-            rating: "98% Rating",
-            image: scary1,
-            link: "/portfolio/rheician"
-        },
         {
             title: "#UndasDanas",
             rating: "98% Rating",
