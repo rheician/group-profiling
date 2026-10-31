@@ -162,6 +162,16 @@ export default function Rheician() {
             {/* MAIN PORTFOLIO CONTENT */}
             <div className={`transition-opacity duration-1000 ${portfolioUnlocked ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
 
+                {/* ADDED: Back to Home Button */}
+                <div className="max-w-7xl mx-auto pt-3 pb-3">
+                    <a
+                        href="/"
+                        className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-zinc-400 hover:text-amber-400 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-full transition-colors shadow-sm"
+                    >
+                        <span>←</span> Back to Dashboard
+                    </a>
+                </div>
+
                 {/* HERO SECTION */}
                 <header className="relative min-h-screen flex flex-col justify-end pb-24 px-6 md:px-20 overflow-hidden">
                     <div className="absolute inset-0 z-0 scale-105 animate-[float_20s_ease-in-out_infinite]">

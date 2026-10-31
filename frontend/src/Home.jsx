@@ -6,7 +6,7 @@ export default function Home() {
     const teamMembers = [
         { name: "Rheician", role: "Developer", link: "/portfolio/rheician" },
         { name: "Chelsy", role: "Developer", link: "/portfolio/chelsy" },
-        { name: "Olivenn", role: "Developer", link: "/portfolio/oli" },
+        { name: "Olivenn", role: "Developer", link: "/portfolio/olivenn" },
         { name: "Radcliff", role: "Developer", link: "/portfolio/rad" }
     ];
 
