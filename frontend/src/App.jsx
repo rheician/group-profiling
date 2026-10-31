@@ -3,6 +3,7 @@ import LoadingScreen from "./LoadingScreen.jsx";
 import Home from './Home'
 import Chelsy from './Chelsy'
 import Rheician from './Rheician'
+import Olivenn from './Olivenn'
 
 function App() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
@@ -19,6 +20,10 @@ function App() {
 
   if (currentPath === '/portfolio/rheician') {
     return <Rheician />
+  }
+
+  if (currentPath === '/portfolio/olivenn') {
+    return <Olivenn />
   }
 
   const [isLoading, setIsLoading] = useState(true);
