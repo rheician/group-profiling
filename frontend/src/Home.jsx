@@ -31,6 +31,12 @@ export default function Home() {
             link: "/portfolio/rheician"
         },
         {
+            title: "#UndasDanas",
+            rating: "98% Rating",
+            image: scary1,
+            link: "/portfolio/rheician"
+        },
+        {
             title: "Radcliff",
             rating: "96% Rating",
             image: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?auto=format&fit=crop&w=600&q=80",
