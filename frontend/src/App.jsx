@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Home from './Home'
 import Chelsy from './Chelsy'
+import Olivenn from './Olivenn'
 
 function App() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
@@ -14,7 +15,9 @@ function App() {
   if (currentPath === '/portfolio/chelsy') {
     return <Chelsy />
   }
-
+  if (currentPath === '/portfolio/oli') {
+    return <Olivenn />
+  }
   return <Home />
 }
 
