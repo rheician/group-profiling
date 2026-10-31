@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import scary1 from './assets/scary1.jpg';
+import steal from './assets/steal.png';
 
 export default function Home() {
     const teamMembers = [
@@ -12,13 +14,13 @@ export default function Home() {
         {
             title: "#UndasDanas",
             rating: "98% Rating",
-            image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80",
+            image: scary1,
             link: "/portfolio/rheician"
         },
         {
             title: "Steal an Egg: Mamaaaa",
             rating: "95% Rating",
-            image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80",
+            image: steal,
             link: "/portfolio/chelsy"
         },
         {
@@ -37,6 +39,13 @@ export default function Home() {
 
     const [dismissBanner, setDismissBanner] = useState(false);
 
+    // Audio notification for unavailable features
+    const playFahhhSound = () => {
+        const sound = new Audio('https://www.myinstants.com/media/sounds/fahhh.mp3');
+        sound.volume = 1.0;
+        sound.play().catch(() => {});
+    };
+
     return (
         <div className="min-h-screen bg-white text-zinc-900 font-sans">
 
@@ -48,8 +57,18 @@ export default function Home() {
                     </div>
                     <div className="hidden md:flex items-center gap-6 text-sm font-semibold text-zinc-600">
                         <span className="text-black border-b-2 border-black pb-5 pt-5 cursor-pointer">Home</span>
-                        <span className="hover:text-black transition cursor-pointer">Discover</span>
-                        <span className="hover:text-black transition cursor-pointer">Avatar Shop</span>
+                        <span
+                            onClick={playFahhhSound}
+                            className="hover:text-black transition cursor-pointer"
+                        >
+                            Discover
+                        </span>
+                        <span
+                            onClick={playFahhhSound}
+                            className="hover:text-black transition cursor-pointer"
+                        >
+                            Avatar Shop
+                        </span>
                     </div>
                 </div>
 
@@ -64,11 +83,25 @@ export default function Home() {
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <div className="w-8 h-8 rounded-full bg-zinc-900 text-white font-bold flex items-center justify-center text-xs">
+                    <div
+                        onClick={playFahhhSound}
+                        className="w-8 h-8 rounded-full bg-zinc-900 text-white font-bold flex items-center justify-center text-xs cursor-pointer hover:bg-zinc-700 transition"
+                        title="Avatar / Profile (Not Available)"
+                    >
                         R
                     </div>
-                    <button className="text-zinc-600 hover:text-black text-xs font-semibold uppercase tracking-wider px-2 py-1">Settings</button>
-                    <button className="text-zinc-600 hover:text-black text-xs font-semibold uppercase tracking-wider px-2 py-1">Alerts</button>
+                    <button
+                        onClick={playFahhhSound}
+                        className="text-zinc-600 hover:text-black text-xs font-semibold uppercase tracking-wider px-2 py-1 cursor-pointer"
+                    >
+                        Settings
+                    </button>
+                    <button
+                        onClick={playFahhhSound}
+                        className="text-zinc-600 hover:text-black text-xs font-semibold uppercase tracking-wider px-2 py-1 cursor-pointer"
+                    >
+                        Alerts
+                    </button>
                 </div>
             </nav>
 
@@ -98,7 +131,7 @@ export default function Home() {
 
             {/* ACTIVE FRIENDS SCROLLER */}
             <section className="max-w-7xl mx-auto px-6 mb-12">
-                <div className="flex gap-6 overflow-x-auto pb-4">
+                <div className="flex gap-6 overflow-x-auto pb-4" onClick={playFahhhSound}>
                     <div className="flex flex-col items-center flex-shrink-0 cursor-pointer group">
                         <div className="w-16 h-16 rounded-full bg-zinc-100 border border-dashed border-zinc-300 flex items-center justify-center text-zinc-400 group-hover:border-black group-hover:text-black transition">
                             <span className="text-lg font-bold">+</span>

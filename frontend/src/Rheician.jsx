@@ -178,7 +178,7 @@ export default function Rheician() {
                         </p>
 
                         <div
-                            className="mt-12 h-16 flex items-center justify-start animate-fade-up delay-300 relative z-20 w-72"
+                            className="mt-5 h-16 flex items-center justify-start animate-fade-up delay-300 relative z-20 w-72"
                             onMouseEnter={() => setIsEvading(true)}
                             onMouseLeave={() => setIsEvading(false)}
                         >
@@ -188,10 +188,10 @@ export default function Rheician() {
                                     ? 'translate-x-24 opacity-0 scale-75 blur-md pointer-events-none bg-zinc-900 border-zinc-700'
                                     : 'translate-x-0 opacity-100 scale-100 bg-amber-400/10 text-amber-400 border-amber-400/50 hover:bg-amber-400 hover:text-zinc-950'}`}
                             >
-                                Click here for Rhei's Secret
+                                Pangalan ni loml ko
                             </button>
                             <span className={`absolute left-4 text-zinc-500 font-mono text-xs transition-opacity duration-500 uppercase tracking-widest ${isEvading ? 'opacity-100 delay-100' : 'opacity-0'}`}>
-                                Wala kang mapapala.
+                                Loh!
                             </span>
                         </div>
                     </div>
