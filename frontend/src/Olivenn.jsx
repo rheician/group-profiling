@@ -1,33 +1,59 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
+import Lightfall from "./Lightfall.jsx";
 
-const SKILLS = [
-    { title: "XXXXXXX", detail: "Secret" },
-    { title: "XXXXXXX", detail: "Level X" },
-    { title: "Secret", detail: "22" },
+/* ------------------------------------------------------------------ */
+/*  Design tokens (from Figma: Group Profiling 1-3)                    */
+/* ------------------------------------------------------------------ */
+const PINK = "#ff0077"; // main text colour
+const PINK_GLINT = "#ffb3d6"; // lighter pink used by the shimmer
+const BG = "#0d1a15"; // page background
+
+const NAME = "Jahn Olivenn Esmarin";
+
+// The three frames: each one is the same text in a different typeface.
+const FRAMES = [
+    { id: "frame-1", font: "'Sekuya', sans-serif" },
+    { id: "frame-2", font: "'Sarina', cursive" },
+    { id: "frame-3", font: "'Reenie Beanie', cursive" },
 ];
 
-function PlaceholderScene() {
+const SPIN_MS = 5000;   // rotate for 5 seconds
+const FRAME_MS = 250;   // each font shows for 0.4s (was 1800)
+const FINAL_FRAME = 0;  // settle on Sekuya
+
+const FONTS_CSS = `@import url('https://fonts.googleapis.com/css2?family=NATS&family=Reenie+Beanie&family=Sarina&family=Sekuya&display=swap');
+@keyframes olivenn-shimmer {
+  from { background-position: 100% 0; }
+  to   { background-position: 0% 0; }
+}`;
+
+function ShimmeringText({ text, color, shimmeringColor, duration = 1.2, className, style }) {
     return (
-        <svg viewBox="0 0 100 100" className="h-full w-full" aria-hidden="true">
-            <defs>
-                <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#b9e2fb" />
-                    <stop offset="100%" stopColor="#f2fbff" />
-                </linearGradient>
-            </defs>
-            <rect width="100" height="100" fill="url(#sky)" />
-            <g fill="#fff">
-                <ellipse cx="38" cy="22" rx="14" ry="6" />
-                <circle cx="33" cy="17" r="7" />
-                <circle cx="44" cy="16" r="6" />
-            </g>
-            <path d="M0 70 Q30 55 70 66 T100 62 V100 H0Z" fill="#c8e08a" />
-            <path d="M20 100 Q40 62 80 72 Q95 76 100 82 V100Z" fill="#8aa300" />
-        </svg>
+        <span
+            className={className}
+            style={{
+                ...style,
+                color: "transparent",
+                backgroundImage: `linear-gradient(90deg, ${color} 0%, ${color} 40%, ${shimmeringColor} 50%, ${color} 60%, ${color} 100%)`,
+                backgroundSize: "250% 100%",
+                backgroundRepeat: "no-repeat",
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                animation: `olivenn-shimmer ${duration}s linear infinite`,
+            }}
+        >
+            {text}
+        </span>
     );
 }
 
-export default function Portfolio({ name = "Jahn Olivenn Esmarin", avatar = "", onBackHome }) {
+export default function Olivenn({ onBackHome }) {
+    const heroRef = useRef(null);
+    const [frame, setFrame] = useState(0);
+    // true while the landing page is (mostly) on screen, i.e. the user has not scrolled down
+    const [onLanding, setOnLanding] = useState(true);
+
     const handleBack = (e) => {
         if (onBackHome) {
             e.preventDefault();
@@ -35,53 +61,103 @@ export default function Portfolio({ name = "Jahn Olivenn Esmarin", avatar = "", 
         }
     };
 
+    // Track whether the user is still on the landing screen.
+    useEffect(() => {
+        const node = heroRef.current;
+        if (!node) return undefined;
+        const observer = new IntersectionObserver(
+            ([entry]) => setOnLanding(entry.intersectionRatio >= 0.5),
+            { threshold: [0, 0.25, 0.5, 0.75, 1] }
+        );
+        observer.observe(node);
+        return () => observer.disconnect();
+    }, []);
+
+    useEffect(() => {
+        const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+        if (!onLanding || reduce) return undefined;
+
+        // swap to the next font every FRAME_MS
+        const cycle = setInterval(() => {
+            setFrame((current) => (current + 1) % FRAMES.length);
+        }, FRAME_MS);
+
+        // after SPIN_MS, stop swapping and lock onto the final font
+        const stop = setTimeout(() => {
+            clearInterval(cycle);
+            setFrame(FINAL_FRAME);
+        }, SPIN_MS);
+
+        return () => {
+            clearInterval(cycle);
+            clearTimeout(stop);
+        };
+    }, [onLanding]);
+
+    const titleStyle = { fontFamily: FRAMES[frame].font, color: PINK };
+    const titleClass =
+        "whitespace-nowrap text-center leading-[normal] text-[5.5vw]";
+
     return (
-        <div className="flex min-h-screen flex-col bg-[#0a1520] font-sans text-white">
-            <header className="border-b-2 border-[#e8c53a] px-6 py-3 text-sm font-medium tracking-wide">
-                PROFILE
+        <section
+            ref={heroRef}
+            className="relative h-dvh w-full overflow-hidden"
+            style={{ backgroundColor: BG, color: PINK }}
+        >
+            <style>{FONTS_CSS}</style>
+
+            {/* Background animation: Lightfall, in lighter shades of the title pink */}
+            <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
+                <Lightfall
+                    colors={["#ffc2dd", "#ff7ab8", PINK]}
+                    backgroundColor="#9CB080"
+                    backgroundGlow={0.12}
+                    headGlow={0.3}
+                    glow={0.9}
+                    bloom={0.35}
+                    opacity={0.7}
+                    speed={0.3}
+                    density={1.6}
+                    twinkle={0.4}
+                    zoom={3}
+                />
+            </div>
+
+            {/* Top bar */}
+            <header
+                className="absolute inset-x-0 top-0 z-10 flex items-start justify-between px-[1.67vw] pt-[1.875vw] leading-[1.15] text-[clamp(8px,1.458vw,28px)]"
+                style={{ fontFamily: "'Sekuya', sans-serif" }}
+            >
+                <a
+                    href="/"
+                    onClick={handleBack}
+                    className="rounded-sm outline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2"
+                    style={{ color: "#618764", outlineColor: "#618764" }}
+                >
+                    [ BACK TO DECEMBER ]
+                </a>
+                <span style={{ color: "#618764"}}>[ NOVEMBER 2026 ]</span>
             </header>
 
-            <div className="flex flex-1 flex-col md:flex-row md:px-[7%] md:pb-12">
-                {/* Left panel */}
-                <aside className="flex w-full flex-col items-center bg-[#2e855a] px-4 pb-8 pt-16 md:w-[23%] md:min-w-[190px] md:rounded-b-[6rem] md:pt-20">
-                    <div className="h-32 w-32 overflow-hidden rounded-full bg-white sm:h-36 sm:w-36">
-                        {avatar ? (
-                            <img src={avatar} alt={name} className="h-full w-full object-cover" />
-                        ) : (
-                            <PlaceholderScene />
-                        )}
-                    </div>
-
-                    <h1 className="mt-8 text-center text-base font-medium">{name}</h1>
-
-                    <a
-                        href="/"
-                        onClick={handleBack}
-                        className="mt-auto pt-24 text-sm text-[#e8c53a] hover:underline md:pt-40"
-                    >
-                        Back to Home
-                    </a>
-                </aside>
-
-                {/* Right side: empty top space, skills at the bottom */}
-                <main className="flex flex-1 flex-col justify-end px-6 md:px-10">
-                    <section
-                        id="skills"
-                        className="mt-12 grid grid-cols-1 gap-10 pb-10 sm:grid-cols-3 md:mt-0 md:pb-0"
-                    >
-                        {SKILLS.map((skill) => (
-                            <div key={skill.title} className="flex flex-col items-center">
-                                <p className="text-base">{skill.title}</p>
-                                <p className="text-sm text-[#e8c53a]">{skill.detail}</p>
-                                <div
-                                    className="mt-3 h-24 w-24 rounded-full bg-[#00c060] sm:h-[100px] sm:w-[100px]"
-                                    title={`${skill.title}: ${skill.detail}`}
-                                />
-                            </div>
-                        ))}
-                    </section>
-                </main>
+            {/* Main name, pinned to the bottom edge */}
+            <div className="absolute inset-x-0 bottom-0 z-10 flex h-[6.8vw] items-center justify-center px-[1.67vw] mb-[1.25vw]">
+                <h1 className="m-0 font-normal">
+                    {onLanding ? (
+                        <ShimmeringText
+                            text={NAME}
+                            color={PINK}
+                            shimmeringColor={PINK_GLINT}
+                            duration={4.2}
+                            className={titleClass}
+                            style={titleStyle}
+                        />
+                    ) : (
+                        <span className={titleClass} style={titleStyle}>
+                            {NAME}
+                        </span>
+                    )}
+                </h1>
             </div>
-        </div>
+        </section>
     );
 }
