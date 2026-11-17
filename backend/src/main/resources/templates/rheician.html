@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rheician Jhoy — Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+        .calligraphic { font-family: 'Great Vibes', cursive; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes spinSlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes scrollMarquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        @keyframes jitter {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px) rotate(-1.5deg); }
+            50% { transform: translateX(3px) rotate(1.5deg); }
+            75% { transform: translateX(-2px) rotate(1deg); }
+        }
+        @keyframes screenShake {
+            0%, 100% { transform: translate(0, 0); }
+            20% { transform: translate(-6px, 3px); }
+            40% { transform: translate(6px, -3px); }
+            60% { transform: translate(-4px, -2px); }
+            80% { transform: translate(4px, 2px); }
+        }
+
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .animate-vinyl { animation: spinSlow 15s linear infinite; }
+        .animate-scroll { display: inline-block; white-space: nowrap; animation: scrollMarquee 28s linear infinite; }
+        .animate-jitter:hover { animation: jitter 0.2s infinite; color: #f59e0b; }
+        .breakdown-shake { animation: screenShake 0.45s ease-in-out 2; }
+
+        /* Stacked Deck Cards */
+        .stack-container {
+            position: relative;
+            width: 100%;
+            max-width: 420px;
+            height: 460px;
+            margin: 0 auto;
+        }
+        .stack-card {
+            position: absolute;
+            inset: 0;
+            transition: transform 0.35s ease, opacity 0.35s ease, box-shadow 0.35s ease;
+        }
+        .stack-card:hover { filter: brightness(1.07); }
+        .rhei-archive-item.is-active { background: #18181b; border-color: rgba(245,158,11,.55); transform: rotate(-1deg) scale(1.025); box-shadow: 0 0 30px rgba(245,158,11,.1); color: #fafafa; }
+        .rhei-archive-item:focus-visible { outline: 2px solid #f59e0b; }
+        .rhei-archive-item:not(.is-active) { color: #71717a; }
+        .stack-card { cursor: pointer; background: #18181b; height:450px; }
+        #rhei-card-stage { height:500px; }
+        @media(max-width:767px) { .stack-card { height:320px; } #rhei-card-stage {height:370px;} }
+        .stack-card.is-active { filter: brightness(1); border-color: rgba(245,158,11,.55); }
+        .stack-card:not(.is-active) { filter: brightness(.35); }
+        #rhei-loader[hidden], #rhei-confirm[hidden], #rhei-pop[hidden] { display: none; }
+        @keyframes rhei-loader-hide { to {opacity:0;} }
+        .rhei-fade-out { animation: rhei-loader-hide .22s ease-out both; pointer-events:none; }
+        #rhei-main { transition: opacity .65s ease; }
+        #rhei-main.is-unlocked { opacity: 1; pointer-events: auto; }
+        .breakdown-shake { animation: breakdownShake .15s linear 6 !important; background: #450a0a !important; }
+        @keyframes breakdownShake {
+            0% { transform: translate(2px,2px) rotate(0deg); }
+            10% { transform: translate(-3px,-2px) rotate(-2deg); filter: contrast(200%) hue-rotate(90deg); }
+            30% { transform: translate(4px,2px) rotate(0deg); }
+            40% { transform: translate(1px,-3px) rotate(2deg); filter: contrast(150%) blur(2px); }
+            60% { transform: translate(-2px,1px) rotate(0deg); }
+            70% { transform: translate(4px,1px) rotate(-2deg); filter: invert(100%); }
+            100% { transform: translate(1px,-2px) rotate(-2deg); }
+        }
+        @media (prefers-reduced-motion:reduce) { .breakdown-shake,.animate-float,.animate-scroll,.animate-vinyl { animation: none !important; } }
+
+        .evade-wrapper:hover .evade-btn {
+            transform: translateX(80px) scale(0.75);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .evade-wrapper:hover .evade-reply {
+            opacity: 1;
+        }
+    </style>
+<noscript><style>#rhei-main { opacity: 1 !important; pointer-events: auto !important; } #rhei-loader { display:none !important; }</style></noscript>
+</head>
+<body th:classappend="${breakdown} ? 'breakdown-shake' : ''"
+      class="min-h-screen bg-black text-gray-100 font-sans overflow-x-hidden">
+<!-- Original introduction: progress, confirmation, then Ngi! before unlocking portfolio. -->
+<div id="rhei-loader" class="fixed inset-0 z-50 bg-black flex flex-col items-center justify-center font-mono">
+    <div class="text-center px-4 w-full max-w-sm">
+        <span class="text-gray-500 text-xs tracking-widest uppercase block mb-3">l0@diNg n@ ppoh...</span>
+        <h1 class="text-2xl font-bold text-gray-200 tracking-wider mb-6 flex justify-between"><span>LOADING</span><span id="rhei-progress-label">[0%]</span></h1>
+        <div class="w-full h-1 bg-gray-900 overflow-hidden rounded-full"><div id="rhei-progress-bar" class="h-full bg-yellow-400 transition-all duration-75 ease-linear" style="width:0%"></div></div>
+    </div>
+</div>
+<div id="rhei-confirm" hidden class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-90 cursor-pointer" role="dialog" aria-modal="true" aria-labelledby="rhei-confirm-title">
+    <button type="button" id="rhei-confirm-button" class="bg-gray-900 border border-gray-800 rounded-2xl p-10 max-w-md w-full text-center shadow-2xl transition-transform hover:scale-105">
+        <h2 id="rhei-confirm-title" class="text-xl text-gray-200 mb-8 italic font-light tracking-wide leading-relaxed">"Are you ready to move forward without looking back sa past?"</h2>
+        <span class="inline-block px-6 py-2 border border-gray-700 rounded-full text-xs text-gray-400 font-mono uppercase tracking-widest">Click to confirm</span>
+    </button>
+</div>
+<div id="rhei-pop" hidden class="fixed inset-0 z-50 bg-black flex items-center justify-center p-4 pointer-events-none" aria-hidden="true">
+    <div class="bg-gray-900 border border-yellow-500 px-8 py-6 rounded-2xl text-center shadow-2xl"><h3 class="text-xl font-bold text-yellow-300 tracking-widest uppercase">Ngi!</h3></div>
+</div>
+<div id="rhei-main" class="opacity-0 pointer-events-none">
+
+<!-- TOP NAV -->
+<div class="max-w-7xl mx-auto px-6 pt-4 pb-3 flex justify-between items-center">
+    <a href="/" class="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-gray-400 hover:text-yellow-400 bg-gray-900 border border-gray-800 px-4 py-2 rounded-full transition">
+        <span>&larr;</span> Back to Dashboard
+    </a>
+    <span class="text-xs font-mono text-gray-500">SPRING BOOT VIEW // JAVA THYMELEAF</span>
+</div>
+
+<!-- HERO SECTION -->
+<header class="relative py-24 px-6 md:px-20 overflow-hidden border-b border-gray-900">
+    <div class="absolute inset-0 z-0 opacity-20">
+        <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=1600&q=80" alt="Background" class="w-full h-full object-cover" />
+    </div>
+
+    <div class="relative z-10 max-w-5xl mx-auto">
+        <h1 class="text-7xl md:text-9xl calligraphic mb-4 text-yellow-400 leading-none py-2">
+            Rheician <span class="text-yellow-200">Jhoy</span>
+        </h1>
+        <p class="text-yellow-400 font-mono text-xs md:text-sm tracking-widest uppercase mb-6">
+            UI/UX Developer sa umaga // Yearner sa gabi :&lt;
+        </p>
+
+        <div class="evade-wrapper relative h-14 flex items-center w-72">
+            <button type="button" class="evade-btn font-mono text-xs uppercase px-8 py-3 rounded-full border border-yellow-500 bg-gray-900 text-yellow-400 transition duration-300">
+                Pangalan ni loml ko
+            </button>
+            <span class="evade-reply opacity-0 transition duration-300 absolute left-4 text-gray-500 font-mono text-xs uppercase tracking-widest">
+                    Loh!
+                </span>
+        </div>
+    </div>
+</header>
+
+<!-- RESTORED INTERACTIVE ARCHIVES (hover chooses a card; click saves selection to Java) -->
+<section id="archives" class="px-6 py-24 max-w-7xl mx-auto">
+    <div class="mb-16 relative text-center">
+        <h2 class="text-xs font-mono text-yellow-500 uppercase tracking-widest mb-4">Archives</h2>
+        <h3 class="text-4xl md:text-5xl font-light tracking-tight text-gray-100 uppercase">Different types of <span class="font-bold text-yellow-300">Rhei</span></h3>
+        <p class="text-xs font-mono text-gray-400 mt-4">Card <span id="rhei-card-number" class="text-yellow-400" th:text="${activeIndex + 1}">1</span> of <span th:text="${#lists.size(cards)}">5</span>. Hover to preview, click to save in Java.</p>
+        <form id="breakdownForm" action="/portfolio/rheician/interact" method="post" class="mt-6 md:absolute md:right-0 md:-top-8 md:mt-0">
+            <button type="submit" onclick="return triggerBreakdown(event)" class="bg-red-900 border border-red-600 text-red-100 hover:bg-red-600 hover:text-white font-mono text-xs uppercase px-5 py-3 rounded-full transition shadow-lg cursor-pointer">⚠ Emotional Breakdown (<span th:text="${count}">0</span>)</button>
+        </form>
+    </div>
+    <div th:if="${breakdown}" class="max-w-xl mx-auto mb-10 bg-red-900 bg-opacity-50 border-2 border-red-500 rounded-2xl p-4 text-center font-mono">
+        <p class="text-xs text-red-300 uppercase tracking-widest font-bold">SYSTEM WARNING: EMOTIONAL BREAKDOWN #<span th:text="${count}">1</span> LOGGED IN JAVA!</p>
+        <p class="text-xs text-gray-300 mt-1">"Ok lang ako lods, kaya pa naman i-defend 'to..."</p>
+    </div>
+    <div id="rhei-archive" th:attr="data-active-index=${activeIndex}" class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+        <div class="lg:col-span-5 space-y-4" aria-label="Choose a type of Rhei">
+            <button th:each="card, iter : ${cards}" type="button" th:attr="data-card-select=${iter.index}"
+                    class="rhei-archive-item w-full p-5 rounded-2xl transition-all duration-300 cursor-pointer flex items-center gap-5 border border-gray-800 text-left">
+                <span class="font-mono text-xs text-yellow-500" th:text="${card.number}">001</span>
+                <span class="font-medium tracking-wide uppercase text-sm" th:text="${card.title}">Card title</span>
+            </button>
+        </div>
+        <div id="rhei-card-stage" class="lg:col-span-7 relative flex items-center justify-center" aria-label="Interactive card deck">
+            <div th:each="card, iter : ${cards}" th:attr="data-card-view=${iter.index}"
+                 class="stack-card absolute w-full max-w-lg h-80 md:h-[450px] rounded-3xl overflow-hidden transition-all duration-500 ease-out border border-gray-700">
+                <img th:src="${card.image}" th:alt="${card.title}" class="w-full h-full object-cover" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent pointer-events-none"></div>
+                <div class="absolute top-4 left-6 bg-black bg-opacity-70 border border-yellow-500 px-3 py-1 rounded-full text-xs font-mono text-yellow-400" th:text="${card.number}">001</div>
+                <div class="absolute bottom-8 left-8 right-8 pointer-events-none">
+                    <h4 class="text-2xl font-bold text-white uppercase mb-2 leading-tight" th:text="${card.title}">Title</h4>
+                    <p class="text-sm text-gray-300 font-light" th:text="${card.caption}">Caption</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form action="/portfolio/rheician/next-card" method="post" class="text-center mt-9">
+        <button type="submit" class="bg-gray-900 hover:bg-yellow-400 hover:text-black text-yellow-400 border border-yellow-500 font-mono text-xs uppercase tracking-widest px-6 py-3 rounded-full transition">Next Card in Stack &rarr;</button>
+    </form>
+</section>
+
+<!-- MUSIC & DIALOGUE -->
+<section class="py-24 overflow-hidden border-t border-b border-gray-900 bg-gray-900 bg-opacity-30">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="flex flex-col items-center justify-center">
+            <div class="w-64 h-64 md:w-80 md:h-80 rounded-full bg-black border-8 border-gray-800 flex items-center justify-center shadow-2xl animate-vinyl">
+                <div class="w-24 h-24 rounded-full bg-yellow-500 flex items-center justify-center border-4 border-black">
+                    <div class="w-5 h-5 rounded-full bg-black"></div>
+                </div>
+            </div>
+            <div class="mt-6 bg-gray-900 border border-gray-800 px-6 py-2.5 rounded-full animate-float">
+                <span class="text-xs font-mono text-yellow-400 tracking-widest uppercase">Playing: Ben&amp;Ben — Lifetime</span>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            <div class="h-64 md:h-80 w-full rounded-3xl overflow-hidden border border-gray-800 shadow-2xl">
+                <img src="/images/rj6.jpg" alt="Jo Dialogue Scene" class="w-full h-full object-cover" />
+            </div>
+            <h3 class="text-2xl md:text-3xl font-light text-yellow-100 italic leading-snug">
+                "Ohh you were a good dream, WAS THERE A LIFETIME?"
+            </h3>
+            <p class="text-sm md:text-base text-gray-400 leading-relaxed font-light border-l-2 border-yellow-500 pl-6">
+                "Tangina Primo, ang talino kong tao, pero pagdating sayo ewan ko, natatanga ako."
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- PROFESSIONAL PORTFOLIO SECTION -->
+<section class="px-6 py-24 max-w-7xl mx-auto font-mono">
+    <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-yellow-300 uppercase mb-10">
+        Proof of Rays (siryuz i2 opo)
+    </h2>
+
+    <a href="https://platypus-vdj9t9.my.canva.site/rheician/"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="group flex flex-col md:flex-row items-start md:items-center justify-between border-t border-b border-gray-800 py-6 hover:bg-gray-900 px-4 transition">
+        <div class="text-gray-500 text-sm w-32 mb-2 md:mb-0 group-hover:text-yellow-400">001</div>
+        <div class="text-gray-200 font-bold uppercase text-lg flex-1 mb-2 md:mb-0 group-hover:text-white">
+            Professional Portfolio
+        </div>
+        <div class="text-gray-500 text-xs uppercase text-left md:text-right max-w-lg leading-relaxed">
+            BUILDING RELIABLE, SCALABLE APPLICATIONS FROM IDEA TO PRODUCTION. FOCUSED ON PERFORMANCE, STRUCTURE, AND LONG-TERM MAINTAINABILITY.
+        </div>
+    </a>
+</section>
+
+<!-- THE OVERTHINKING MARQUEE -->
+<div class="w-full overflow-hidden bg-gray-900 border-t border-b border-gray-800 py-2.5">
+    <div class="font-mono text-xs text-yellow-500 uppercase tracking-widest animate-scroll">
+        <span class="mx-8">&lt; 404: WILL TO LIVE NOT FOUND /&gt;</span>
+        <span class="mx-8">// ERROR: ASUKAL SA KAPE AY MAPAIT</span>
+        <span class="mx-8">/* TODO: MOVE ON SA PAST */</span>
+        <span class="mx-8">GIT COMMIT -M "PAGOD NA PO AKO"</span>
+        <span class="mx-8">&lt; 404: WILL TO LIVE NOT FOUND /&gt;</span>
+        <span class="mx-8">// ERROR: ASUKAL SA KAPE AY MAPAIT</span>
+        <span class="mx-8">/* TODO: MOVE ON SA PAST */</span>
+        <span class="mx-8">GIT COMMIT -M "PAGOD NA PO AKO"</span>
+    </div>
+</div>
+
+<!-- CONTACT FORM -->
+<section id="connect" class="px-6 py-24 bg-gray-900 bg-opacity-40 border-b border-gray-900">
+    <div class="max-w-xl mx-auto font-mono">
+        <div class="mb-12">
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-100 mb-3 uppercase tracking-tight">Let's Connect</h2>
+            <p class="text-gray-500 text-xs tracking-wide">Send feedback o kaya ay mandamay sa kalungkutan (processed by Spring Boot).</p>
+        </div>
+
+        <div th:if="${sent}" class="mb-8 bg-gray-900 border border-yellow-500 p-6 rounded-2xl text-yellow-400 text-sm text-center shadow-lg">
+            STATUS: Message saved to Spring Boot! Check the Alerts Wall on the <a href="/" class="underline font-bold">Dashboard</a>.
+        </div>
+
+        <form action="/feedback" method="post" class="space-y-8">
+            <input type="hidden" name="recipient" value="Rheician" />
+
+            <div>
+                <label class="block text-xs text-gray-500 uppercase tracking-widest mb-2">NAME*</label>
+                <input type="text" name="name" required placeholder="JHON DOE"
+                       class="w-full bg-transparent text-gray-100 text-sm border-b border-gray-800 focus:border-yellow-400 py-2 focus:outline-none" />
+            </div>
+
+            <div>
+                <label class="block text-xs text-gray-500 uppercase tracking-widest mb-2">EMAIL*</label>
+                <input type="email" name="email" required placeholder="EXAMPLE@EMAIL.COM"
+                       class="w-full bg-transparent text-gray-100 text-sm border-b border-gray-800 focus:border-yellow-400 py-2 focus:outline-none" />
+            </div>
+
+            <div>
+                <label class="block text-xs text-gray-500 uppercase tracking-widest mb-2">WHAT ARE YOU BUILDING?*</label>
+                <textarea name="message" required rows="2" placeholder="DESCRIBE YOUR PROJECT IN A FEW WORDS"
+                          class="w-full bg-transparent text-gray-100 text-sm border-b border-gray-800 focus:border-yellow-400 py-2 focus:outline-none resize-none"></textarea>
+            </div>
+
+            <button type="submit" id="rhei-submit-button"
+                    class="w-full bg-gray-100 hover:bg-yellow-400 text-black font-bold py-4 rounded-xl transition text-xs uppercase tracking-widest cursor-pointer shadow-lg">
+                <span id="rhei-submit-label">Submit to Java Backend</span>
+            </button>
+        </form>
+    </div>
+</section>
+
+<footer class="bg-black px-6 py-12 text-center">
+    <p class="text-xs text-gray-600 font-mono tracking-widest uppercase mb-4">
+        <span class="inline-block animate-jitter">Developed with Panic &amp; Spring Boot</span>
+    </p>
+    <p class="text-xs text-gray-700 font-mono tracking-widest">© 2026 RHEICIAN JHOY BUENO GONZALES. ALL RIGHTS RESERVED.</p>
+</footer>
+
+</div><!-- /rhei-main -->
+<script src="/js/common.js" defer></script>
+<script src="/js/rheician.js" defer></script>
+</body>
+</html>

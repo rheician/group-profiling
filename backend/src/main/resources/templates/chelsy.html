@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chelsy Kaye C. Ilagan — Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+
+        @keyframes marquee-slide {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        @keyframes red-alert {
+            0%, 100% { box-shadow: 0 0 0px rgba(220, 38, 38, 0.4); }
+            50%      { box-shadow: 0 0 24px rgba(220, 38, 38, 0.95); }
+        }
+
+        @keyframes flash-shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+        }
+
+        .animate-marquee {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee-slide 14s linear infinite;
+        }
+
+        .animate-alert-box {
+            animation: red-alert 2.5s ease-in-out infinite;
+        }
+
+        .ulti-hit {
+            animation: flash-shake 0.4s ease-in-out 2;
+        }
+
+        .runaway-btn { position: absolute; transition: transform .15s ease-out; box-shadow: 4px 4px 0 rgb(220,38,38); }
+        .runaway-box { overflow: visible; }
+        .ulti-hit { animation: flash-shake .12s linear 5; }
+        #meme-popup[hidden] { display: none; }
+        @media (prefers-reduced-motion: reduce) { .ulti-hit, .runaway-btn { animation: none; transition: none; } }
+    </style>
+</head>
+<body class="min-h-screen bg-black text-gray-100 font-mono pb-24 overflow-x-hidden">
+
+<!-- Top Moving Marquee Ticker -->
+<div class="bg-red-600 text-black py-1 font-black text-xs uppercase tracking-widest overflow-hidden whitespace-nowrap border-b-2 border-black">
+    <div class="animate-marquee">
+        *** Hindi po *** masama ang aking *** ginawa *** dahil ang *** aking *** konsensya *** ay *** clear *** Hindi po *** masama ang aking *** ginawa *** dahil ang *** aking *** konsensya *** ay *** clear ***
+    </div>
+</div>
+
+<!-- Nav -->
+<nav class="p-4 max-w-5xl mx-auto flex justify-between items-center border-b border-gray-800">
+    <a href="/" class="text-gray-400 hover:text-white text-xs underline uppercase tracking-wider">
+        [ &lt;-- BACK TO BASE ]
+    </a>
+    <span class="text-xs bg-gray-900 border border-gray-700 text-red-500 px-3 py-1 font-bold">
+            SYSTEM STATUS: <span th:text="${count > 0 ? 'INULTIHAN (' + count + 'x)' : 'READY'}">READY</span>
+        </span>
+</nav>
+
+<main class="max-w-4xl mx-auto px-4 mt-8">
+
+    <!-- Hero Header -->
+    <section class="text-center py-8 border-b-2 border-gray-800 relative">
+        <div class="inline-block bg-gray-900 border-2 border-gray-700 p-2 mb-4">
+            <img src="/images/kiyo.jpg" alt="Kiyo" class="w-32 h-32 object-cover border border-gray-800" />
+        </div>
+
+        <h1 class="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white mb-2">
+            CHELSY KAYE C. ILAGAN
+        </h1>
+        <p class="text-xs md:text-sm text-red-500 font-bold uppercase tracking-widest bg-gray-900 inline-block px-3 py-1 border border-gray-800">
+            OFFICIAL TRIBUTE FOR RENE
+        </p>
+
+        <!-- Runaway Button -->
+        <div class="runaway-box mt-8 relative h-16 flex justify-center items-center">
+            <button type="button"
+                    id="secret-button"
+                    class="runaway-btn bg-white text-black font-black text-xs uppercase px-6 py-3 border-2 border-red-600 transition duration-200 cursor-pointer">
+                CLICK HERE TO KNOW CHELSY's SECRET
+            </button>
+        </div>
+    </section>
+
+    <!-- Viral Comments / Q&A Screenshot Vault -->
+    <section class="my-10">
+        <h2 class="text-sm font-bold uppercase tracking-widest text-red-500 mb-4 bg-gray-900 p-2 border-l-4 border-red-600">
+            Hindi ko rin alam
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-gray-900 border border-gray-800 p-4 hover:border-red-600 transition">
+                <p class="text-xs text-gray-400 mb-2 font-bold">Q: Pag nagka std po ang seaman may posibilidad na pauwiin?</p>
+                <div class="bg-black p-3 border border-gray-800 text-xs text-white">
+                    <span class="text-red-500 font-bold">A:</span> Hindi. Bat ka pauuwin eh std ka nga. Wag ka gumalaw std kalang jan.
+                </div>
+            </div>
+
+            <div class="bg-gray-900 border border-gray-800 p-4 hover:border-red-600 transition">
+                <p class="text-xs text-gray-400 mb-2 font-bold">Q: Ano ang similarities ng utot at tula?</p>
+                <div class="bg-black p-3 border border-gray-800 text-xs text-white">
+                    <span class="text-red-500 font-bold">A:</span> Galing sila sa poet.
+                </div>
+            </div>
+
+            <div class="bg-gray-900 border border-gray-800 p-4 hover:border-red-600 transition">
+                <p class="text-xs text-gray-400 mb-2 font-bold">Q: Sige nga ano tagalog ng clinic?</p>
+                <div class="bg-black p-3 border border-gray-800 text-xs text-white">
+                    <span class="text-red-500 font-bold">A:</span> Pinindot.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hard Truth Skills -->
+    <section class="my-10 bg-gray-900 border border-gray-800 p-6">
+        <h2 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">
+            PAPANSIN LANG
+        </h2>
+        <ul class="space-y-3 text-xs md:text-sm">
+            <li class="flex items-center gap-3 bg-black p-2 border border-gray-800">
+                <span class="text-red-500 font-bold">[!]</span>
+                <span><strong>SA UNA LANG MAGALING:</strong> mag paka-.</span>
+            </li>
+            <li class="flex items-center gap-3 bg-black p-2 border border-gray-800">
+                <span class="text-red-500 font-bold">[!]</span>
+                <span><strong>MATULOG NG ISANG BUONG ARAW:</strong> Palong palo ang palamunin.</span>
+            </li>
+            <li class="flex items-center gap-3 bg-black p-2 border border-gray-800">
+                <span class="text-red-500 font-bold">[!]</span>
+                <span><strong>GUMASTOS NG ILANG LIBO SA ISANG ARAW:</strong> Hanggat walang pinapadede, gasta lang.</span>
+            </li>
+            <li class="flex items-center gap-3 bg-black p-2 border border-gray-800">
+                <span class="text-red-500 font-bold">[!]</span>
+                <span><strong>PROGRAMMING LANGUAGE:</strong> Japanese... pwede rin Acts of Service hehe.</span>
+            </li>
+        </ul>
+    </section>
+
+    <!-- Interactive Meme Grid -->
+    <section class="my-10">
+        <h2 class="text-sm font-bold uppercase tracking-widest text-red-500 mb-4 bg-gray-900 p-2 border-l-4 border-red-600">
+            WEIRDO (Click to reveal)
+        </h2>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <button type="button" data-meme="DEPENDE KUNG 3 YAN" class="meme-button bg-gray-900 hover:bg-red-600 border border-gray-800 text-white text-xs font-bold p-4 uppercase hover:scale-105 transition text-center">May kaliwa ba sa right?!?!</button>
+            <button type="button" data-meme="WALANG KANIN BUSSENG!" class="meme-button bg-gray-900 hover:bg-red-600 border border-gray-800 text-white text-xs font-bold p-4 uppercase hover:scale-105 transition text-center">Posposro head</button>
+            <button type="button" data-meme="KAIN PO TAYO TEAM RYZZA" class="meme-button bg-gray-900 hover:bg-red-600 border border-gray-800 text-white text-xs font-bold p-4 uppercase hover:scale-105 transition text-center">Legends lang nakakaalam</button>
+            <button type="button" data-meme="DINUROBONG TUBO DANCE" class="meme-button bg-gray-900 hover:bg-red-600 border border-gray-800 text-white text-xs font-bold p-4 uppercase hover:scale-105 transition text-center">Alam mo ha</button>
+        </div>
+    </section>
+
+    <!-- Ultimate Trigger Connected to Spring Boot @PostMapping("/portfolio/chelsy/interact") -->
+    <section id="ulti-zone"
+             th:classappend="${triggered} ? 'ulti-hit' : ''"
+             class="animate-alert-box bg-red-900 bg-opacity-40 border-2 border-red-600 p-8 text-center my-12">
+        <h3 class="text-xl font-black text-white uppercase mb-2">
+            PRESS BUTTON IF INULTIHAN KA TODAY
+        </h3>
+        <p class="text-xs text-gray-400 mb-4 uppercase">
+            Warning: Recorded directly in Java Spring Boot
+        </p>
+
+        <!-- Dynamic Java Status Banner when triggered -->
+        <div th:if="${triggered or count > 0}"
+             class="max-w-md mx-auto mb-6 bg-black border-2 border-red-500 p-4 text-center">
+            <p class="text-xs text-red-400 font-bold uppercase">
+                ULTI LOG #<span th:text="${count}">1</span>:
+            </p>
+            <p class="text-sm font-black text-white mt-1" th:text="${statusMessage}">
+                ARAY KO BOSSING!
+            </p>
+        </div>
+
+        <form id="inultiForm" action="/portfolio/chelsy/interact" method="post">
+            <button type="button"
+                    onclick="triggerInulti()"
+                    class="bg-red-600 hover:bg-red-500 text-white font-black text-sm uppercase px-8 py-4 border-2 border-white transition cursor-pointer">
+                INULTIHAN AKO BOSSING (<span th:text="${count}">0</span>)
+            </button>
+        </form>
+    </section>
+
+    <!-- Guestbook Form Connected to Spring Boot @PostMapping("/feedback") -->
+    <section class="bg-gray-900 border border-gray-800 p-6 my-10">
+        <h3 class="text-sm font-bold uppercase tracking-widest text-red-500 mb-4">LEAVE A MESSAGE FOR CHELSY</h3>
+        <div th:if="${sent}" class="mb-4 p-3 bg-black border border-red-500 text-xs text-red-400">
+            STATUS: Message saved in Spring Boot! View on <a href="/" class="underline font-bold">Dashboard</a>.
+        </div>
+        <form action="/feedback" method="post" class="space-y-3">
+            <input type="hidden" name="recipient" value="Chelsy" />
+            <input type="text" name="name" required placeholder="YOUR NAME" class="w-full bg-black border border-gray-700 p-2 text-xs text-white" />
+            <input type="email" name="email" required placeholder="YOUR EMAIL" class="w-full bg-black border border-gray-700 p-2 text-xs text-white" />
+            <textarea name="message" required rows="2" placeholder="YOUR MESSAGE" class="w-full bg-black border border-gray-700 p-2 text-xs text-white"></textarea>
+            <button type="submit" class="bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase px-6 py-2.5 cursor-pointer">
+                Send to Java
+            </button>
+        </form>
+    </section>
+
+    <div id="meme-popup" hidden class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="meme-popup-title">
+    <div class="bg-gray-900 border-2 border-red-600 p-6 max-w-sm w-full text-center relative shadow-2xl">
+        <h4 id="meme-popup-title" class="text-lg font-black text-white uppercase mb-4"></h4>
+        <p class="text-xs text-gray-400 mb-6 uppercase">sana ngayong pasko ay maka uno rin ako</p>
+        <button type="button" id="meme-close" class="bg-red-600 text-white font-bold text-xs uppercase px-4 py-2 border border-white">CLOSE [ X ]</button>
+    </div>
+</div>
+<footer class="text-center pt-8 border-t border-gray-800 text-gray-600 text-xs font-bold uppercase tracking-widest">
+        GG FRICKING EZ
+    </footer>
+</main>
+
+<script src="/js/common.js" defer></script>
+<script src="/js/chelsy.js" defer></script>
+</body>
+</html>

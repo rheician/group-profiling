@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radcliff Jorel B. Flores — Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        @keyframes menacing-float {
+            0%, 100% { transform: rotate(-6deg) translateY(0px); }
+            50%      { transform: rotate(-3deg) translateY(-6px) scale(1.04); }
+        }
+
+        .halftone-left {
+            background-color: #168ac4;
+            background-image: radial-gradient(circle at 3px 3px, rgba(0,0,0,.65) 1.2px, transparent 1.5px),
+            repeating-linear-gradient(135deg, transparent 0 13px, rgba(0,0,0,.45) 14px 16px);
+            background-size: 7px 7px, 100% 100%;
+        }
+
+        .menacing-text {
+            -webkit-text-stroke: 2px #171717;
+            text-shadow: 4px 4px 0 #171717, 7px 7px 0 #facc15;
+            animation: menacing-float 2.4s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="relative min-h-screen overflow-x-hidden bg-white font-sans text-gray-900">
+
+<!-- Left halftone border -->
+<div aria-hidden="true" class="halftone-left pointer-events-none fixed inset-y-0 left-0 w-12 border-r-4 border-black sm:w-20"></div>
+
+<!-- Blue manga accent on the right -->
+<div aria-hidden="true" class="pointer-events-none fixed right-0 top-0 h-full w-8 bg-blue-400 sm:w-20"></div>
+
+<div class="relative z-10 ml-12 mr-8 min-h-screen px-4 pb-10 sm:ml-20 sm:mr-20 sm:px-8">
+
+    <!-- Header -->
+    <header class="mx-auto flex max-w-5xl items-center justify-between gap-4 py-6 sm:py-8">
+        <div class="flex items-center gap-4 sm:gap-6">
+            <div class="flex-shrink-0 border-4 border-purple-500 p-1">
+                <img src="/images/Rohan_DagaKotowaru.png"
+                     alt="Rohan"
+                     class="h-16 w-16 rounded-full border-2 border-black object-cover sm:h-20 sm:w-20" />
+            </div>
+
+            <div>
+                <h1 class="text-2xl font-black uppercase leading-tight tracking-tight sm:text-4xl">
+                    Radcliff Jorel B. Flores
+                </h1>
+                <p class="mt-1 max-w-xl text-sm sm:text-lg">Words</p>
+            </div>
+        </div>
+
+        <!-- Interactive Menacing Button connected to Spring Boot -->
+        <form action="/portfolio/radcliff/interact" method="post">
+            <button type="submit" title="Click to increment in Java"
+                    class="menacing-text text-4xl sm:text-6xl font-black italic tracking-tighter text-white cursor-pointer">
+                ゴゴゴ <span class="text-base not-italic text-black bg-yellow-300 px-2 py-0.5 border-2 border-black" th:text="${count}">0</span>
+            </button>
+        </form>
+    </header>
+
+    <!-- Main Manga Panels -->
+    <main class="mx-auto grid max-w-5xl grid-cols-1 border-4 border-black bg-white sm:grid-cols-2">
+        <!-- Left column -->
+        <div class="flex flex-col border-b-4 border-black sm:border-b-0 sm:border-r-4">
+            <section class="flex-1 p-5 border-b-4 border-black">
+                <h2 class="mb-3 inline-block bg-black px-2 py-1 text-xs font-black tracking-widest text-white sm:text-sm">
+                    ABOUT ME
+                </h2>
+                <div class="space-y-2 text-sm sm:text-base">
+                    <p>Existing.</p>
+                    <p>Rather reserved.</p>
+                </div>
+            </section>
+
+            <section class="flex-1 p-5 border-b-4 border-black">
+                <h2 class="mb-3 inline-block bg-black px-2 py-1 text-xs font-black tracking-widest text-white sm:text-sm">
+                    PERSONALITY
+                </h2>
+                <div class="space-y-2 text-sm sm:text-base">
+                    <p>Enjoys the simplicity.</p>
+                    <p>Aaaaaaaa.</p>
+                </div>
+            </section>
+
+            <section class="flex-1 p-5">
+                <h2 class="mb-3 inline-block bg-black px-2 py-1 text-xs font-black tracking-widest text-white sm:text-sm">
+                    LIKES &amp; INTERESTS
+                </h2>
+                <div class="space-y-2 text-sm sm:text-base">
+                    <p>Drawing.</p>
+                    <p>Gaming.</p>
+                    <p>Mysterious third thing.</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- Right column -->
+        <div class="flex flex-col">
+            <section class="flex flex-1 items-center justify-center border-b-4 border-black p-6">
+                <div class="max-w-sm text-center">
+                    <h2 class="text-xl font-black uppercase tracking-tight sm:text-2xl">
+                        HEAVEN'S DOOR // SPRING WEB
+                    </h2>
+                    <p class="mt-3 text-sm leading-relaxed sm:text-base">
+                        Powered by Java Spring Boot @Controller and Thymeleaf HTML templates.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Manga Guestbook Panel connected to @PostMapping("/feedback") -->
+            <section class="flex-1 p-5">
+                <h2 class="mb-3 inline-block bg-black px-2 py-1 text-xs font-black tracking-widest text-white">
+                    WRITE IN RADCLIFF'S BOOK
+                </h2>
+                <div th:if="${sent}" class="mb-3 p-2 bg-yellow-200 border-2 border-black text-xs font-bold">
+                    Saved in Java! View on <a href="/" class="underline">Dashboard</a>.
+                </div>
+                <form action="/feedback" method="post" class="space-y-2">
+                    <input type="hidden" name="recipient" value="Radcliff" />
+                    <input type="text" name="name" required placeholder="NAME" class="w-full border-2 border-black p-2 text-xs font-bold" />
+                    <input type="email" name="email" required placeholder="EMAIL" class="w-full border-2 border-black p-2 text-xs font-bold" />
+                    <textarea name="message" required rows="2" placeholder="MESSAGE..." class="w-full border-2 border-black p-2 text-xs font-bold"></textarea>
+                    <button type="submit" class="w-full bg-black text-white font-black text-xs uppercase py-2.5 hover:bg-yellow-400 hover:text-black border-2 border-black transition">
+                        SUBMIT TO SPRING BOOT
+                    </button>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <footer class="mx-auto mt-5 flex max-w-5xl items-center justify-between gap-4 text-xs font-bold uppercase tracking-widest">
+        <a href="/" class="underline hover:text-blue-700">
+            &larr; Back to Home
+        </a>
+        <span>Thus Spoke Kishibe Rohan: JoJo's Bizarre Adventure</span>
+    </footer>
+</div>
+</body>
+</html>
