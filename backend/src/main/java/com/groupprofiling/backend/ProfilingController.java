@@ -24,7 +24,7 @@ public class ProfilingController {
 
     public ProfilingController() {
         teamMembers.add(new TeamMember("Chelsy", "Developer", "/portfolio/chelsy", "Steal an Egg: Mamaaaa", "95% Rating", "/images/steal.png"));
-        teamMembers.add(new TeamMember("Olivenn", "Developer", "/portfolio/olivenn", "99 Nights ng Pagdurusa", "92% Rating", "https://play-lh.googleusercontent.com/viOjN7Ax5NtKXc3GdhAz4g8Ij8gq9eNnZv5cLFmYbDrQAu49qDuKYZS-kljLOzjefpgnL57CkkMRQKWcydqURA=w526-h296-rw"));
+        teamMembers.add(new TeamMember("Olivenn", "Developer", "/portfolio/olivenn", "99 Nights ng Ano?", "92% Rating", "https://play-lh.googleusercontent.com/viOjN7Ax5NtKXc3GdhAz4g8Ij8gq9eNnZv5cLFmYbDrQAu49qDuKYZS-kljLOzjefpgnL57CkkMRQKWcydqURA=w526-h296-rw"));
         teamMembers.add(new TeamMember("Rheician", "Developer", "/portfolio/rheician", "#UndasDanas", "98% Rating", "/images/scary1.jpg"));
         teamMembers.add(new TeamMember("Radcliff", "Developer", "/portfolio/radcliff", "Radcliff", "96% Rating", "https://images.unsplash.com/photo-1504639725590-34d0984388bd?auto=format&fit=crop&w=600&q=80"));
     }

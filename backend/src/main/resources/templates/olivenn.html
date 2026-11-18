@@ -4,160 +4,349 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jahn Olivenn Esmarin — Portfolio</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Covered+By+Your+Grace&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=NATS&family=Reenie+Beanie&family=Sarina&family=Sekuya&display=swap');
-
         :root {
-            --pink: #ff0077;
-            --pink-glint: #ffb3d6;
-            --bg: #0d1a15;
-            --sage: #618764;
+            --bg: #070b18;
+            --accent: #ff6b35;
+            --sage: #aec3b0;
+            --font: 'Covered By Your Grace', cursive;
+            /* Figma frame is 1920 wide: 1vw = 19.2 design px */
+            --hero-size: min(128px, 6.667vw);
+            --nav-size: clamp(14px, 1.667vw, 32px);
+            --nav-h: calc(var(--hero-size) * 0.5 + 24px);   /* approx. nav height, used for spacing below it */
         }
 
-        body {
-            background-color: var(--bg);
-            color: var(--pink);
+        * { box-sizing: border-box; }
+
+        html, body {
             margin: 0;
-            overflow-x: hidden;
+            background: var(--bg);
+            color: #fff;
+            font-family: var(--font);
         }
 
-        @keyframes olivenn-shimmer {
-            from { background-position: 100% 0; }
-            to   { background-position: 0% 0; }
+        body { overflow-x: hidden; }
+
+        html { scroll-snap-type: y proximity; }
+
+        main { position: relative; z-index: 1; }
+
+        /* Every section fills the whole viewport, like the landing page */
+        .screen {
+            position: relative;
+            height: 100vh;
+            height: 100svh;
+            min-height: 100vh;
+            min-height: 100svh;
+            overflow: hidden;
+            background: transparent;
+            scroll-snap-align: start;
         }
 
-        @keyframes font-spin {
-            0%, 15%   { font-family: 'Reenie Beanie', cursive; }
-            16%, 32%  { font-family: 'Sarina', cursive; }
-            33%, 48%  { font-family: 'Sekuya', sans-serif; }
-            49%, 65%  { font-family: 'Reenie Beanie', cursive; }
-            66%, 82%  { font-family: 'Sarina', cursive; }
-            83%, 100% { font-family: 'Sekuya', sans-serif; }
+        /* One fixed forest backdrop (Figma "forest" layer, 15% opacity) shared by
+           every section, so it never re-appears or scrolls while you move down */
+        .backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: url('/images/forest.png') center / cover no-repeat;
+            opacity: 0.15;
+            pointer-events: none;
         }
 
-        .shimmer-title {
-            font-family: 'Sekuya', sans-serif;
-            font-size: 5.2vw;
-            line-height: normal;
-            white-space: nowrap;
-            color: transparent;
-            background-image: linear-gradient(90deg, var(--pink) 0%, var(--pink) 40%, var(--pink-glint) 50%, var(--pink) 60%, var(--pink) 100%);
-            background-size: 250% 100%;
-            background-repeat: no-repeat;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: olivenn-shimmer 4.2s linear infinite;
-        }
-
-        @keyframes streak-fall {
-            0%   { transform: translateY(-120%) scaleY(0.6); opacity: 0; }
-            30%  { opacity: 0.85; }
-            100% { transform: translateY(120vh) scaleY(1.4); opacity: 0; }
-        }
-
-        .lightfall-backdrop {
-            background: radial-gradient(ellipse at 50% 0%, rgba(156, 176, 128, 0.18) 0%, rgba(13, 26, 21, 0) 65%);
-        }
-
-        .streak {
-            position: absolute;
+        /* Floating nav: stays on screen for the whole page */
+        .nav {
+            position: fixed;
             top: 0;
-            width: 2px;
-            height: 180px;
-            border-radius: 9999px;
-            background: linear-gradient(to bottom, transparent, #ffc2dd, #ff7ab8, #ff0077);
-            box-shadow: 0 0 12px #ff7ab8;
-            animation: streak-fall linear infinite;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            padding: 0 2vw;
+            background: rgba(7, 11, 24, 0);          /* fades in with scroll (JS) */
+            -webkit-backdrop-filter: blur(0px);
+            backdrop-filter: blur(0px);
         }
 
-        details > summary { list-style: none; }
-        details > summary::-webkit-details-marker { display: none; }
+        .nav-inner {
+            position: relative;
+            padding: 10px 0 4px;                       /* tight space above the line */
+            border-bottom: 1px solid rgba(174, 195, 176, 0.55);
+        }
+
+        .nav-row {
+            min-height: calc(var(--hero-size) * 0.5);  /* room for the title once it docks */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: var(--nav-size);
+            line-height: 1;
+            color: var(--sage);
+        }
+
+        .nav-row a { color: inherit; text-decoration: none; }
+        .nav-row a:hover { text-decoration: underline; }
+
+        /* Single title element that travels from the hero centre (screen 1)
+           into the floating nav bar as the page scrolls. */
+        #name {
+            position: fixed;
+            left: 50%;
+            top: 50vh;
+            z-index: 11;
+            margin: 0;
+            font-weight: 400;
+            font-size: var(--hero-size);
+            letter-spacing: 0.1em;
+            line-height: 1;
+            white-space: nowrap;
+            text-align: center;
+            color: var(--accent);
+            text-shadow: 0 15px 35px rgba(255, 107, 53, 0.35);
+            transform: translate(-50%, -50%);
+            will-change: top, font-size;
+            pointer-events: none;
+        }
+
+        /* Second text that appears once the name has moved up */
+        #headline {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            z-index: 2;
+            margin: 0;
+            width: 92%;
+            font-weight: 400;
+            font-size: var(--hero-size);
+            letter-spacing: 0.1em;
+            line-height: 1.1;
+            text-align: center;
+            color: #fff;
+            opacity: 0;
+            transform: translate(-50%, calc(-50% + 24px));
+            will-change: opacity, transform;
+        }
+
+
+        /* Leave Message section (last on the page) */
+        #leave-message {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+            padding: calc(var(--nav-h) + 4vh) 6vw 6vh;
+        }
+
+        .message-card {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 560px;
+        }
+
+        .message-card h2 {
+            margin: 0 0 8px;
+            font-weight: 400;
+            font-size: clamp(36px, 4.4vw, 84px);
+            letter-spacing: 0.1em;
+            line-height: 1.1;
+            text-align: center;
+            color: #fff;
+        }
+
+        .message-card p.sub {
+            margin: 0 0 28px;
+            text-align: center;
+            font-size: clamp(16px, 1.667vw, 28px);
+            color: var(--sage);
+        }
+
+        .status {
+            margin: 0 0 20px;
+            padding: 10px 18px;
+            border: 1px solid var(--sage);
+            border-radius: 9999px;
+            text-align: center;
+            font-size: clamp(15px, 1.4vw, 24px);
+            color: var(--accent);
+            background: rgba(7, 11, 24, 0.85);
+        }
+
+        .status a { color: inherit; font-weight: 700; }
+
+        .message-card form { display: grid; gap: 14px; }
+
+        .message-card input,
+        .message-card textarea {
+            width: 100%;
+            padding: 12px 14px;
+            font: inherit;
+            font-size: clamp(16px, 1.5vw, 26px);
+            color: #fff;
+            background: rgba(174, 195, 176, 0.08);
+            border: 1px solid rgba(174, 195, 176, 0.55);
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .message-card input::placeholder,
+        .message-card textarea::placeholder { color: rgba(174, 195, 176, 0.7); }
+
+        .message-card input:focus,
+        .message-card textarea:focus { border-color: var(--accent); }
+
+        .message-card textarea { resize: vertical; min-height: 120px; }
+
+        .message-card button {
+            padding: 12px 18px;
+            font: inherit;
+            font-size: clamp(18px, 1.8vw, 30px);
+            letter-spacing: 0.1em;
+            color: var(--bg);
+            background: var(--accent);
+            border: 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: filter .15s;
+        }
+
+        .message-card button:hover { filter: brightness(1.12); }
+
+        /* No JavaScript: show the final state of screen 2 */
+        .no-js #name { display: none; }
+        .no-js #headline { opacity: 1; transform: translate(-50%, -50%); }
+        .no-js .nav-title { display: block; }
+
+        .nav-title {
+            display: none;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: calc(var(--hero-size) / 2);
+            letter-spacing: 0.1em;
+            white-space: nowrap;
+            color: var(--accent);
+            text-shadow: 0 15px 35px rgba(255, 107, 53, 0.35);
+        }
     </style>
 </head>
-<body class="relative min-h-screen w-full flex flex-col justify-between">
+<body class="no-js">
 
-<!-- Original interactive WebGL Lightfall effect, ported from React into vanilla JS.
-     The existing CSS streaks remain as a fallback for browsers without WebGL2. -->
-<div id="lightfall-container" class="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true" style="background: radial-gradient(ellipse at 50% 0%, rgba(156,176,128,.18), transparent 65%);">
-    <canvas id="lightfall-canvas" style="display:block;width:100%;height:100%;"></canvas>
-</div>
-<div id="lightfall-fallback" class="hidden lightfall-backdrop pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
-    <span class="streak" style="left: 8%;  animation-duration: 3.4s; animation-delay: 0.1s;"></span>
-    <span class="streak" style="left: 19%; animation-duration: 2.7s; animation-delay: 1.2s;"></span>
-    <span class="streak" style="left: 31%; animation-duration: 4.1s; animation-delay: 0.5s;"></span>
-    <span class="streak" style="left: 44%; animation-duration: 2.9s; animation-delay: 1.8s;"></span>
-    <span class="streak" style="left: 56%; animation-duration: 3.6s; animation-delay: 0.3s;"></span>
-    <span class="streak" style="left: 68%; animation-duration: 2.5s; animation-delay: 1.5s;"></span>
-    <span class="streak" style="left: 79%; animation-duration: 3.9s; animation-delay: 0.8s;"></span>
-    <span class="streak" style="left: 91%; animation-duration: 3.1s; animation-delay: 2.0s;"></span>
-</div>
+<div class="backdrop" aria-hidden="true"></div>
 
-<!-- Top bar -->
-<header class="relative z-10 flex items-start justify-between px-6 pt-6 leading-tight text-xs sm:text-lg md:text-2xl"
-        style="font-family: 'Sekuya', sans-serif;">
-    <a href="/"
-       class="rounded-sm hover:underline"
-       style="color: #618764;">
-        [ BACK TO DECEMBER ]
-    </a>
-    <span style="color: #618764;">[ NOVEMBER 2026 ]</span>
-</header>
+<main id="stage">
 
-<!-- Center Spring Boot Controls -->
-<main class="relative z-10 flex flex-col items-center justify-center px-4 my-auto space-y-6">
-    <div th:if="${sent}"
-         class="px-5 py-2.5 rounded-full text-xs font-mono border"
-         style="background-color: rgba(13, 26, 21, 0.85); border-color: #618764; color: #ffb3d6;">
-        STATUS: Message saved in Spring Boot! View on <a href="/" class="underline font-bold">Dashboard Alerts</a>.
-    </div>
+    <!-- Floating nav (always visible) -->
+    <header class="nav">
+        <div class="nav-inner">
+            <div class="nav-row" id="nav-row">
+                <a href="/">Back to Home</a>
+                <span>November 2026</span>
+            </div>
+            <span class="nav-title">JAHN OLIVENN ESMARIN</span>
+        </div>
+    </header>
 
-    <div class="flex flex-wrap items-center justify-center gap-4">
-        <form action="/portfolio/olivenn/interact" method="post">
-            <button type="submit"
-                    class="px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition transform hover:scale-105 cursor-pointer"
-                    style="background-color: rgba(255, 0, 119, 0.15); border: 1px solid #ff0077; color: #ffb3d6; font-family: 'Sekuya', sans-serif;">
-                VOUCH (<span th:text="${count}">0</span>)
-            </button>
-        </form>
+    <!-- Group Profiling 1 -->
+    <section id="screen-1" class="screen"></section>
 
-        <details class="relative">
-            <summary class="px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest cursor-pointer transition hover:opacity-80"
-                     style="background-color: rgba(97, 135, 100, 0.2); border: 1px solid #618764; color: #9CB080; font-family: 'Sekuya', sans-serif;">
-                LEAVE MESSAGE
-            </summary>
+    <!-- Group Profiling 2 -->
+    <section id="screen-2" class="screen">
+        <h2 id="headline">99 Nights ng Ano?</h2>
+    </section>
 
-            <form action="/feedback" method="post"
-                  class="mt-3 p-5 rounded-2xl w-80 space-y-3 shadow-2xl"
-                  style="background-color: #0a1410; border: 1px solid #618764;">
+    <!-- Leave Message (very end of the page) -->
+    <section id="leave-message" class="screen" th:attr="data-sent=${sent}">
+        <div class="message-card">
+            <h2>Leave a Message</h2>
+            <p class="sub">Say something to Olivenn.</p>
+
+            <div class="status" th:if="${sent}">
+                Message saved in Spring Boot! View it on the <a href="/">Dashboard Alerts</a>.
+            </div>
+
+            <form action="/feedback" method="post">
                 <input type="hidden" name="recipient" value="Olivenn" />
-                <input type="text" name="name" required placeholder="Your Name"
-                       class="w-full rounded-lg p-2 text-xs text-white outline-none"
-                       style="background-color: #13241d; border: 1px solid #618764;" />
-                <input type="email" name="email" required placeholder="Your Email"
-                       class="w-full rounded-lg p-2 text-xs text-white outline-none"
-                       style="background-color: #13241d; border: 1px solid #618764;" />
-                <textarea name="message" required rows="2" placeholder="Write a message..."
-                          class="w-full rounded-lg p-2 text-xs text-white outline-none"
-                          style="background-color: #13241d; border: 1px solid #618764;"></textarea>
-                <button type="submit"
-                        class="w-full py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-black cursor-pointer"
-                        style="background-color: #ff0077;">
-                    Send to Spring Boot
-                </button>
+                <input type="text" name="name" required placeholder="Your Name" />
+                <input type="email" name="email" required placeholder="Your Email" />
+                <textarea name="message" required rows="4" placeholder="Write a message..."></textarea>
+                <button type="submit">Send to Spring Boot</button>
             </form>
-        </details>
-    </div>
+        </div>
+    </section>
+
+    <!-- Moves from screen 1's centre into screen 2's nav bar while scrolling -->
+    <h1 id="name">JAHN OLIVENN ESMARIN</h1>
 </main>
 
-<!-- Main name pinned to the bottom edge -->
-<div class="relative z-10 flex items-center justify-center px-4 pb-5">
-    <h1 id="olivenn-name" class="m-0 font-normal shimmer-title">
-        Jahn Olivenn Esmarin
-    </h1>
-</div>
+<script>
+    (function () {
+        document.body.classList.remove('no-js');
 
-<script src="/js/lightfall.js" defer></script>
+        var name = document.getElementById('name');
+        var headline = document.getElementById('headline');
+        var nav = document.querySelector('.nav');
+        var navRow = document.getElementById('nav-row');
+        var screen2 = document.getElementById('screen-2');
+
+        var startY, endY, startSize, endSize, distance;
+
+        function clamp(v, a, b) { return Math.min(b, Math.max(a, v)); }
+        function lerp(a, b, t) { return a + (b - a) * t; }
+        function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+
+        function measure() {
+            startSize = Math.min(128, window.innerWidth * 0.06667);
+            endSize = startSize / 2;
+            startY = window.innerHeight / 2;
+            var r = navRow.getBoundingClientRect();          // nav is fixed: viewport coords
+            endY = r.top + r.height / 2;
+            distance = Math.max(1, screen2.offsetTop);
+        }
+
+        function update() {
+            var p = clamp(window.scrollY / distance, 0, 1);
+            var e = ease(p);
+
+            name.style.top = lerp(startY, endY, e) + 'px';
+            name.style.fontSize = lerp(startSize, endSize, e) + 'px';
+
+            // nav gets a backdrop as it becomes the persistent header
+            nav.style.background = 'rgba(7, 11, 24, ' + (0.88 * e) + ')';
+            var blur = 'blur(' + (8 * e) + 'px)';
+            nav.style.backdropFilter = blur;
+            nav.style.webkitBackdropFilter = blur;
+
+            // second text fades/rises in during the last part of the scroll
+            var t = clamp((p - 0.55) / 0.45, 0, 1);
+            headline.style.opacity = t;
+            headline.style.transform =
+                'translate(-50%, calc(-50% + ' + (1 - t) * 24 + 'px))';
+        }
+
+        var ticking = false;
+        function onScroll() {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(function () { ticking = false; update(); });
+        }
+
+        function onResize() { measure(); update(); }
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onResize);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(onResize);
+        onResize();
+
+        // After submitting the form the page reloads at the top; jump back to it.
+        var leave = document.getElementById('leave-message');
+        if (leave && leave.getAttribute('data-sent') === 'true') {
+            leave.scrollIntoView();
+        }
+    })();
+</script>
 </body>
 </html>
