@@ -130,6 +130,125 @@
         }
 
 
+        /* Frame 2 button ("1, 2, 3...") — sits under the headline, fades in with it */
+        #go-btn {
+            position: absolute;
+            left: 50%;
+            top: calc(50% + var(--hero-size) * 1.086);
+            z-index: 2;
+            min-width: min(437px, 90vw);
+            height: calc(var(--nav-size) * 1.9);
+            padding: 0 1.5em;
+            font: inherit;
+            font-size: var(--nav-size);
+            letter-spacing: 0.1em;
+            color: var(--bg);
+            background: var(--accent);
+            border: 0;
+            border-radius: 10px;
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transform: translate(-50%, calc(-50% + 24px));
+            will-change: opacity, transform;
+            transition: filter .15s;
+        }
+
+        #go-btn:hover { filter: brightness(1.12); }
+
+        /* Frame 3 "Missing Adults" — hidden until the button above is clicked.
+           Everything inside the board is positioned in % / cqw of the Figma
+           board (1366 x 768), so it scales with the board. */
+        #screen-3 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: calc(var(--nav-h) + 1vh) 2vw 2vh;
+        }
+
+        #screen-3.is-hidden { display: none; }
+
+        #screen-3.reveal .board { animation: board-in .7s ease both; }
+
+        @keyframes board-in {
+            from { opacity: 0; transform: translateY(32px); }
+            to   { opacity: 1; transform: none; }
+        }
+
+        .board {
+            position: relative;
+            z-index: 2;
+            width: min(71.15vw, calc((100svh - var(--nav-h) - 3vh) * 1366 / 768));
+            aspect-ratio: 1366 / 768;
+            container-type: inline-size;
+        }
+
+        .board > img.bg,
+        .board .pad,
+        .board .face {
+            position: absolute;
+            display: block;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .board > img.bg { inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+        .board h2 {
+            position: absolute;
+            left: 50%;
+            top: 15.75%;
+            margin: 0;
+            width: 100%;
+            font-weight: 400;
+            font-size: 9.37cqw;
+            letter-spacing: 0.1em;
+            line-height: 1;
+            text-align: center;
+            color: #fff;
+            transform: translate(-50%, -50%);
+            white-space: nowrap;
+        }
+
+        .board .pad  { top: 30.99%; width: 16.03%; height: 40.49%; object-fit: cover; }
+        .board .face { width: 13.03%; aspect-ratio: 1; object-fit: cover; }
+
+        .board .mark {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 15.74%;
+            font-size: 14.35cqw;
+            line-height: 1;
+            letter-spacing: 0.01em;
+            color: var(--bg);
+            text-shadow: 0 15px 35px rgba(255, 107, 53, 0.35);
+            transform: translate(-50%, -50%) rotate(-45deg);
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .board .hanapin {
+            position: absolute;
+            left: 41.36%;
+            top: 81.51%;
+            width: 17.28%;
+            height: 7.94%;
+            padding: 0;
+            font: inherit;
+            font-size: 2.34cqw;
+            letter-spacing: 0.1em;
+            color: var(--bg);
+            background: var(--accent);
+            border: 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: filter .15s;
+        }
+
+        .board .hanapin:hover { filter: brightness(1.12); }
+
         /* Leave Message section (last on the page) */
         #leave-message {
             display: flex;
@@ -218,6 +337,8 @@
         .no-js #name { display: none; }
         .no-js #headline { opacity: 1; transform: translate(-50%, -50%); }
         .no-js .nav-title { display: block; }
+        .no-js #go-btn { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%); }
+        .no-js #screen-3.is-hidden { display: flex; }
 
         .nav-title {
             display: none;
@@ -255,7 +376,32 @@
 
     <!-- Group Profiling 2 -->
     <section id="screen-2" class="screen">
-        <h2 id="headline">99 Nights ng Ano?</h2>
+        <h2 id="headline">99 NIGHTS NG ANO?</h2>
+        <button type="button" id="go-btn">1, 2, 3... Go Kanya Kanya Na To!</button>
+    </section>
+
+    <!-- Group Profiling 3: Missing Adults (revealed by the button in screen 2) -->
+    <section id="screen-3" class="screen is-hidden" aria-label="Missing Adults">
+        <div class="board">
+            <img class="bg" src="/images/woodboard.png" alt="" />
+            <h2>MISSING ADULTS</h2>
+            <img class="pad" style="left:4.1%" src="/images/yellowpad.png" alt="" />
+            <img class="pad" style="left:23.06%" src="/images/yellowpad.png" alt="" />
+            <img class="pad" style="left:42.02%" src="/images/yellowpad.png" alt="" />
+            <img class="pad" style="left:60.91%" src="/images/yellowpad.png" alt="" />
+            <img class="pad" style="left:79.87%" src="/images/yellowpad.png" alt="" />
+            <img class="face" style="left:5.64%;top:38.41%" src="/images/joy.png" alt="Joy" />
+            <img class="face" style="left:24.6%;top:39.71%" src="/images/fear.png" alt="Fear" />
+            <img class="face" style="left:43.48%;top:39.58%" src="/images/anger.png" alt="Anger" />
+            <img class="face" style="left:62.44%;top:40.76%" src="/images/sadness.png" alt="Sadness" />
+            <img class="face" style="left:81.4%;top:39.58%" src="/images/disgust.png" alt="Disgust" />
+            <span class="mark" style="left:12.14%;top:51.15%" aria-hidden="true">???</span>
+            <span class="mark" style="left:31.1%;top:53.88%" aria-hidden="true">???</span>
+            <span class="mark" style="left:49.99%;top:51.15%" aria-hidden="true">???</span>
+            <span class="mark" style="left:68.95%;top:54.93%" aria-hidden="true">???</span>
+            <span class="mark" style="left:89.37%;top:52.59%" aria-hidden="true">???</span>
+            <button type="button" class="hanapin" id="hanapin">#Hanapin</button>
+        </div>
     </section>
 
     <!-- Leave Message (very end of the page) -->
@@ -291,6 +437,8 @@
         var nav = document.querySelector('.nav');
         var navRow = document.getElementById('nav-row');
         var screen2 = document.getElementById('screen-2');
+        var goBtn = document.getElementById('go-btn');
+        var screen3 = document.getElementById('screen-3');
 
         var startY, endY, startSize, endSize, distance;
 
@@ -325,6 +473,12 @@
             headline.style.opacity = t;
             headline.style.transform =
                 'translate(-50%, calc(-50% + ' + (1 - t) * 24 + 'px))';
+
+            // the button fades/rises in together with the headline
+            goBtn.style.opacity = t;
+            goBtn.style.transform =
+                'translate(-50%, calc(-50% + ' + (1 - t) * 24 + 'px))';
+            goBtn.style.pointerEvents = t > 0.9 ? 'auto' : 'none';
         }
 
         var ticking = false;
@@ -340,6 +494,15 @@
         window.addEventListener('resize', onResize);
         if (document.fonts && document.fonts.ready) document.fonts.ready.then(onResize);
         onResize();
+
+        // Frame 2 button: reveal Frame 3, then scroll down to it.
+        goBtn.addEventListener('click', function () {
+            screen3.classList.remove('is-hidden');
+            screen3.classList.add('reveal');
+            var reduce = window.matchMedia &&
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            screen3.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+        });
 
         // After submitting the form the page reloads at the top; jump back to it.
         var leave = document.getElementById('leave-message');
