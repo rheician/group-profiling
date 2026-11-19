@@ -232,7 +232,7 @@
         .board .hanapin {
             position: absolute;
             left: 41.36%;
-            top: 81.51%;
+            top: 78%;
             width: 17.28%;
             height: 7.94%;
             padding: 0;
@@ -253,16 +253,19 @@
             position: absolute;
             left: 0;
             right: 0;
-            bottom: 2.5%;
+            bottom: 5%;
             margin: 0;
             text-align: center;
-            font-size: 2.1cqw;
+            font-size: 2cqw;
+            line-height: 1.25;
             letter-spacing: 0.05em;
             color: var(--sage);
         }
         .board a.hanapin { display: flex; align-items: center; justify-content: center; text-decoration: none; }
-        .board .hanapin-l { left: 31%; }
-        .board .hanapin-r { left: 51.7%; }
+        .board .tally-msg { animation: tally-out .4s ease 3.5s forwards; }
+        .board .tally-count.delayed { opacity: 0; animation: tally-in .4s ease 3.9s forwards; }
+        @keyframes tally-out { to { opacity: 0; visibility: hidden; } }
+        @keyframes tally-in  { to { opacity: 1; } }
 
         .findbtn {
             display: inline-block; margin-top: 24px; padding: 12px 28px;
@@ -614,14 +617,12 @@
                     th:if="${foundCount < #lists.size(emotions)}">#Hanapin</button>
 
             <th:block th:if="${foundCount == #lists.size(emotions)}">
-                <form method="post" th:action="@{/portfolio/olivenn/reset}" style="display:contents">
-                    <button type="submit" class="hanapin hanapin-l">Ulitin</button>
-                </form>
-                <a class="hanapin hanapin-r" th:href="@{/portfolio/olivenn/ending#ending}">Ending</a>
+                <a class="hanapin" th:href="@{/portfolio/olivenn/ending#ending}">#Found</a>
             </th:block>
 
-            <p class="tally"
-               th:text="${message} ?: ('Nahanap: ' + ${foundCount} + ' / ' + ${#lists.size(emotions)})"></p>
+            <p class="tally tally-msg" th:if="${message != null}" th:text="${message}"></p>
+            <p class="tally tally-count" th:classappend="${message != null} ? 'delayed'"
+               th:text="'Found: ' + ${foundCount} + ' / ' + ${#lists.size(emotions)}"></p>
         </div>
     </section>
 
@@ -641,9 +642,8 @@
         <p>Nahanap na silang lima. Ikaw na lang ang hindi pa nahahanap.</p>
         <div class="endrow">
             <form method="post" th:action="@{/portfolio/olivenn/reset}">
-                <button type="submit" class="findbtn">Ulitin</button>
+                <button type="submit" class="findbtn">Try Again</button>
             </form>
-            <a class="findbtn" href="/">Back to Home</a>
         </div>
     </section>
 

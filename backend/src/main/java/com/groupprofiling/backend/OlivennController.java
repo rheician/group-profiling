@@ -28,7 +28,7 @@ public class OlivennController {
     private final List<MissingEmotion> emotions = List.of(
             new MissingEmotion("joy", "Joy", "/images/joy.png",
                     "Nag-leave daw, nag-Tagaytay para mag-move on.", 4.1, 5.64, 38.41, 12.14, 51.15,
-                    1, "TAGAYTAY VIEW DECK", "Nagpapa-picture at nagko-kape ng 150 pesos."),
+                    1, "TAGAYTAY VIEW DECK", "Bakasyon na siya, na para bang may bakasyon?."),
             new MissingEmotion("disgust", "Disgust", "/images/disgust.png",
                     "Nag-walk out nung may nag-lagay ng pinya sa pizza.", 79.87, 81.4, 39.58, 89.37, 52.59,
                     2, "PIZZA PLACE (HAWAIIAN ONLY)", "May pinya. Naka-mask siya pero ramdam ang pandidiri."),
@@ -51,8 +51,7 @@ public class OlivennController {
 
     // `sent` is set by ProfilingController after the Leave Message form is submitted.
     @GetMapping
-    public String showPortfolio(@RequestParam(required = false) Boolean sent,
-                                HttpSession session, Model model) {
+    public String showPortfolio(@RequestParam(required = false) Boolean sent, HttpSession session, Model model) {
         fill(model, session, sent != null && sent);
         return "olivenn";
     }
