@@ -249,6 +249,31 @@
 
         .board .hanapin:hover { filter: brightness(1.12); }
 
+        .board .tally {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 2.5%;
+            margin: 0;
+            text-align: center;
+            font-size: 2.1cqw;
+            letter-spacing: 0.05em;
+            color: var(--sage);
+        }
+        .board a.hanapin { display: flex; align-items: center; justify-content: center; text-decoration: none; }
+        .board .hanapin-l { left: 31%; }
+        .board .hanapin-r { left: 51.7%; }
+
+        .findbtn {
+            display: inline-block; margin-top: 24px; padding: 12px 28px;
+            font: inherit; font-size: clamp(18px, 1.8vw, 30px); letter-spacing: 0.1em;
+            color: var(--bg); background: var(--accent);
+            border: 0; border-radius: 10px; cursor: pointer; text-decoration: none;
+        }
+        .findbtn:hover { filter: brightness(1.12); }
+        .endrow { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+        .endrow form { margin: 0; }
+
         /* Frame 3.1: "UNLOCKED" popup (full-screen dim, covers the nav too) */
         .unlock {
             position: fixed;
@@ -570,35 +595,57 @@
     </section>
 
     <!-- Group Profiling 3: Missing Adults (revealed by the button in screen 2) -->
-    <section id="screen-3" class="screen is-hidden" aria-label="Missing Adults">
+    <section id="screen-3" class="screen"
+             th:classappend="${foundCount == 0 and message == null} ? 'is-hidden'"
+             aria-label="Missing Adults">
         <div class="board">
             <img class="bg" src="/images/woodboard.png" alt="" />
             <h2>MISSING ADULTS</h2>
-            <img class="pad" style="left:4.1%" src="/images/yellowpad.png" alt="" />
-            <img class="pad" style="left:23.06%" src="/images/yellowpad.png" alt="" />
-            <img class="pad" style="left:42.02%" src="/images/yellowpad.png" alt="" />
-            <img class="pad" style="left:60.91%" src="/images/yellowpad.png" alt="" />
-            <img class="pad" style="left:79.87%" src="/images/yellowpad.png" alt="" />
-            <img class="face" style="left:5.64%;top:38.41%" src="/images/joy.png" alt="Joy" />
-            <img class="face" style="left:24.6%;top:39.71%" src="/images/fear.png" alt="Fear" />
-            <img class="face" style="left:43.48%;top:39.58%" src="/images/anger.png" alt="Anger" />
-            <img class="face" style="left:62.44%;top:40.76%" src="/images/sadness.png" alt="Sadness" />
-            <img class="face" style="left:81.4%;top:39.58%" src="/images/disgust.png" alt="Disgust" />
-            <span class="mark" style="left:12.14%;top:51.15%" aria-hidden="true">???</span>
-            <span class="mark" style="left:31.1%;top:53.88%" aria-hidden="true">???</span>
-            <span class="mark" style="left:49.99%;top:51.15%" aria-hidden="true">???</span>
-            <span class="mark" style="left:68.95%;top:54.93%" aria-hidden="true">???</span>
-            <span class="mark" style="left:89.37%;top:52.59%" aria-hidden="true">???</span>
-            <button type="button" class="hanapin" id="hanapin">#Hanapin</button>
+
+            <th:block th:each="e : ${emotions}">
+                <img class="pad" th:style="'left:' + ${e.padLeft} + '%'" src="/images/yellowpad.png" alt="" />
+                <img class="face" th:src="${e.image}" th:alt="${e.name}"
+                     th:style="'left:' + ${e.faceLeft} + '%;top:' + ${e.faceTop} + '%'" />
+                <span class="mark" aria-hidden="true" th:unless="${found.contains(e.slug)}"
+                      th:style="'left:' + ${e.markLeft} + '%;top:' + ${e.markTop} + '%'">???</span>
+            </th:block>
+
+            <button type="button" class="hanapin" id="hanapin"
+                    th:if="${foundCount < #lists.size(emotions)}">#Hanapin</button>
+
+            <th:block th:if="${foundCount == #lists.size(emotions)}">
+                <form method="post" th:action="@{/portfolio/olivenn/reset}" style="display:contents">
+                    <button type="submit" class="hanapin hanapin-l">Ulitin</button>
+                </form>
+                <a class="hanapin hanapin-r" th:href="@{/portfolio/olivenn/ending#ending}">Ending</a>
+            </th:block>
+
+            <p class="tally"
+               th:text="${message} ?: ('Nahanap: ' + ${foundCount} + ' / ' + ${#lists.size(emotions)})"></p>
         </div>
     </section>
 
-    <!-- Placeholder sections for the map coordinates 1-5 (empty for now) -->
-    <section id="loc-1" class="screen loc is-hidden"><h2>COORDINATE 1</h2><p>Coming soon.</p></section>
-    <section id="loc-2" class="screen loc is-hidden"><h2>COORDINATE 2</h2><p>Coming soon.</p></section>
-    <section id="loc-3" class="screen loc is-hidden"><h2>COORDINATE 3</h2><p>Coming soon.</p></section>
-    <section id="loc-4" class="screen loc is-hidden"><h2>COORDINATE 4</h2><p>Coming soon.</p></section>
-    <section id="loc-5" class="screen loc is-hidden"><h2>COORDINATE 5</h2><p>Coming soon.</p></section>
+    <!-- Location sections for the map coordinates 1-5 (one per emotion) -->
+    <section th:each="e : ${emotions}" th:id="'loc-' + ${e.loc}" class="screen loc is-hidden">
+        <h2 th:text="${e.place}">PLACE</h2>
+        <p th:text="${e.teaser}">Teaser</p>
+        <form method="post" th:unless="${found.contains(e.slug)}"
+              th:action="@{/portfolio/olivenn/find/{slug}(slug=${e.slug})}">
+            <button type="submit" class="findbtn" th:text="'Hanapin si ' + ${e.name}">Hanapin</button>
+        </form>
+        <p th:if="${found.contains(e.slug)}" th:text="${e.name} + ' nahanap mo na. Balik ka sa base.'"></p>
+    </section>
+
+    <section id="ending" class="screen loc" th:if="${ending}">
+        <h2>THE END?</h2>
+        <p>Nahanap na silang lima. Ikaw na lang ang hindi pa nahahanap.</p>
+        <div class="endrow">
+            <form method="post" th:action="@{/portfolio/olivenn/reset}">
+                <button type="submit" class="findbtn">Ulitin</button>
+            </form>
+            <a class="findbtn" href="/">Back to Home</a>
+        </div>
+    </section>
 
     <!-- Leave Message (very end of the page) -->
     <section id="leave-message" class="screen" th:attr="data-sent=${sent}">
@@ -627,7 +674,8 @@
     </div>
 
     <!-- Frames 3.2.1 / 3.2.2: map (opened by #Hanapin or the map icon) -->
-    <div id="map" class="mapview" aria-hidden="true">
+    <div id="map" class="mapview" aria-hidden="true"
+         th:attr="data-unlocked=${foundCount > 0 or message != null}">
         <div class="mapfield">
             <img src="/images/mapfield.png" alt="" />
             <button type="button" class="coord" style="--c:var(--c0);left:50.05%;top:50.05%" data-target="screen-3" aria-label="Missing Adults (Base)"></button>
@@ -741,7 +789,8 @@
         var confirmText = document.getElementById('confirm-text');
         var pending = null;
         var unlocking = false;
-        var unlockedNow = false;   // lives only in memory: resets on every page load
+        var unlockedNow = mapEl.getAttribute('data-unlocked') === 'true';   // server tells us after a reload
+        if (unlockedNow) document.body.classList.add('unlocked');
 
         function isUnlocked() { return unlockedNow; }
         function markUnlocked() { unlockedNow = true; }
@@ -763,7 +812,7 @@
             document.documentElement.style.overflow = '';
         }
 
-        hanapin.addEventListener('click', function () {
+        if (hanapin) hanapin.addEventListener('click', function () {
             if (unlocking) return;
             if (isUnlocked()) { openMap(); return; }       // 3.2.1: clicked again
             markUnlocked();
