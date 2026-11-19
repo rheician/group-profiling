@@ -249,6 +249,195 @@
 
         .board .hanapin:hover { filter: brightness(1.12); }
 
+        /* Frame 3.1: "UNLOCKED" popup (full-screen dim, covers the nav too) */
+        .unlock {
+            position: fixed;
+            inset: 0;
+            z-index: 20;
+            background: rgba(30, 30, 30, 0.84);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity .4s ease, visibility 0s linear .4s;
+        }
+
+        .unlock.show {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transition: opacity .4s ease;
+        }
+
+        .unlock h2 {
+            position: absolute;
+            left: 50%;
+            top: 30.28%;
+            margin: 0;
+            width: 100%;
+            font-weight: 400;
+            font-size: var(--hero-size);
+            letter-spacing: 0.1em;
+            line-height: 1;
+            text-align: center;
+            color: #fff;
+            transform: translate(-50%, -50%);
+        }
+
+        .unlock img {
+            position: absolute;
+            left: 50%;
+            top: 56.94%;
+            width: min(19.79vw, 35.2vh);
+            aspect-ratio: 1;
+            object-fit: contain;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Frame 3.2: map icon. Once unlocked it floats bottom-right in EVERY
+           section and acts like a nav link (opens / closes the map). */
+        .map-btn {
+            display: none;
+            position: fixed;
+            z-index: 16;
+            right: 2.76vw;
+            bottom: 3.98vh;
+            width: min(4.9vw, 8.7vh);
+            aspect-ratio: 1;
+            padding: 0;
+            border: 0;
+            background: none;
+            cursor: pointer;
+            transition: transform .15s;
+        }
+
+        .map-btn img { display: block; width: 100%; height: 100%; object-fit: contain; }
+        .map-btn:hover { transform: scale(1.08); }
+
+        body.unlocked .map-btn { display: block; animation: icon-in .5s ease both; }
+
+        @keyframes icon-in {
+            from { opacity: 0; transform: scale(.6); }
+            to   { opacity: 1; transform: none; }
+        }
+
+        /* Frames 3.2.1 / 3.2.2: the map (dim backdrop + map field + 5 coordinates) */
+        .mapview {
+            position: fixed;
+            inset: 0;
+            z-index: 15;
+            background: rgba(30, 30, 30, 0.84);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity .35s ease, visibility 0s linear .35s;
+        }
+
+        .mapview.show {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transition: opacity .35s ease;
+        }
+
+        .mapfield {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: min(53.9vw, 95.83vh);
+            aspect-ratio: 1;
+            transform: translate(-50%, -50%);
+        }
+
+        .mapfield > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+
+        /* Dot colours: Base = brown (Missing Adults); coordinates 1-5 = yellow,
+           green, blue, red, purple. Hex values are my best match; tweak if needed. */
+        .mapfield { --c0: #8b5a2b; --c1: #f2c94c; --c2: #5fae5b; --c3: #4f8fe0; --c4: #e0524f; --c5: #9b6bd3; }
+
+        .coord {
+            position: absolute;
+            width: 4.83%;
+            aspect-ratio: 1;
+            padding: 0;
+            border: 0;
+            border-radius: 50%;
+            background: var(--c);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, .7);
+            cursor: pointer;
+            transform: translate(-50%, -50%);
+            transition: transform .15s;
+        }
+
+        .coord:hover, .coord:focus-visible { transform: translate(-50%, -50%) scale(1.25); outline: none; }
+
+        /* Frame 3.3: "Go to this location?" box (322 x 118 in Figma, placed next to
+           the clicked dot; --k is the map's scale factor, set from JS) */
+        .confirm {
+            --k: 1;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 17;
+            width: calc(322px * var(--k));
+            height: calc(118px * var(--k));
+            background: #0f2a1d;
+            border-radius: calc(10px * var(--k));
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity .2s ease, visibility 0s linear .2s;
+        }
+
+        .confirm.show { opacity: 1; visibility: visible; transition: opacity .2s ease; }
+
+        .confirm p {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: calc(12px * var(--k));
+            margin: 0;
+            text-align: center;
+            font-size: calc(32px * var(--k));
+            letter-spacing: 0.1em;
+            line-height: 1;
+            white-space: nowrap;
+            color: #fff;
+        }
+
+        .confirm button {
+            position: absolute;
+            top: calc(54px * var(--k));
+            width: calc(140px * var(--k));
+            height: calc(47px * var(--k));
+            padding: 0;
+            font: inherit;
+            font-size: calc(32px * var(--k));
+            letter-spacing: 0.1em;
+            line-height: 1;
+            color: var(--bg);
+            border: 0;
+            border-radius: calc(5px * var(--k));
+            cursor: pointer;
+            transition: filter .15s;
+        }
+
+        .confirm button:hover { filter: brightness(1.12); }
+        .confirm .no  { left: calc(17px * var(--k));  background: var(--sage); }
+        .confirm .yes { left: calc(164px * var(--k)); background: var(--accent); }
+
+        /* Empty placeholder sections for coordinates 2-5 (hidden until visited) */
+        .loc {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: calc(var(--nav-h) + 4vh) 6vw 6vh;
+        }
+
+        .loc.is-hidden { display: none; }
+        .loc h2 { margin: 0 0 8px; font-weight: 400; font-size: var(--hero-size); letter-spacing: 0.1em; line-height: 1.1; color: #fff; }
+        .loc p { margin: 0; font-size: clamp(16px, 1.667vw, 28px); color: var(--sage); }
+
         /* Leave Message section (last on the page) */
         #leave-message {
             display: flex;
@@ -404,6 +593,13 @@
         </div>
     </section>
 
+    <!-- Placeholder sections for the map coordinates 1-5 (empty for now) -->
+    <section id="loc-1" class="screen loc is-hidden"><h2>COORDINATE 1</h2><p>Coming soon.</p></section>
+    <section id="loc-2" class="screen loc is-hidden"><h2>COORDINATE 2</h2><p>Coming soon.</p></section>
+    <section id="loc-3" class="screen loc is-hidden"><h2>COORDINATE 3</h2><p>Coming soon.</p></section>
+    <section id="loc-4" class="screen loc is-hidden"><h2>COORDINATE 4</h2><p>Coming soon.</p></section>
+    <section id="loc-5" class="screen loc is-hidden"><h2>COORDINATE 5</h2><p>Coming soon.</p></section>
+
     <!-- Leave Message (very end of the page) -->
     <section id="leave-message" class="screen" th:attr="data-sent=${sent}">
         <div class="message-card">
@@ -423,6 +619,37 @@
             </form>
         </div>
     </section>
+
+    <!-- Group Profiling 3.1: unlock popup (shown on the first #Hanapin click of the session) -->
+    <div id="unlock" class="unlock" aria-hidden="true">
+        <h2>UNLOCKED</h2>
+        <img src="/images/map.png" alt="" />
+    </div>
+
+    <!-- Frames 3.2.1 / 3.2.2: map (opened by #Hanapin or the map icon) -->
+    <div id="map" class="mapview" aria-hidden="true">
+        <div class="mapfield">
+            <img src="/images/mapfield.png" alt="" />
+            <button type="button" class="coord" style="--c:var(--c0);left:50.05%;top:50.05%" data-target="screen-3" aria-label="Missing Adults (Base)"></button>
+            <button type="button" class="coord" style="--c:var(--c1);left:50.05%;top:20.19%" data-target="loc-1" aria-label="Coordinate 1"></button>
+            <button type="button" class="coord" style="--c:var(--c2);left:81.55%;top:50.05%" data-target="loc-2" aria-label="Coordinate 2"></button>
+            <button type="button" class="coord" style="--c:var(--c3);left:69.37%;top:78.84%" data-target="loc-3" aria-label="Coordinate 3"></button>
+            <button type="button" class="coord" style="--c:var(--c4);left:30.72%;top:78.84%" data-target="loc-4" aria-label="Coordinate 4"></button>
+            <button type="button" class="coord" style="--c:var(--c5);left:18.74%;top:50.05%" data-target="loc-5" aria-label="Coordinate 5"></button>
+        </div>
+    </div>
+
+    <!-- Frame 3.3: confirm before going to a location -->
+    <div id="confirm" class="confirm" role="dialog" aria-live="polite">
+        <p id="confirm-text">Go to this location?</p>
+        <button type="button" class="no" id="confirm-no">No</button>
+        <button type="button" class="yes" id="confirm-yes">Yes</button>
+    </div>
+
+    <!-- Map icon: visible in every section once unlocked (acts like a nav link) -->
+    <button type="button" class="map-btn" id="map-btn" aria-label="Open map">
+        <img src="/images/map.png" alt="" />
+    </button>
 
     <!-- Moves from screen 1's centre into screen 2's nav bar while scrolling -->
     <h1 id="name">JAHN OLIVENN ESMARIN</h1>
@@ -502,6 +729,90 @@
             var reduce = window.matchMedia &&
                 window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             screen3.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+        });
+
+        // Frame 3.1 / 3.2: first #Hanapin click of the session unlocks the map.
+        // The popup disappears after ~2s and leaves the map icon (in every section).
+        var hanapin = document.getElementById('hanapin');
+        var unlockEl = document.getElementById('unlock');
+        var mapBtn = document.getElementById('map-btn');
+        var mapEl = document.getElementById('map');
+        var confirmEl = document.getElementById('confirm');
+        var confirmText = document.getElementById('confirm-text');
+        var pending = null;
+        var unlocking = false;
+        var unlockedNow = false;   // lives only in memory: resets on every page load
+
+        function isUnlocked() { return unlockedNow; }
+        function markUnlocked() { unlockedNow = true; }
+
+        // Frames 3.2.1 / 3.2.2: open / close the map
+        function openMap() {
+            mapEl.classList.add('show');
+            mapEl.setAttribute('aria-hidden', 'false');
+            document.documentElement.style.overflow = 'hidden';
+        }
+        function closeConfirm() {
+            confirmEl.classList.remove('show');
+            pending = null;
+        }
+        function closeMap() {
+            closeConfirm();
+            mapEl.classList.remove('show');
+            mapEl.setAttribute('aria-hidden', 'true');
+            document.documentElement.style.overflow = '';
+        }
+
+        hanapin.addEventListener('click', function () {
+            if (unlocking) return;
+            if (isUnlocked()) { openMap(); return; }       // 3.2.1: clicked again
+            markUnlocked();
+            unlocking = true;
+            unlockEl.classList.add('show');
+            setTimeout(function () {
+                unlockEl.classList.remove('show');
+                document.body.classList.add('unlocked');
+                unlocking = false;
+            }, 2000);
+        });
+
+        mapBtn.addEventListener('click', function () {
+            if (mapEl.classList.contains('show')) closeMap(); else openMap();   // 3.2.2 / close
+        });
+
+        // Frame 3.3: clicking a coordinate asks first, then jumps to that section
+        var coords = mapEl.querySelectorAll('.coord');
+        for (var i = 0; i < coords.length; i++) {
+            coords[i].addEventListener('click', function (ev) {
+                pending = ev.currentTarget;
+                // place the box next to the clicked dot (offsets taken from Figma 3.3)
+                var field = mapEl.querySelector('.mapfield');
+                var k = Math.max(0.6, field.getBoundingClientRect().width / 1035);
+                var r = pending.getBoundingClientRect();
+                var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+                var w = 322 * k, h = 118 * k;
+                confirmEl.style.setProperty('--k', k);
+                confirmEl.style.left = Math.min(Math.max(8, cx + 39 * k), window.innerWidth - w - 8) + 'px';
+                confirmEl.style.top = Math.min(Math.max(8, cy - 133 * k), window.innerHeight - h - 8) + 'px';
+                confirmEl.classList.add('show');
+            });
+        }
+
+        document.getElementById('confirm-no').addEventListener('click', closeConfirm);
+        document.getElementById('confirm-yes').addEventListener('click', function () {
+            var target = pending && document.getElementById(pending.getAttribute('data-target'));
+            closeMap();
+            if (!target) return;
+            target.classList.remove('is-hidden');
+            var reduce = window.matchMedia &&
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+        });
+
+        document.addEventListener('keydown', function (ev) {
+            if (ev.key !== 'Escape') return;
+            if (confirmEl.classList.contains('show')) closeConfirm();
+            else if (mapEl.classList.contains('show')) closeMap();
         });
 
         // After submitting the form the page reloads at the top; jump back to it.
