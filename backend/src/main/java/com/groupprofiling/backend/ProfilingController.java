@@ -50,8 +50,8 @@ public class ProfilingController {
                 List.of("Interactive card archive", "Emotional breakdown effect", "Animated vinyl artwork", "Creative portfolio links")
         ));
         teamMembers.add(new TeamMember(
-                "radcliff", "Radcliff", "Developer", "/portfolio/radcliff", "Radcliff",
-                "96%", "https://images.unsplash.com/photo-1504639725590-34d0984388bd?auto=format&fit=crop&w=600&q=80",
+                "radcliff", "Radcliff", "Developer", "/portfolio/radcliff", "Knock Knock Knockin' on Heaven's Door",
+                "96%", "/images/JJBA_Rolbox_Cover.png",
                 "Manga", "An expressive, manga-inspired introduction.",
                 "Take a trip into Radcliff's stylized manga panels. Discover interests " +
                 "and personality details, trigger the menacing counter, and write in the guestbook.",

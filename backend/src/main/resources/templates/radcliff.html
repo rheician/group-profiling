@@ -7,8 +7,8 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         @keyframes menacing-float {
-            0%, 100% { transform: rotate(-6deg) translateY(0px); }
-            50%      { transform: rotate(-3deg) translateY(-6px) scale(1.04); }
+            0%, 100% { transform: rotate(-6deg) translateY(0); }
+            50% { transform: rotate(-3deg) translateY(-6px) scale(1.04); }
         }
 
         .halftone-left {
@@ -23,107 +23,236 @@
             text-shadow: 4px 4px 0 #171717, 7px 7px 0 #facc15;
             animation: menacing-float 2.4s ease-in-out infinite;
         }
+
+        .profile-avatar {
+            position: relative;
+            width: 5rem;
+            height: 5rem;
+            flex: 0 0 auto;
+            overflow: visible;
+        }
+
+        .profile-avatar-circle {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            border: 2px solid #000;
+            border-radius: 50%;
+            background: #fff;
+        }
+
+        .profile-avatar-circle img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .profile-avatar-circle .profile-face {
+            object-fit: cover;
+        }
+
+        .profile-avatar .profile-pigeon {
+            position: absolute;
+            z-index: 1;
+            top: -13%;
+            left: -1%;
+            width: 122%;
+            height: 122%;
+            object-fit: contain;
+            pointer-events: none;
+            transform: scale(1.08) translateY(-7%);
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+        }
+
+        .panel-column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-column > h2 {
+            flex: 0 0 auto;
+        }
+
+        .game-panel-about {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: #171717;
+            color: #fff;
+            font-size: .9rem;
+            font-weight: 700;
+        }
+
+        .game-panel {
+            display: block;
+            position: relative;
+            flex: 1 1 0;
+            min-height: 132px;
+            overflow: hidden;
+            border-bottom: 4px solid #000;
+            background: #080808;
+        }
+
+        .game-panel > a {
+            z-index: 1;
+            background: #080808;
+        }
+
+        .game-panel:last-child {
+            border-bottom: 0;
+        }
+
+        .game-panel-image {
+            position: absolute;
+            inset: -8px;
+            width: calc(100% + 16px);
+            height: calc(100% + 16px);
+            object-fit: cover;
+            filter: blur(5px) brightness(.42);
+            transition: filter .2s ease, transform .2s ease;
+        }
+
+        .game-panel:hover .game-panel-image,
+        .game-panel:focus-visible .game-panel-image {
+            filter: blur(2px) brightness(.56);
+            transform: scale(1.03);
+        }
+
+        .game-panel.is-unlocked {
+            background: #fff;
+        }
+
+        .game-panel.is-unlocked .game-panel-about {
+            background: #fff;
+            color: #171717;
+        }
+
+        .game-panel-lock {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            color: white;
+            font-size: 3rem;
+            text-shadow: 0 2px 8px #000;
+        }
+
+        .heavens-door-panel {
+            min-height: 180px;
+        }
+
+        @media (max-width: 767px) {
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .game-panel {
+                min-height: 120px;
+            }
+
+            .heavens-door-panel {
+                min-height: auto;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .menacing-text {
+                animation: none;
+            }
+
+            .game-panel-image {
+                transition: none;
+            }
+        }
     </style>
 </head>
 <body class="relative min-h-screen overflow-x-hidden bg-white font-sans text-gray-900">
 
-<!-- Left halftone border -->
 <div aria-hidden="true" class="halftone-left pointer-events-none fixed inset-y-0 left-0 w-12 border-r-4 border-black sm:w-20"></div>
-
-<!-- Blue manga accent on the right -->
 <div aria-hidden="true" class="pointer-events-none fixed right-0 top-0 h-full w-8 bg-blue-400 sm:w-20"></div>
 
 <div class="relative z-10 ml-12 mr-8 min-h-screen px-4 pb-10 sm:ml-20 sm:mr-20 sm:px-8">
-
-    <!-- Header -->
     <header class="mx-auto flex max-w-5xl items-center justify-between gap-4 py-6 sm:py-8">
         <div class="flex items-center gap-4 sm:gap-6">
-            <div class="flex-shrink-0 border-4 border-purple-500 p-1">
-                <img src="/images/Rohan_DagaKotowaru.png"
-                     alt="Rohan"
-                     class="h-16 w-16 rounded-full border-2 border-black object-cover sm:h-20 sm:w-20" />
+            <div class="profile-avatar" role="img"
+                 th:attr="aria-label=${allPanelsUnlocked ? 'Radcliff profile picture' : 'Profile picture with a pigeon covering the face'}">
+                <div class="profile-avatar-circle">
+                    <img class="profile-face" src="/images/Picture_R.jpg" alt="">
+                </div>
+                <img th:unless="${allPanelsUnlocked}" class="profile-pigeon" src="/images/Pigeon.png" alt="">
             </div>
-
             <div>
-                <h1 class="text-2xl font-black uppercase leading-tight tracking-tight sm:text-4xl">
+                <h1 class="text-xl font-black uppercase leading-tight tracking-tight sm:text-4xl">
                     Radcliff Jorel B. Flores
                 </h1>
-                <p class="mt-1 max-w-xl text-sm sm:text-lg">Words</p>
+                <p class="mt-1 max-w-xl text-sm sm:text-lg">Knock-knock-knockin' on Heaven's Door</p>
             </div>
         </div>
 
-        <!-- Interactive Menacing Button connected to Spring Boot -->
         <form action="/portfolio/radcliff/interact" method="post">
-            <button type="submit" title="Click to increment in Java"
-                    class="menacing-text text-4xl sm:text-6xl font-black italic tracking-tighter text-white cursor-pointer">
-                ゴゴゴ <span class="text-base not-italic text-black bg-yellow-300 px-2 py-0.5 border-2 border-black" th:text="${count}">0</span>
+            <button type="submit" title="Increment the menacing counter"
+                    class="menacing-text cursor-pointer text-3xl font-black italic tracking-tighter text-white sm:text-6xl">
+                ゴゴゴ
+                <span class="border-2 border-black bg-yellow-300 px-2 py-0.5 text-base not-italic text-black"
+                      th:text="${count}">0</span>
             </button>
         </form>
     </header>
 
-    <!-- Main Manga Panels -->
-    <main class="mx-auto grid max-w-5xl grid-cols-1 border-4 border-black bg-white sm:grid-cols-2">
-        <!-- Left column -->
-        <div class="flex flex-col border-b-4 border-black sm:border-b-0 sm:border-r-4">
-            <section class="flex-1 p-5 border-b-4 border-black">
-                <h2 class="mb-3 inline-block bg-black px-2 py-1 text-xs font-black tracking-widest text-white sm:text-sm">
-                    ABOUT ME
-                </h2>
-                <div class="space-y-2 text-sm sm:text-base">
-                    <p>Existing.</p>
-                    <p>Rather reserved.</p>
-                </div>
-            </section>
+    <main class="portfolio-grid mx-auto max-w-5xl border-4 border-black bg-white">
+        <section class="panel-column border-b-4 border-black md:border-b-0 md:border-r-4" aria-labelledby="panels-title">
+            <h2 id="panels-title" class="border-b-4 border-black bg-black px-4 py-3 text-sm font-black tracking-widest text-white">
+                SELECT A MANGA PANEL
+            </h2>
+            <div th:each="game : ${games}" class="game-panel"
+                 th:classappend="${(game.id == 'steel-ball' and steelBallUnlocked) or (game.id == 'wonder-of-u' and wonderOfUUnlocked) or (game.id == 'mystery' and mysteryUnlocked)} ? ' is-unlocked' : ''">
+                <div class="game-panel-about" th:text="${game.about}">Profile information hidden behind this panel.</div>
+                <a th:unless="${(game.id == 'steel-ball' and steelBallUnlocked) or (game.id == 'wonder-of-u' and wonderOfUUnlocked) or (game.id == 'mystery' and mysteryUnlocked)}"
+                   class="absolute inset-0 block focus:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-yellow-300"
+                   th:href="@{/portfolio/radcliff/games/{gameId}(gameId=${game.id})}"
+                   th:attr="aria-label=|Open ${game.title} game preview|">
+                    <img class="game-panel-image" th:src="${game.image}" alt="">
+                    <span class="game-panel-lock" aria-hidden="true">&#128274;</span>
+                </a>
+            </div>
+        </section>
 
-            <section class="flex-1 p-5 border-b-4 border-black">
-                <h2 class="mb-3 inline-block bg-black px-2 py-1 text-xs font-black tracking-widest text-white sm:text-sm">
-                    PERSONALITY
-                </h2>
-                <div class="space-y-2 text-sm sm:text-base">
-                    <p>Enjoys the simplicity.</p>
-                    <p>Aaaaaaaa.</p>
-                </div>
-            </section>
-
-            <section class="flex-1 p-5">
-                <h2 class="mb-3 inline-block bg-black px-2 py-1 text-xs font-black tracking-widest text-white sm:text-sm">
-                    LIKES &amp; INTERESTS
-                </h2>
-                <div class="space-y-2 text-sm sm:text-base">
-                    <p>Drawing.</p>
-                    <p>Gaming.</p>
-                    <p>Mysterious third thing.</p>
-                </div>
-            </section>
-        </div>
-
-        <!-- Right column -->
         <div class="flex flex-col">
-            <section class="flex flex-1 items-center justify-center border-b-4 border-black p-6">
-                <div class="max-w-sm text-center">
-                    <h2 class="text-xl font-black uppercase tracking-tight sm:text-2xl">
-                        HEAVEN'S DOOR // SPRING WEB
-                    </h2>
-                    <p class="mt-3 text-sm leading-relaxed sm:text-base">
-                        Powered by Java Spring Boot @Controller and Thymeleaf HTML templates.
+            <section class="heavens-door-panel flex-1 border-b-4 border-black p-5 sm:p-6" aria-labelledby="heavens-door-title">
+                <h2 id="heavens-door-title" class="mb-4 inline-block bg-black px-2 py-1 text-xs font-black tracking-widest text-white sm:text-sm">
+                    HEAVEN'S DOOR // SPRING WEB
+                </h2>
+                <div class="flex h-full items-center justify-center text-center">
+                    <p class="max-w-sm text-sm leading-relaxed sm:text-base">
+                        Powered by Java Spring Boot <code>@Controller</code> and Thymeleaf HTML templates.
                     </p>
                 </div>
             </section>
 
-            <!-- Manga Guestbook Panel connected to @PostMapping("/feedback") -->
-            <section class="flex-1 p-5">
-                <h2 class="mb-3 inline-block bg-black px-2 py-1 text-xs font-black tracking-widest text-white">
+            <section class="heavens-door-panel flex-1 p-5 sm:p-6" aria-labelledby="guestbook-title">
+                <h2 id="guestbook-title" class="mb-3 inline-block bg-black px-2 py-1 text-xs font-black tracking-widest text-white">
                     WRITE IN RADCLIFF'S BOOK
                 </h2>
-                <div th:if="${sent}" class="mb-3 p-2 bg-yellow-200 border-2 border-black text-xs font-bold">
-                    Saved in Java! View on <a href="/" class="underline">Dashboard</a>.
+                <div th:if="${sent}" class="mb-3 border-2 border-black bg-yellow-200 p-2 text-xs font-bold">
+                    Saved in Java! View it on the <a href="/" class="underline">dashboard</a>.
                 </div>
                 <form action="/feedback" method="post" class="space-y-2">
-                    <input type="hidden" name="recipient" value="Radcliff" />
-                    <input type="text" name="name" required placeholder="NAME" class="w-full border-2 border-black p-2 text-xs font-bold" />
-                    <input type="email" name="email" required placeholder="EMAIL" class="w-full border-2 border-black p-2 text-xs font-bold" />
-                    <textarea name="message" required rows="2" placeholder="MESSAGE..." class="w-full border-2 border-black p-2 text-xs font-bold"></textarea>
-                    <button type="submit" class="w-full bg-black text-white font-black text-xs uppercase py-2.5 hover:bg-yellow-400 hover:text-black border-2 border-black transition">
+                    <input type="hidden" name="recipient" value="Radcliff">
+                    <input type="text" name="name" required placeholder="NAME"
+                           class="w-full border-2 border-black p-2 text-xs font-bold">
+                    <input type="email" name="email" required placeholder="EMAIL"
+                           class="w-full border-2 border-black p-2 text-xs font-bold">
+                    <textarea name="message" required rows="2" placeholder="MESSAGE..."
+                              class="w-full border-2 border-black p-2 text-xs font-bold"></textarea>
+                    <button type="submit"
+                            class="flex w-full items-center justify-center border-2 border-black bg-black py-2.5 text-center text-xs font-black uppercase text-white transition hover:bg-yellow-400 hover:text-black">
                         SUBMIT TO SPRING BOOT
                     </button>
                 </form>
@@ -131,11 +260,9 @@
         </div>
     </main>
 
-    <footer class="mx-auto mt-5 flex max-w-5xl items-center justify-between gap-4 text-xs font-bold uppercase tracking-widest">
-        <a href="/" class="underline hover:text-blue-700">
-            &larr; Back to Home
-        </a>
-        <span>Thus Spoke Kishibe Rohan: JoJo's Bizarre Adventure</span>
+    <footer class="mx-auto mt-6 flex max-w-5xl items-center justify-between gap-4 text-xs font-bold uppercase tracking-widest">
+        <a href="/" class="underline hover:text-blue-700">&larr; Back to Home</a>
+        <span>RADCLIFF // MANGA PROFILE</span>
     </footer>
 </div>
 </body>
