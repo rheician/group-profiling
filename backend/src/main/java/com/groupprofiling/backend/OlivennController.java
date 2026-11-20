@@ -27,20 +27,25 @@ public class OlivennController {
     // Order matches the map coordinates: 1 yellow, 2 green, 3 blue, 4 red, 5 purple.
     private final List<MissingEmotion> emotions = List.of(
             new MissingEmotion("joy", "Joy", "/images/joy.png",
-                    "Nag-leave daw, nag-Tagaytay para mag-move on.", 4.1, 5.64, 38.41, 12.14, 51.15,
-                    1, "TAGAYTAY VIEW DECK", "Bakasyon na siya, na para bang may bakasyon?."),
+                    "Deserve daw niya kasi, ket indi pa naman?!", 4.1, 5.64, 38.41, 12.14, 51.15,
+                    1, "NAG-JOLLIBEE LANG PALA", "Favorite kasi ni Joy ang Chickenjoy",
+                    "Huli ka, Joy!", "/images/jabee.png"),
             new MissingEmotion("disgust", "Disgust", "/images/disgust.png",
-                    "Nag-walk out nung may nag-lagay ng pinya sa pizza.", 79.87, 81.4, 39.58, 89.37, 52.59,
-                    2, "PIZZA PLACE (HAWAIIAN ONLY)", "May pinya. Naka-mask siya pero ramdam ang pandidiri."),
+                    "Pababa na ng bundok.", 79.87, 81.4, 39.58, 89.37, 52.59,
+                    2, "NAUNA NANG MAGBAKASYON", "Hiking, green daw kasi, fav niya.",
+                    "Baba na!", "/images/hiking.png"),
             new MissingEmotion("sadness", "Sadness", "/images/sadness.png",
-                    "Umiiyak pa rin kasi 74% ang final grade.", 60.91, 62.44, 40.76, 68.95, 54.93,
-                    3, "ILALIM NG HAGDAN", "May hawak na tissue at 74% na grade."),
+                    "Penge raw blue bills :D.", 60.91, 62.44, 40.76, 68.95, 54.93,
+                    3, "AYUN, NAGBILANG", "Nagpapademonyo kasi kay Joy eh.",
+                    "Tipid-tipid din!", "/images/broke.png"),
             new MissingEmotion("anger", "Anger", "/images/anger.png",
-                    "Nag-rant sa group chat tapos na-seen lang.", 42.02, 43.48, 39.58, 49.99, 51.15,
-                    4, "GC NA NA-SEEN", "Nagta-type... nagbubura... nagta-type ulit."),
+                    "Tilted na 'yan siya.", 42.02, 43.48, 39.58, 49.99, 51.15,
+                    4, "NAGLALARO LANG PALA", "Stress reliever o stressor?",
+                    "Kalma!", "/images/leg.png"),
             new MissingEmotion("fear", "Fear", "/images/fear.png",
-                    "Nagtago sa ilalim ng kama kasi may deadline bukas.", 23.06, 24.6, 39.71, 31.1, 53.88,
-                    5, "ILALIM NG KAMA", "Nanginginig kasi bukas na ang deadline.")
+                    "Wait lang daw, 'di pa tapos.", 23.06, 24.6, 39.71, 31.1, 53.88,
+                    5, "AY NAGPRE-PRESENT PALA", "Sana raw pasado :>",
+                    "Goodluck?", "/images/present.png")
     );
 
     // Runs before every handler in this controller and puts "emotions" into the Model.
@@ -74,14 +79,14 @@ public class OlivennController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unknown emotion"));
         boolean isNew = foundSet(session).add(e.slug());
         ra.addFlashAttribute("message",
-                isNew ? e.name() + " nahanap! " + e.hint() : e.name() + " nahanap mo na, bes.");
+                isNew ? e.name() + " nahanap na! " + e.hint() : e.name() + " nahanap mo na, bes.");
         return BACK;
     }
 
     @PostMapping("/reset")
     public String reset(HttpSession session, RedirectAttributes ra) {
         foundSet(session).clear();
-        ra.addFlashAttribute("message", "Nawawala na naman silang lahat. Tradisyon na.");
+        ra.addFlashAttribute("message", "Asaan nanaman ang mga taong ito?!");
         return BACK;
     }
 
@@ -106,4 +111,5 @@ public class OlivennController {
 record MissingEmotion(String slug, String name, String image, String hint,
                       double padLeft, double faceLeft, double faceTop,
                       double markLeft, double markTop,
-                      int loc, String place, String teaser) {}
+                      int loc, String place, String teaser,
+                      String button, String photo) {}

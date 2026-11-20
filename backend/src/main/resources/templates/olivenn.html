@@ -459,12 +459,16 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: calc(var(--nav-h) + 4vh) 6vw 6vh;
+            padding: calc(var(--nav-h) + 1vh) 6vw 3vh;
         }
 
         .loc.is-hidden { display: none; }
         .loc h2 { margin: 0 0 8px; font-weight: 400; font-size: var(--hero-size); letter-spacing: 0.1em; line-height: 1.1; color: #fff; }
         .loc p { margin: 0; font-size: clamp(16px, 1.667vw, 28px); color: var(--sage); }
+
+        .loc h2 { margin: 0; font-size: min(var(--hero-size), 7vw, 10vh); white-space: nowrap; }
+        .loc-photo { height: 50vh; width: auto; max-width: 88vw; aspect-ratio: 1027 / 577; object-fit: cover; margin: 1vh 0; }
+        .loc .findbtn { margin-top: 8px; padding: 8px 24px; }
 
         /* Leave Message section (last on the page) */
         #leave-message {
@@ -629,12 +633,13 @@
     <!-- Location sections for the map coordinates 1-5 (one per emotion) -->
     <section th:each="e : ${emotions}" th:id="'loc-' + ${e.loc}" class="screen loc is-hidden">
         <h2 th:text="${e.place}">PLACE</h2>
-        <p th:text="${e.teaser}">Teaser</p>
+        <img class="loc-photo" th:src="${e.photo}" th:alt="${e.place}" />
+        <p class="loc-caption" th:text="${e.teaser}">Caption</p>
         <form method="post" th:unless="${found.contains(e.slug)}"
               th:action="@{/portfolio/olivenn/find/{slug}(slug=${e.slug})}">
-            <button type="submit" class="findbtn" th:text="'Hanapin si ' + ${e.name}">Hanapin</button>
+            <button type="submit" class="findbtn" th:text="${e.button}">Button</button>
         </form>
-        <p th:if="${found.contains(e.slug)}" th:text="${e.name} + ' nahanap mo na. Balik ka sa base.'"></p>
+        <p th:if="${found.contains(e.slug)}" th:text="'Nahanap na, balik na sa base.'"></p>
     </section>
 
     <section id="ending" class="screen loc" th:if="${ending}">
