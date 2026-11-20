@@ -3,203 +3,293 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ROLBOX — AET Group 4 Profiling</title>
+    <title>ROLBOX — Discover Group 4 Worlds</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
-        @keyframes card-rise {
-            from { opacity: 0; transform: translateY(10px); }
-            to   { opacity: 1; transform: translateY(0); }
+        html { scroll-behavior: smooth; }
+        .scroll-offset { scroll-margin-top: 5.5rem; }
+        @keyframes card-rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes loader-out { from { opacity: 1; } to { opacity: 0; } }
+        @keyframes glow-shift { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(10px,-13px) scale(1.06); } }
+        #home-loader.is-closing { animation: loader-out .3s ease forwards; pointer-events: none; }
+        #welcome-banner[hidden], #search-empty[hidden], .search-hidden { display: none !important; }
+        .world-card { animation: card-rise .45s ease both; transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+        .world-card:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(15,23,42,.12); border-color: #cbd5e1; }
+        .world-card:focus-within { outline: 2px solid #111827; outline-offset: 3px; }
+        .world-card .card-image { transition: transform .55s cubic-bezier(.2,.8,.2,1); }
+        .world-card:hover .card-image { transform: scale(1.08); }
+        .world-card .preview-label { opacity: 0; transform: translateY(8px); transition: opacity .2s, transform .2s; }
+        .world-card:hover .preview-label, .world-card:focus-within .preview-label { opacity: 1; transform: translateY(0); }
+        .filter-chip { border: 1px solid #e5e7eb; background: #ffffff; color: #4b5563; cursor: pointer; transition: all .15s ease; }
+        .filter-chip:hover { border-color: #111827; color: #111827; }
+        .filter-chip.is-active { background: #111827 !important; border-color: #111827 !important; color: #ffffff !important; }
+        .saved-toggle { cursor: pointer; transition: all .15s ease; }
+        .saved-toggle.is-active { background: #eef2ff !important; border-color: #4f46e5 !important; color: #3730a3 !important; }
+        .favorite-btn { display: inline-flex; align-items: center; justify-content: center; transition: transform .2s, background-color .2s; z-index: 20; cursor: pointer; }
+        .favorite-btn:hover { transform: scale(1.12); }
+        .favorite-btn[aria-pressed="true"] { background: #fef2f2; color: #dc2626; }
+        .hero-glow { animation: glow-shift 8s ease-in-out infinite; }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
         }
-
-        #recommended a { animation: card-rise 0.45s ease-out both; }
-        @keyframes loader-in { from { opacity: 1; } to { opacity: 0; } }
-        #home-loader.is-closing { animation: loader-in .3s forwards; pointer-events: none; }
-        .search-hidden, #welcome-banner[hidden], #search-empty[hidden] { display: none !important; }
     </style>
 </head>
-<body class="min-h-screen bg-white text-gray-900 font-sans">
-<!-- Original ROLBOX loading sequence, executed in the browser (not React). -->
-<div id="home-loader" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center font-sans select-none" role="status" aria-label="Loading group portfolio">
+<body class="min-h-screen bg-gray-50 text-gray-900 font-sans antialiased">
+
+<!-- Loading sequence -->
+<div id="home-loader" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center select-none" role="status" aria-label="Loading group portfolio">
     <div class="w-20 h-20 bg-black rounded-2xl flex items-center justify-center text-white font-black text-4xl tracking-tighter mb-8 shadow-lg">R</div>
     <h1 class="text-gray-900 font-bold text-lg tracking-tight mb-6">ROLBOX loading group portfolio...</h1>
     <div class="w-72 h-2 bg-gray-100 rounded-full overflow-hidden border border-gray-200">
-        <div id="home-load-bar" class="h-full bg-black transition-all duration-75 ease-out rounded-full" style="width:0%"></div>
+        <div id="home-load-bar" class="h-full bg-black transition-all duration-75 ease-out rounded-full" style="width: 0%"></div>
     </div>
     <span id="home-load-label" class="text-xs font-mono text-gray-400 mt-3">0%</span>
 </div>
 
-<!-- TOP NAVBAR -->
-<nav class="h-16 bg-white border-b border-gray-200 px-6 flex items-center justify-between sticky top-0 z-40">
-    <div class="flex items-center gap-8">
-        <a href="/" class="font-black text-2xl tracking-tighter text-black">
-            ROLBOX
-        </a>
-        <div class="hidden md:flex items-center gap-6 text-sm font-semibold text-gray-600">
-            <a href="/" class="text-black border-b-2 border-black pb-5 pt-5">Home</a>
-            <button type="button" onclick="playFahh()" class="hover:text-black transition cursor-pointer font-semibold">
-                Discover
-            </button>
-            <button type="button" onclick="playFahh()" class="hover:text-black transition cursor-pointer font-semibold">Avatar Shop</button>
+<!-- NAVBAR -->
+<nav class="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4 sm:gap-6">
+        <div class="flex items-center gap-7 flex-shrink-0">
+            <a href="/" class="font-black text-2xl tracking-tighter text-black">ROLBOX</a>
+            <div class="hidden md:flex items-center gap-6 text-sm font-semibold text-gray-600">
+                <a href="/" class="text-black border-b-2 border-black py-5">Home</a>
+                <a href="#recommended" class="hover:text-black transition py-5">Discover</a>
+                <button type="button" data-sfx="Avatar Shop is locked in lobby mode!" class="hover:text-black transition py-5">Avatar Shop</button>
+            </div>
         </div>
-    </div>
 
-    <div class="flex-1 max-w-md mx-6 hidden sm:block">
-        <input
-                id="portfolio-search"
-                type="search"
-                aria-label="Search member portfolios"
-                placeholder="Search portfolios, systems, or features"
-                class="w-full bg-gray-100 border border-transparent focus:border-gray-300 focus:bg-white rounded-full py-2 px-4 text-sm outline-none transition"
-        />
-    </div>
+        <div class="flex-1 max-w-lg relative">
+            <label class="sr-only" for="portfolio-search">Search game previews</label>
+            <input id="portfolio-search" type="search" autocomplete="off"
+                   placeholder="Search games, creators, or genres..."
+                   class="w-full bg-gray-100 border border-gray-200 focus:border-gray-600 focus:bg-white rounded-full py-2 pl-4 pr-9 text-sm outline-none transition" />
+            <button id="clear-search" type="button" hidden aria-label="Clear search"
+                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs font-bold text-gray-400 hover:text-gray-800 px-1">
+                ✕
+            </button>
+        </div>
 
-    <div class="flex items-center gap-4">
-        <button type="button"
-                onclick="playFahh()"
-                title="Profile"
-                class="w-8 h-8 rounded-full bg-gray-900 text-white font-bold flex items-center justify-center text-xs cursor-pointer hover:opacity-80 transition">
-            R
-        </button>
-        <button type="button" onclick="playFahh()" class="text-gray-600 hover:text-black text-xs font-semibold uppercase tracking-wider px-2 py-1">Settings</button>
-        <a href="#alerts" class="text-gray-600 hover:text-black text-xs font-semibold uppercase tracking-wider px-2 py-1">
-            Alerts
-            <span th:if="${!#lists.isEmpty(feedbacks)}"
-                  th:text="${#lists.size(feedbacks)}"
-                  class="ml-1 bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
-                    0
-                </span>
-        </a>
+        <div class="flex items-center gap-3 sm:gap-4 flex-shrink-0">
+            <button type="button" data-sfx="ROLBOX Guest Profile active." title="ROLBOX profile"
+                    class="hidden sm:flex h-9 w-9 rounded-full bg-gray-900 text-white font-bold items-center justify-center text-xs hover:bg-gray-700 transition">R</button>
+            <a href="#alerts" class="flex items-center gap-1.5 text-gray-600 hover:text-black text-xs font-semibold uppercase tracking-wider px-2.5 py-1.5 rounded-lg hover:bg-gray-100 transition">
+                <span>Alerts</span>
+                <span th:if="${!#lists.isEmpty(feedbacks)}" th:text="${#lists.size(feedbacks)}"
+                      class="bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">0</span>
+            </a>
+        </div>
     </div>
 </nav>
 
-<div class="max-w-7xl mx-auto px-6 pt-6">
-    <div class="flex gap-6 text-sm font-semibold border-b border-gray-200 pb-3 mb-6">
-        <button type="button" onclick="playFahh()" class="text-black border-b-2 border-black pb-3 -mb-3 cursor-pointer font-semibold">
-            For you
-        </button>
-        <button type="button" onclick="playFahh()" class="text-gray-500 hover:text-black pb-3 -mb-3 cursor-pointer font-semibold">
-            Charts
-        </button>
-        <button type="button" onclick="playFahh()" class="text-gray-500 hover:text-black pb-3 -mb-3 cursor-pointer font-semibold">
-            Avatar Shop
-        </button>
-    </div>
-
-    <div id="welcome-banner" class="bg-gray-100 border border-gray-200 rounded-xl p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-        <div>
-            <h2 class="font-bold text-gray-900 text-base">AET Group 4 Profiling System</h2>
-            <p class="text-sm text-gray-500 mt-1">Explore interactive developer worlds and group project repositories below. Powered by Spring Boot MVC and Thymeleaf.</p>
-            <a href="#recommended" class="inline-block mt-4 bg-gray-900 text-white text-xs font-semibold px-4 py-2 rounded-lg hover:bg-gray-800 transition">Get Started</a>
-        </div>
-        <div class="flex items-center gap-3">
-            <a href="#alerts" class="bg-gray-900 text-white text-xs font-semibold px-4 py-2 rounded-lg hover:bg-gray-800 transition">
-                View Evaluator Feedback (<span th:text="${#lists.size(feedbacks)}">0</span>)
-            </a>
-            <button id="close-banner" type="button" class="text-gray-500 hover:text-black text-xs font-bold px-3 py-2" aria-label="Close welcome banner">Close</button>
-        </div>
+<!-- SUB-NAV -->
+<div class="bg-white border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-7 text-xs font-semibold text-gray-500 overflow-x-auto py-3">
+        <a href="#recommended" class="text-black hover:underline whitespace-nowrap">For You</a>
+        <button type="button" data-sfx="Charts are synced with demo scores!" class="hover:text-black whitespace-nowrap">Charts</button>
+        <button type="button" data-sfx="Lobby settings are managed by Spring Boot." class="hover:text-black whitespace-nowrap">Settings</button>
     </div>
 </div>
 
-<!-- ACTIVE FRIENDS SCROLLER -->
-<section class="max-w-7xl mx-auto px-6 mb-10">
-    <div class="flex gap-6 overflow-x-auto pb-4 items-start">
-        <button type="button"
-                onclick="playFahh()"
-                class="flex flex-col items-center flex-shrink-0 cursor-pointer group">
-            <div class="w-16 h-16 rounded-full bg-gray-100 border border-dashed border-gray-300 flex items-center justify-center text-gray-400 group-hover:border-black group-hover:text-black transition">
-                <span class="text-lg font-bold">+</span>
-            </div>
-            <span class="text-xs font-semibold text-gray-600 mt-2">Add Sched</span>
-        </button>
+<!-- MAIN CONTENT -->
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-20 space-y-12">
 
-        <a th:each="member : ${members}"
-           th:href="${member.link}"
-           class="flex flex-col items-center flex-shrink-0 cursor-pointer group">
-            <div class="relative">
-                <div class="w-16 h-16 rounded-full bg-gray-900 text-white p-0.5 shadow-sm transform group-hover:scale-105 transition">
-                    <div class="w-full h-full bg-gray-900 rounded-full flex items-center justify-center font-bold text-sm"
-                         th:text="${#strings.substring(member.name, 0, 1)}">
-                        M
-                    </div>
-                </div>
-                <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
-            </div>
-            <span class="text-xs font-semibold text-gray-800 mt-2 group-hover:underline truncate max-w-[70px]"
-                  th:text="${member.name}">
-                    Member
-                </span>
-        </a>
-    </div>
-</section>
+    <!-- HERO + WELCOME BANNER -->
+    <div class="space-y-5">
+        <section class="relative overflow-hidden rounded-3xl bg-gray-900 text-white px-7 py-10 sm:px-12 sm:py-14 lg:px-14 lg:py-16 shadow-lg">
+            <div class="hero-glow absolute -top-24 -right-12 w-80 h-80 rounded-full opacity-30 pointer-events-none" style="background: radial-gradient(circle, #818cf8 0%, transparent 68%)" aria-hidden="true"></div>
+            <div class="absolute bottom-0 right-14 w-40 h-40 rounded-full opacity-20 pointer-events-none" style="background: radial-gradient(circle, #f472b6 0%, transparent 72%)" aria-hidden="true"></div>
 
-<!-- RECOMMENDED GAMES GRID -->
-<section id="recommended" class="max-w-7xl mx-auto px-6 pb-16">
-    <p id="search-empty" hidden class="text-sm text-gray-500 mb-4">No matching member portfolios.</p>
-    <h2 class="text-lg font-bold text-gray-900 mb-6">Recommended For You</h2>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <a th:each="member : ${members}"
-           th:href="${member.link}"
-           th:attr="data-search=${member.name + ' ' + member.gameTitle + ' ' + member.role}"
-           class="group flex flex-col cursor-pointer searchable-member">
-            <div class="w-full h-44 rounded-xl overflow-hidden bg-gray-100 border border-gray-200 mb-3 relative">
-                <img th:src="${member.image}"
-                     th:alt="${member.gameTitle}"
-                     class="w-full h-full object-cover transform group-hover:scale-105 transition duration-300" />
-                <div class="absolute top-2 right-2 bg-gray-900 text-white text-xs font-semibold px-2 py-1 rounded">
-                    <span>Play</span>
-                </div>
-            </div>
-            <h3 class="font-bold text-sm text-gray-900 group-hover:underline" th:text="${member.gameTitle}">
-                Game Title
-            </h3>
-            <div class="flex items-center gap-1.5 text-xs text-gray-500 mt-1">
-                <span th:text="'Rating: ' + ${member.rating}">Rating: 95%</span>
-            </div>
-        </a>
-    </div>
-</section>
-
-<!-- LIVE SPRING BOOT ALERTS / FEEDBACK WALL -->
-<section id="alerts" class="max-w-7xl mx-auto px-6 pb-20">
-    <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6">
-        <h2 class="text-lg font-bold text-gray-900 mb-1">
-            Spring Boot Alerts &amp; Evaluator Feedback (<span th:text="${#lists.size(feedbacks)}">0</span>)
-        </h2>
-        <p class="text-xs text-gray-500 mb-4">Messages submitted from any member's portfolio page appear here via Java.</p>
-
-        <p th:if="${#lists.isEmpty(feedbacks)}" class="text-sm text-gray-400 py-6 text-center border border-dashed border-gray-200 rounded-xl bg-white">
-            No feedback messages yet. Open a portfolio above and submit the contact form!
-        </p>
-
-        <div th:if="${!#lists.isEmpty(feedbacks)}" class="space-y-3">
-            <div th:each="fb : ${feedbacks}" class="p-4 bg-white border border-gray-200 rounded-xl flex justify-between items-start gap-4">
-                <div>
-                    <div class="text-xs font-bold text-gray-900">
-                        To: <span th:text="${fb.recipient}">Member</span> •
-                        From: <span th:text="${fb.name}">Sender</span>
-                        <span class="text-gray-400 font-normal" th:text="'(' + ${fb.timestamp} + ')'"></span>
-                    </div>
-                    <p class="text-xs text-gray-500" th:text="${fb.email}"></p>
-                    <p class="text-sm text-gray-800 mt-1.5" th:text="${fb.message}"></p>
-                </div>
-                <form action="/feedback/delete" method="post">
-                    <input type="hidden" name="id" th:value="${fb.id}">
-                    <button type="submit" class="text-xs text-red-600 hover:text-red-800 font-semibold">
-                        Delete
+            <div class="relative z-10 max-w-2xl">
+                <p class="uppercase text-xs font-bold tracking-widest text-indigo-300 mb-4">AET Group 4 • Discover our world</p>
+                <h1 class="font-black tracking-tight text-4xl sm:text-5xl md:text-6xl leading-tight">
+                    Choose a world.<br><span class="text-indigo-300">Meet the creator.</span>
+                </h1>
+                <p class="mt-5 text-sm sm:text-base text-gray-300 leading-relaxed max-w-xl">
+                    Every member has a different game-inspired portfolio. Preview an experience, read what it is about, and enter the member's profile when you're ready.
+                </p>
+                <div class="flex flex-wrap items-center gap-3.5 mt-8">
+                    <a href="#recommended" class="bg-white hover:bg-gray-200 text-gray-900 text-sm font-bold px-6 py-3.5 rounded-xl shadow-sm transition">
+                        Explore experiences
+                    </a>
+                    <button id="random-world" type="button" class="bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white text-sm font-bold px-5 py-3.5 rounded-xl transition">
+                        Surprise me
                     </button>
-                </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- DISMISSIBLE BANNER -->
+        <section aria-label="Lobby notice">
+            <div id="welcome-banner" class="bg-indigo-50 border border-indigo-100 rounded-2xl p-5 sm:px-6 sm:py-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6">
+                <div class="space-y-1">
+                    <h2 class="font-bold text-gray-900 text-sm">Welcome to the ROLBOX lobby!</h2>
+                    <p class="text-xs sm:text-sm text-gray-600">Click a cover to see its preview first. None of these cards will send you directly into a profile.</p>
+                </div>
+                <div class="flex items-center gap-4 flex-shrink-0">
+                    <a href="#alerts" class="text-xs font-bold text-indigo-700 hover:underline">
+                        Evaluator feedback (<span th:text="${#lists.size(feedbacks)}">0</span>)
+                    </a>
+                    <button id="close-banner" type="button" aria-label="Dismiss welcome message"
+                            class="bg-white text-gray-600 hover:text-black hover:border-gray-400 text-xs font-bold border border-gray-200 rounded-xl px-3.5 py-2 transition">
+                        Close ✕
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- CREATOR SHORTCUTS -->
+    <section aria-label="Our creators" class="space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+            <h2 class="font-bold text-lg text-gray-900">Our creators</h2>
+            <span class="text-xs text-gray-500">Select a creator to preview their world</span>
+        </div>
+
+        <div class="flex gap-6 sm:gap-8 overflow-x-auto py-2 px-1 items-start">
+            <button type="button" data-sfx="All 4 Group 4 creators are already in your lobby!" class="flex flex-col items-center flex-shrink-0 cursor-pointer group" aria-label="Add friends">
+                <div class="w-16 h-16 rounded-full bg-white border border-dashed border-gray-300 flex items-center justify-center text-gray-500 group-hover:border-black group-hover:text-black transition">
+                    <span class="text-xl font-bold">+</span>
+                </div>
+                <span class="text-xs font-semibold text-gray-600 mt-2.5">Add friends</span>
+            </button>
+
+            <a th:each="member : ${members}" th:href="@{/games/{slug}(slug=${member.slug})}"
+               class="flex flex-col items-center flex-shrink-0 cursor-pointer group" th:aria-label="|Preview ${member.name} world|">
+                <div class="relative w-16 h-16 rounded-full bg-gray-900 text-white p-0.5 shadow-sm transform group-hover:scale-105 transition">
+                    <div class="w-full h-full rounded-full flex items-center justify-center text-lg font-black" th:text="${#strings.substring(member.name, 0, 1)}">M</div>
+                    <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-white rounded-full"></span>
+                </div>
+                <span class="text-xs font-semibold text-gray-800 mt-2.5 group-hover:underline truncate max-w-xs" th:text="${member.name}">Member</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- INTERACTIVE DISCOVERY GRID -->
+    <section id="recommended" class="scroll-offset space-y-6">
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div class="space-y-1.5">
+                <p class="uppercase text-xs tracking-widest font-bold text-indigo-600">Discover</p>
+                <h2 class="text-2xl sm:text-3xl font-black tracking-tight text-gray-900">Experiences for you</h2>
+                <p class="text-sm text-gray-500" aria-live="polite">
+                    Showing <strong id="world-count" class="text-gray-900" th:text="${#lists.size(members)}">4</strong>
+                    <span id="filter-summary">experiences • open a preview to learn more</span>
+                </p>
+            </div>
+            <button type="button" id="favorites-only" aria-pressed="false"
+                    class="saved-toggle self-start md:self-auto text-sm font-semibold border border-gray-300 rounded-xl bg-white px-4 py-2.5 hover:border-gray-800 transition">
+                ♡ Saved worlds (<span id="saved-count">0</span>)
+            </button>
+        </div>
+
+        <!-- Genre Filter Chips -->
+        <div id="genre-filters" class="flex items-center gap-2.5 overflow-x-auto py-1" role="group" aria-label="Filter experiences by genre">
+            <button class="filter-chip is-active rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap" type="button" data-filter="All" aria-pressed="true">All worlds</button>
+            <button class="filter-chip rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap" type="button" data-filter="Comedy" aria-pressed="false">Comedy</button>
+            <button class="filter-chip rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap" type="button" data-filter="Atmosphere" aria-pressed="false">Atmosphere</button>
+            <button class="filter-chip rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap" type="button" data-filter="Story" aria-pressed="false">Story</button>
+            <button class="filter-chip rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap" type="button" data-filter="Manga" aria-pressed="false">Manga</button>
+        </div>
+
+        <!-- Empty Search State -->
+        <div id="search-empty" hidden class="rounded-2xl border border-dashed border-gray-300 bg-white p-10 sm:p-12 text-center space-y-2">
+            <h3 class="font-bold text-base text-gray-900">No worlds found</h3>
+            <p class="text-gray-500 text-sm">Try a different search keyword, switch back to all genres, or clear your saved-only filter.</p>
+            <div class="pt-3">
+                <button type="button" id="reset-filters" class="px-5 py-2.5 rounded-xl bg-gray-900 text-white font-bold text-xs uppercase tracking-wider hover:bg-indigo-600 transition">
+                    Clear all filters
+                </button>
             </div>
         </div>
-    </div>
-</section>
 
-<!-- FOOTER -->
-<footer class="border-t border-gray-200 py-6 px-6 text-center text-xs text-gray-400 font-mono">
-    ROLBOX DASHBOARD SIMULATION // AET GROUP 4 PROFILING PORTFOLIO © 2026
+        <!-- World Cards Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-7 pt-1" id="world-grid">
+            <article th:each="member, iter : ${members}"
+                     class="world-card searchable-member bg-white border border-gray-200 rounded-2xl overflow-hidden relative flex flex-col"
+                     th:data-search="${member.name + ' ' + member.gameTitle + ' ' + member.role + ' ' + member.genre + ' ' + member.tagline + ' ' + member.description}"
+                     th:data-category="${member.genre}"
+                     th:data-slug="${member.slug}"
+                     th:style="|animation-delay: ${iter.index * 65}ms|">
+
+                <button type="button" class="favorite-btn absolute top-3.5 right-3.5 w-9 h-9 rounded-full bg-white text-gray-600 shadow-md font-black text-lg"
+                        th:data-favorite="${member.slug}" aria-pressed="false" th:aria-label="|Save ${member.gameTitle}|" title="Save this world">♡</button>
+
+                <a th:href="@{/games/{slug}(slug=${member.slug})}" class="flex-1 flex flex-col group" th:aria-label="|See preview for ${member.gameTitle}|">
+                    <div class="relative h-48 bg-gray-200 overflow-hidden flex-shrink-0">
+                        <img th:src="${member.image}" th:alt="${member.gameTitle}" class="card-image w-full h-full object-cover" loading="lazy">
+                        <div class="absolute inset-x-0 bottom-0 h-24 pointer-events-none" style="background: linear-gradient(transparent, rgba(0,0,0,.66))"></div>
+                        <span class="absolute top-3.5 left-3.5 bg-white text-gray-900 text-xs font-extrabold rounded-full px-3 py-1 shadow-sm" th:text="${member.genre}">Genre</span>
+                        <span class="preview-label absolute bottom-3.5 left-3.5 bg-white text-gray-900 text-xs font-bold rounded-lg px-3 py-1.5 shadow">View game preview →</span>
+                    </div>
+
+                    <div class="p-5 flex-1 flex flex-col">
+                        <div>
+                            <h3 class="font-extrabold text-base leading-snug text-gray-900 group-hover:text-indigo-700 transition" th:text="${member.gameTitle}">Game title</h3>
+                            <p class="text-xs text-gray-500 mt-1">By <span class="font-medium text-gray-700" th:text="${member.name}">Creator</span></p>
+                        </div>
+
+                        <p class="text-sm text-gray-600 leading-relaxed mt-3.5 mb-5" th:text="${member.tagline}">Short description</p>
+
+                        <div class="mt-auto flex items-center justify-between text-xs text-gray-500 border-t border-gray-100 pt-3.5">
+                            <span><span class="font-semibold text-gray-700" th:text="${member.rating}">98%</span> <span title="Sample display score, not based on actual votes">demo</span></span>
+                            <span class="font-bold text-indigo-600 group-hover:translate-x-0.5 transform transition">Preview →</span>
+                        </div>
+                    </div>
+                </a>
+            </article>
+        </div>
+    </section>
+
+    <!-- SPRING BOOT FEEDBACK WALL -->
+    <section id="alerts" class="scroll-offset">
+        <div class="bg-white border border-gray-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+            <div class="pb-5 mb-6 border-b border-gray-100">
+                <h2 class="text-lg sm:text-xl font-black text-gray-900">
+                    Spring Boot Alerts &amp; Evaluator Feedback (<span th:text="${#lists.size(feedbacks)}">0</span>)
+                </h2>
+                <p class="text-xs sm:text-sm text-gray-500 mt-1">Messages submitted from any member's portfolio page appear here via Java.</p>
+            </div>
+
+            <p th:if="${#lists.isEmpty(feedbacks)}" class="text-sm text-gray-400 py-10 px-4 text-center border border-dashed border-gray-200 rounded-2xl bg-gray-50">
+                No feedback yet. Enter a creator's portfolio and submit the contact form!
+            </p>
+
+            <div th:if="${!#lists.isEmpty(feedbacks)}" class="space-y-4">
+                <div th:each="fb : ${feedbacks}" class="p-5 bg-gray-50 border border-gray-200 rounded-2xl flex justify-between items-start gap-4">
+                    <div class="space-y-1.5 min-w-0">
+                        <div class="text-xs font-bold text-gray-900">
+                            To: <span class="text-indigo-700" th:text="${fb.recipient}">Member</span>
+                            • From: <span th:text="${fb.name}">Sender</span>
+                            <span class="text-gray-400 font-normal" th:text="'(' + ${fb.timestamp} + ')'">Time</span>
+                        </div>
+                        <p class="text-xs text-gray-500" th:text="${fb.email}">Email</p>
+                        <p class="text-sm text-gray-800 leading-relaxed pt-1" th:text="${fb.message}">Message</p>
+                    </div>
+                    <form action="/feedback/delete" method="post" class="flex-shrink-0">
+                        <input type="hidden" name="id" th:value="${fb.id}">
+                        <button type="submit" class="text-xs text-red-600 hover:text-red-800 font-semibold px-2.5 py-1.5 rounded-lg hover:bg-red-50 transition">
+                            Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- Lobby feedback toast -->
+<div id="lobby-toast" hidden role="status" aria-live="polite"
+     class="fixed bottom-5 right-5 z-50 bg-gray-900 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-lg border border-gray-700">
+</div>
+
+<footer class="border-t border-gray-200 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-xs text-gray-400 font-mono">
+        ROLBOX DISCOVERY LOBBY // AET GROUP 4 PROFILING © 2026
+    </div>
 </footer>
 
-<script src="/js/common.js" defer></script>
-<script src="/js/home.js" defer></script>
+<script th:src="@{/js/common.js}" src="/js/common.js" defer></script>
+<script th:src="@{/js/home.js(v=2)}" src="/js/home.js?v=2" defer></script>
 </body>
 </html>

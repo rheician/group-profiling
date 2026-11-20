@@ -1,0 +1,84 @@
+.game-hud { backdrop-filter: blur(8px); }
+:root { color-scheme: dark; }
+[hidden] { display: none !important; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+button, input, textarea { font: inherit; }
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px solid #fbbf24; outline-offset: 3px; }
+button:disabled { cursor: not-allowed; opacity: .48; }
+.game-scene { min-height: 100dvh; height: 100dvh; }
+.game-header-button { border: 1px solid rgba(255,255,255,.18); border-radius: .5rem; padding: .45rem .65rem; font-size: .65rem; color: #d1d5db; background: rgba(0,0,0,.4); white-space: nowrap; }
+.game-header-button:hover { border-color: #fbbf24; color: #fde68a; }
+.game-exit-button { border: 1px solid #fbbf24; color: #050607; background: #fbbf24; border-radius: .75rem; padding: .85rem 1.6rem; font-size: .75rem; font-weight: 900; letter-spacing: .06em; transition: transform .2s, background .2s; }
+.game-exit-button:not(:disabled):hover { transform: translateY(-3px); background: #fde68a; }
+.game-exit-button:disabled { background: #1f2937; border-color: #374151; color: #9ca3af; }
+
+/* LEVEL 00: the tunnel repeats indefinitely until a real visitor action. */
+.scene-void { background: radial-gradient(circle at center, #010101 0 5%, #121419 13%, #050607 32%, #000 70%); }
+.void-center { filter: drop-shadow(0 0 2rem rgba(250,204,21,.08)); }
+.void-ring { position: absolute; top: 50%; left: 50%; display: block; width: 16vmin; height: 16vmin; border: 2px solid rgba(234,179,8,.35); border-radius: 32%; box-shadow: inset 0 0 35px rgba(255,255,255,.04), 0 0 28px rgba(234,179,8,.06); animation: endlessFall 7.2s linear infinite; animation-delay: calc(var(--i) * -.8s); }
+@keyframes endlessFall { 0% { transform: translate(-50%,-50%) scale(.12) rotate(0deg); opacity:0; } 12% { opacity:.7; } 78% { opacity:.32; } 100% { transform: translate(-50%,-50%) scale(8) rotate(92deg); opacity:0; } }
+.game-glitch { text-shadow: 3px 2px 0 rgba(250,204,21,.17), -3px -1px 0 rgba(255,255,255,.06); }
+.move-on-button { z-index: 10; touch-action: manipulation; transition: left .18s cubic-bezier(.2,.8,.2,1), top .18s cubic-bezier(.2,.8,.2,1), background .18s; white-space: nowrap; }
+.move-on-button.is-ready { background: #86efac; box-shadow: 0 0 35px rgba(134,239,172,.28); }
+.secret-exit { color: #282b32; padding: 8px; text-decoration: underline; text-decoration-color: transparent; transition: color .25s, text-decoration-color .25s; }
+.secret-exit:hover, .secret-exit:focus-visible { color: #fbbf24; text-decoration-color: #fbbf24; }
+.fall-target { position: absolute; width: 70px; height: 70px; border: 9px solid #fbbf24; border-radius: 50%; box-shadow: 0 0 60px #fbbf2480; animation: fallExit 1.5s cubic-bezier(.72,.02,.38,1) both; }
+@keyframes fallExit { 0% { transform: scale(.1); opacity:.2; } 45% { transform: scale(1); opacity:1; } 100% { transform: scale(35) rotate(60deg); opacity:0; } }
+
+/* LEVEL 01: true folder silhouettes, tabs and tilt on hover. */
+.scene-archive { background: radial-gradient(ellipse at 55% 15%, #242316 0, #0d1111 50%, #030405 100%); }
+.folder-card { cursor: pointer; min-height: 172px; }
+.folder-shape { width: min(100%,145px); height: 105px; position: relative; display: block; transform-origin: 35% 70%; transition: transform .25s cubic-bezier(.16,1,.3,1), filter .25s; filter: drop-shadow(5px 10px 6px rgba(0,0,0,.7)); }
+.folder-shape::before { content:""; position:absolute; left:8%; top:0; width:50%; height:36px; background:linear-gradient(110deg,#a16207,#ca8a04); border:1px solid #fde68a44; border-radius:8px 9px 0 0; }
+.folder-shape::after { content:""; position:absolute; top:22px; left:0; width:100%; height:83px; background:linear-gradient(145deg,#facc15,#a16207 70%,#713f12); border:1px solid rgba(254,240,138,.32); border-radius:7px 10px 12px 12px; box-shadow:inset 0 12px 18px rgba(255,255,255,.13),inset 0 -12px 18px rgba(0,0,0,.2); }
+.folder-label { position:absolute; z-index:2; top:55px; left:50%; transform:translateX(-50%); font-size:12px; font-weight:900; color:#422006; background:rgba(254,240,138,.55); border-radius:3px; padding:4px 10px; }
+.folder-card:hover .folder-shape, .folder-card:focus-visible .folder-shape { transform: translateY(-10px) rotate(-9deg) scale(1.035); filter:drop-shadow(6px 18px 10px rgba(0,0,0,.85)); }
+.folder-card.is-viewed .folder-shape::after { background: linear-gradient(145deg,#fde68a,#d97706 80%); }
+.folder-card.is-viewed .folder-status { color:#86efac; }
+
+/* LEVEL 02: glass-pane maze with a slowly growing silhouette behind it. */
+.scene-academic { background: radial-gradient(ellipse at 50% 30%, #274449 0%, #102526 32%, #071313 60%, #010706 100%); }
+.hallway-lines { background:repeating-linear-gradient(90deg,transparent 0 13%,rgba(176,216,215,.06) 13.1% 13.35%,transparent 13.5% 25%),linear-gradient(transparent 82%,rgba(255,255,255,.05) 82.2%); opacity:.85; }
+.academic-world { isolation:isolate; }
+.academic-floor { width: min(82vw,54vh,590px); aspect-ratio:1; max-width:100%; box-shadow:0 0 90px rgba(2,6,6,.4),0 0 140px rgba(226,232,240,.08); }
+.glass-panel { position:relative; width:100%; min-width:0; aspect-ratio:1; cursor:pointer; overflow:hidden; border:1px solid rgba(216,250,250,.30); border-radius:.25rem; background:rgba(71,105,110,.19); color:rgba(235,249,248,.45); backdrop-filter:blur(1.6px); transition:background .2s,border .2s,transform .18s; font-size:clamp(.6rem,1.5vmin,.9rem); }
+.glass-panel::after { content:""; position:absolute; inset:-90% -40%; transform:rotate(20deg) translateX(-130%); background:linear-gradient(90deg,transparent,rgba(255,255,255,.13),transparent); }
+.glass-panel.glint::after { animation:glassGlint 5s ease-in-out infinite; }
+@keyframes glassGlint { 0%,48%,100% { transform:rotate(20deg) translateX(-130%); } 58%,68% { transform:rotate(20deg) translateX(130%); } }
+.glass-panel.glint { border-color:rgba(250,204,21,.35); }
+.glass-panel:hover:not(:disabled), .glass-panel:focus-visible:not(:disabled) { background:rgba(245,158,11,.20); border-color:rgba(253,230,138,.9); transform:translateY(-2px); }
+.glass-panel.is-safe { background:rgba(202,138,4,.70); border-color:#fef08a; color:#fff; }
+.glass-panel.is-wrong { background:rgba(153,27,27,.65); border-color:#f87171; color:#fff; }
+.glass-panel:disabled { opacity:1; cursor:default; }
+.deadline-monster { left:50%; bottom:8%; width:160px; height:300px; z-index:1; transform:translateX(-50%) scale(var(--monster-scale, .65)); opacity:var(--monster-opacity,.45); filter:drop-shadow(0 0 18px rgba(0,0,0,.9)); transition:transform .65s ease-out,opacity .65s ease-out; }
+.monster-head { position:absolute; top:0; left:36px; width:90px; height:100px; background:#03070a; border-radius:48% 52% 44% 42%; box-shadow:0 0 25px 10px rgba(0,0,0,.75); }
+.monster-eye { display:block; position:absolute; top:48px; width:14px; height:5px; background:#f87171; box-shadow:0 0 10px #ef4444; border-radius:50%; }
+.monster-eye:first-child { left:21px; } .monster-eye:last-child { right:20px; }
+.monster-torso { position:absolute; top:85px; left:17px; width:128px; height:208px; background:#03070a; border-radius:38% 40% 10% 10%; }
+.monster-arm { position:absolute; top:108px; width:29px; height:167px; background:#03070a; border-radius:30px; }
+.monster-left { left:0; transform:rotate(15deg); transform-origin:top; }
+.monster-right { right:0; transform:rotate(-15deg); transform-origin:top; }
+.academic-world.is-caught { animation:caughtShake .5s linear 2; }
+@keyframes caughtShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-9px)} 50%{transform:translateX(9px)} 75%{transform:translateX(-7px)} }
+
+/* LEVEL 03: small editor details; Tailwind owns the rest. */
+.scene-code { background:radial-gradient(ellipse at top,#111f1b,#050607 68%); }
+.code-editor { background: #080b0f; font-family: ui-monospace,SFMono-Regular,Consolas,monospace; white-space:nowrap; }
+.code-number { display:inline-block; width:2.1rem; color:#64748b; user-select:none; }
+.code-purple { color:#c4b5fd; } .code-green { color:#86efac; }
+.code-answer { display:inline-block; width:7rem; max-width:30vw; padding:2px 5px; color:#fde68a; font-weight:800; background:rgba(161,98,7,.16); border:1px dashed #fbbf24; border-radius:4px; outline-offset:1px; }
+.code-answer::placeholder { color:#a3a3a3; }
+.code-input-line { display:block; min-width:350px; }
+
+/* LEVEL 04: achievements are the only normal portfolio section. */
+.scene-final { background:radial-gradient(ellipse at 65% 10%,#2e2911 0%,#0b0e0c 43%,#030504 100%); }
+.achievement-chip { display:inline-block; border:1px solid rgba(250,204,21,.25); border-radius:999px; padding:.45rem .85rem; color:#fcd34d; font-size:.7rem; }
+.achievement-card { border:1px solid #323a38; padding:1.5rem; border-radius:1rem; background:rgba(12,17,15,.86); transition:transform .2s,border .2s; }
+.achievement-card:hover { transform:translateY(-3px); border-color:#b45309; }
+.survivor-input { display:block; width:100%; padding:.85rem; background:rgba(10,13,12,.95); border:1px solid #374151; border-radius:.65rem; color:#fff; font-size:.875rem; }
+.survivor-input:focus { border-color:#fbbf24; }
+
+@media(max-height:650px) { .academic-floor { width:min(77vw,45vh,450px); } .scene-archive { justify-content:flex-start; } }
+@media(max-width:520px) { .game-header-button { font-size:.55rem;padding:.42rem .5rem; } .academic-floor { width:min(91vw,43vh); gap:5px; padding:8px; } .folder-shape {height:84px; width:115px;} .folder-shape::after {height:65px;top:19px;} .folder-shape::before {height:29px;} .folder-label {top:44px;} .folder-card {min-height:132px;} }
+@media(prefers-reduced-motion:reduce) { .void-ring,.glass-panel.glint::after,.fall-target,.academic-world.is-caught {animation:none!important;} .move-on-button,.folder-shape,.deadline-monster {transition:none!important;} }
