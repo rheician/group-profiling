@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="|${game.gameTitle} — ROLBOX Preview|">ROLBOX — Game Preview</title>
+    <meta name="description" th:content="${game.description}" content="Preview an AET Group 4 portfolio world.">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        html { scroll-behavior: smooth; }
+        .preview-hero { position: relative; overflow: hidden; background: #0f172a; min-height: 340px; }
+        .preview-hero::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to top, rgba(15,23,42,.85), rgba(15,23,42,0) 62%); }
+        .preview-cover { transition: transform .6s cubic-bezier(.2,.8,.2,1); }
+        .preview-hero:hover .preview-cover { transform: scale(1.035); }
+        .related-card { transition: transform .2s ease, box-shadow .2s ease; }
+        .related-card:hover { transform: translateY(-3px); box-shadow: 0 15px 28px rgba(15,23,42,.12); }
+        .preview-icon { box-shadow: 0 7px 20px rgba(0,0,0,.08); }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after { transition-duration: .01ms !important; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen text-gray-900 font-sans antialiased">
+
+<!-- NAVBAR (Aligned to max-w-6xl container) -->
+<nav class="bg-white border-b border-gray-200 sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        <a href="/" class="font-black text-2xl tracking-tighter text-gray-900">ROLBOX</a>
+        <span class="text-xs text-gray-400 uppercase tracking-wider hidden sm:inline">Experience preview</span>
+        <a th:href="${game.link}" class="text-xs font-bold bg-gray-900 hover:bg-gray-700 text-white rounded-xl px-4 py-2.5 transition">Enter Profile</a>
+    </div>
+</nav>
+
+<main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
+    <!-- Breadcrumbs -->
+    <div class="text-sm text-gray-500 flex items-center gap-2 mb-6">
+        <a href="/" class="hover:text-black">Home</a>
+        <span>/</span>
+        <a href="/#recommended" class="hover:text-black">Discover</a>
+        <span>/</span>
+        <span class="text-gray-900 font-semibold truncate" th:text="${game.gameTitle}">Experience</span>
+    </div>
+
+    <!-- TOP ROW: 7/5 Grid Split with Equal-Height Cards -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        <!-- Left: Cover Art Card -->
+        <div class="lg:col-span-7 flex flex-col">
+            <div class="preview-hero flex-1 rounded-3xl border border-gray-200 shadow-lg">
+                <img th:src="${game.image}" th:alt="|Cover art for ${game.gameTitle}|"
+                     class="preview-cover absolute inset-0 w-full h-full object-cover" />
+                <div class="absolute top-5 left-5 z-10 bg-white bg-opacity-95 text-gray-900 text-xs font-extrabold px-4 py-1.5 rounded-full shadow-sm"
+                     th:text="${game.genre}">Genre</div>
+                <div class="absolute left-6 right-6 bottom-6 z-10 text-white">
+                    <div class="uppercase tracking-widest text-xs text-indigo-200 font-bold mb-1.5">ROLBOX WORLD PREVIEW</div>
+                    <p class="text-lg md:text-xl font-extrabold leading-snug max-w-xl" th:text="${game.tagline}">A world to discover.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Title, Stats & Primary Actions (No duplicate description) -->
+        <div class="lg:col-span-5 bg-white rounded-3xl border border-gray-200 p-6 md:p-8 shadow-sm flex flex-col justify-between">
+            <div>
+                <div class="flex items-start gap-4 mb-6">
+                    <div class="preview-icon h-16 w-16 bg-gray-900 text-white rounded-2xl flex items-center justify-center font-black text-3xl flex-shrink-0"
+                         th:text="${#strings.substring(game.name,0,1)}">G</div>
+                    <div class="min-w-0">
+                        <p class="text-xs font-bold uppercase tracking-wide text-indigo-600 mb-1">Creator's experience</p>
+                        <h1 class="font-black text-2xl md:text-3xl leading-tight break-words text-gray-900" th:text="${game.gameTitle}">Game name</h1>
+                        <p class="text-sm text-gray-500 mt-1.5">By <span class="font-semibold text-gray-900" th:text="${game.name}">Creator</span> • <span th:text="${game.role}">Developer</span></p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 text-center border-y border-gray-100 py-5 mb-6">
+                    <div>
+                        <p class="text-xl font-extrabold text-gray-900" th:text="${game.rating}">98%</p>
+                        <p class="text-xs text-gray-400 mt-1">Demo score*</p>
+                    </div>
+                    <div class="border-l border-gray-100">
+                        <p class="text-lg font-extrabold text-gray-900" th:text="${game.genre}">Genre</p>
+                        <p class="text-xs text-gray-400 mt-1">Experience type</p>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <a th:href="${game.link}" class="flex w-full items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold rounded-xl px-5 py-4 shadow-md transition text-base">
+                    Enter Profile
+                </a>
+                <div class="grid grid-cols-2 gap-3 mt-3">
+                    <button id="preview-favorite" type="button" th:data-slug="${game.slug}" aria-pressed="false"
+                            class="border border-gray-200 bg-gray-50 hover:bg-gray-100 rounded-xl py-3 text-sm font-bold text-gray-800 transition">♡ Save</button>
+                    <button id="preview-share" type="button"
+                            class="border border-gray-200 bg-gray-50 hover:bg-gray-100 rounded-xl py-3 text-sm font-bold text-gray-800 transition">Copy Link</button>
+                </div>
+                <p id="preview-feedback" role="status" aria-live="polite" class="text-center text-xs text-indigo-600 font-medium mt-3 min-h-4"></p>
+                <p class="text-xs text-gray-400 leading-relaxed mt-2">*Cover art and demo scores are part of the ROLBOX preview layout.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECOND ROW: Matching 7/5 Grid Split so vertical column edges align -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8 items-stretch">
+        <div class="lg:col-span-7 bg-white border border-gray-200 rounded-3xl p-6 md:p-8 shadow-sm">
+            <h2 class="text-xl font-black text-gray-900 mb-3">About this experience</h2>
+            <p class="text-sm md:text-base leading-relaxed text-gray-600" th:text="${game.description}">Description</p>
+
+            <h3 class="text-base font-extrabold text-gray-900 mt-8 mb-4">What to expect</h3>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <li th:each="feature : ${game.features}" class="bg-gray-50 border border-gray-100 rounded-xl p-3.5 flex items-center gap-3 text-sm font-semibold text-gray-700">
+                    <span class="text-indigo-600 font-bold">✓</span>
+                    <span th:text="${feature}">Interactive feature</span>
+                </li>
+            </ul>
+        </div>
+
+        <aside class="lg:col-span-5 bg-white border border-gray-200 rounded-3xl p-6 md:p-8 shadow-sm flex flex-col justify-between">
+            <div>
+                <h2 class="text-xl font-black text-gray-900 mb-5">Meet the creator</h2>
+                <div class="flex items-center gap-3.5 mb-5">
+                    <div class="h-12 w-12 rounded-full bg-gray-900 text-white flex items-center justify-center text-lg font-black flex-shrink-0"
+                         th:text="${#strings.substring(game.name,0,1)}">M</div>
+                    <div>
+                        <p class="font-bold text-gray-900" th:text="${game.name}">Creator</p>
+                        <p class="text-xs text-gray-500" th:text="${game.role}">Developer</p>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-600 leading-relaxed">
+                    Open <span class="font-semibold text-gray-800" th:text="${game.name}">Member</span>'s full interactive portfolio to try the live effects and leave a message on the lobby guestbook.
+                </p>
+            </div>
+
+            <a th:href="${game.link}" class="block text-center mt-6 border border-gray-300 rounded-xl px-4 py-3 text-sm font-bold text-gray-900 hover:bg-gray-100 transition">
+                View Creator Profile
+            </a>
+        </aside>
+    </section>
+
+    <!-- OTHER EXPERIENCES -->
+    <section class="mt-14 pb-12">
+        <div class="flex items-end justify-between gap-4 mb-6">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-widest text-indigo-600 mb-1.5">Keep exploring</p>
+                <h2 class="text-2xl font-black text-gray-900">Other experiences</h2>
+            </div>
+            <a href="/#recommended" class="text-xs font-bold text-indigo-600 hover:underline">See All</a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <a th:each="other : ${otherGames}" th:href="@{/games/{slug}(slug=${other.slug})}"
+               class="related-card bg-white border border-gray-200 rounded-2xl overflow-hidden group flex flex-col h-full">
+                <div class="h-40 overflow-hidden bg-gray-100 flex-shrink-0">
+                    <img th:src="${other.image}" th:alt="|Cover for ${other.gameTitle}|" class="h-full w-full object-cover group-hover:opacity-95 transition" loading="lazy">
+                </div>
+                <div class="p-5 flex-1 flex flex-col justify-between">
+                    <div>
+                        <p class="text-xs text-indigo-600 font-bold mb-1" th:text="${other.genre}">Genre</p>
+                        <h3 class="font-extrabold text-gray-900 group-hover:underline" th:text="${other.gameTitle}">Game name</h3>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">By <span th:text="${other.name}">Member</span></p>
+                </div>
+            </a>
+        </div>
+    </section>
+</main>
+
+<footer class="border-t border-gray-200 bg-white py-7 px-6 text-center text-xs text-gray-400">
+    ROLBOX • AET Group 4 Profiling • Java Spring Boot MVC + Thymeleaf
+</footer>
+<script th:src="@{/js/game-preview.js}" src="/js/game-preview.js" defer></script>
+</body>
+</html>
