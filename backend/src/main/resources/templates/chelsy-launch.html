@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Joining Steal a Chelsy · ROLBOX</title>
+    <style>
+        *{box-sizing:border-box}
+        body{
+            margin:0;min-height:100vh;min-height:100dvh;display:grid;align-items:end;
+            background:#101c28;color:white;font:16px/1.5 system-ui,sans-serif
+        }
+        .cover,.shade{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+        .cover{object-fit:cover;object-position:60% center}
+        .shade{background:linear-gradient(0deg,#0a1424 2%,#0a1424eb 19%,#0a142460 51%,transparent 78%)}
+        main{position:relative;width:min(680px,100%);padding:clamp(24px,6vw,96px)}
+        h1{margin:0;font-size:clamp(2.8rem,8vw,6.5rem);line-height:1;font-weight:950;letter-spacing:-.07em}
+        p{margin:10px 0 16px;color:#f1f5ff}
+        .track{height:6px;background:#d8e5ff45;border-radius:99px;overflow:hidden}
+        .track i{display:block;height:100%;border-radius:99px;background:#a1ee87;animation:join 1.65s linear both}
+        a{display:inline-block;margin-top:15px;color:white;font-weight:700;text-underline-offset:3px}
+        a:focus-visible{outline:3px solid #a1ee87;outline-offset:4px}
+        @keyframes join{from{width:4%}to{width:100%}}
+        @media(prefers-reduced-motion:reduce){.track i{animation:none;width:100%}}
+    </style>
+</head>
+<body>
+<img class="cover" th:src="@{${coverImage}}" alt="" fetchpriority="high">
+<div class="shade" aria-hidden="true"></div>
+<main>
+    <h1>Steal a Chelsy</h1>
+    <p role="status">Joining Chelsy’s world…</p>
+    <div class="track" aria-hidden="true"><i></i></div>
+    <a id="join" href="/portfolio/chelsy" th:href="@{/portfolio/chelsy}">Continue to game</a>
+</main>
+<script th:inline="none">
+    requestAnimationFrame(() => {
+        setTimeout(() => location.replace(document.getElementById('join').href), 1700);
+    });
+</script>
+</body>
+</html>
