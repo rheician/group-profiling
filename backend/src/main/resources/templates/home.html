@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         html { scroll-behavior: smooth; }
+        #portfolio-search::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; display: none; }
         .scroll-offset { scroll-margin-top: 5.5rem; }
         @keyframes card-rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes loader-out { from { opacity: 1; } to { opacity: 0; } }
@@ -106,14 +107,14 @@
                     Choose a world.<br><span class="text-indigo-300">Meet the creator.</span>
                 </h1>
                 <p class="mt-5 text-sm sm:text-base text-gray-300 leading-relaxed max-w-xl">
-                    Every member has a different game-inspired portfolio. Preview an experience, read what it is about, and enter the member's profile when you're ready.
+                    Every member has a different game-inspired portfolio. Preview an experience, read what it is about, and enter the creator's world when you're ready.
                 </p>
                 <div class="flex flex-wrap items-center gap-3.5 mt-8">
                     <a href="#recommended" class="bg-white hover:bg-gray-200 text-gray-900 text-sm font-bold px-6 py-3.5 rounded-xl shadow-sm transition">
-                        Explore experiences
+                        Explore Experiences
                     </a>
                     <button id="random-world" type="button" class="bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white text-sm font-bold px-5 py-3.5 rounded-xl transition">
-                        Surprise me
+                        Surprise Me
                     </button>
                 </div>
             </div>
@@ -170,23 +171,23 @@
         <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div class="space-y-1.5">
                 <p class="uppercase text-xs tracking-widest font-bold text-indigo-600">Discover</p>
-                <h2 class="text-2xl sm:text-3xl font-black tracking-tight text-gray-900">Experiences for you</h2>
+                <h2 class="text-2xl sm:text-3xl font-black tracking-tight text-gray-900">Experiences For You</h2>
                 <p class="text-sm text-gray-500" aria-live="polite">
                     Showing <strong id="world-count" class="text-gray-900" th:text="${#lists.size(members)}">4</strong>
-                    <span id="filter-summary">experiences • open a preview to learn more</span>
+                    <span id="filter-summary">experiences • Open a preview to learn more</span>
                 </p>
             </div>
             <button type="button" id="favorites-only" aria-pressed="false"
                     class="saved-toggle self-start md:self-auto text-sm font-semibold border border-gray-300 rounded-xl bg-white px-4 py-2.5 hover:border-gray-800 transition">
-                ♡ Saved worlds (<span id="saved-count">0</span>)
+                ♡ Saved Worlds (<span id="saved-count">0</span>)
             </button>
         </div>
 
         <!-- Genre Filter Chips -->
         <div id="genre-filters" class="flex items-center gap-2.5 overflow-x-auto py-1" role="group" aria-label="Filter experiences by genre">
-            <button class="filter-chip is-active rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap" type="button" data-filter="All" aria-pressed="true">All worlds</button>
+            <button class="filter-chip is-active rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap" type="button" data-filter="All" aria-pressed="true">All Worlds</button>
             <button class="filter-chip rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap" type="button" data-filter="Comedy" aria-pressed="false">Comedy</button>
-            <button class="filter-chip rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap" type="button" data-filter="Atmosphere" aria-pressed="false">Atmosphere</button>
+            <button class="filter-chip rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap" type="button" data-filter="Mystery" aria-pressed="false">Mystery</button>
             <button class="filter-chip rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap" type="button" data-filter="Story" aria-pressed="false">Story</button>
             <button class="filter-chip rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap" type="button" data-filter="Manga" aria-pressed="false">Manga</button>
         </div>
@@ -219,7 +220,7 @@
                         <img th:src="${member.image}" th:alt="${member.gameTitle}" class="card-image w-full h-full object-cover" loading="lazy">
                         <div class="absolute inset-x-0 bottom-0 h-24 pointer-events-none" style="background: linear-gradient(transparent, rgba(0,0,0,.66))"></div>
                         <span class="absolute top-3.5 left-3.5 bg-white text-gray-900 text-xs font-extrabold rounded-full px-3 py-1 shadow-sm" th:text="${member.genre}">Genre</span>
-                        <span class="preview-label absolute bottom-3.5 left-3.5 bg-white text-gray-900 text-xs font-bold rounded-lg px-3 py-1.5 shadow">View game preview →</span>
+                        <span class="preview-label absolute bottom-3.5 left-3.5 bg-white text-gray-900 text-xs font-bold rounded-lg px-3 py-1.5 shadow">View Game Preview</span>
                     </div>
 
                     <div class="p-5 flex-1 flex flex-col">
@@ -231,8 +232,8 @@
                         <p class="text-sm text-gray-600 leading-relaxed mt-3.5 mb-5" th:text="${member.tagline}">Short description</p>
 
                         <div class="mt-auto flex items-center justify-between text-xs text-gray-500 border-t border-gray-100 pt-3.5">
-                            <span><span class="font-semibold text-gray-700" th:text="${member.rating}">98%</span> <span title="Sample display score, not based on actual votes">demo</span></span>
-                            <span class="font-bold text-indigo-600 group-hover:translate-x-0.5 transform transition">Preview →</span>
+                            <span><span class="font-semibold text-gray-700" th:text="${member.rating}">98%</span> <span title="Sample display score, not based on actual votes">Rating</span></span>
+                            <span class="font-bold text-indigo-600 group-hover:translate-x-0.5 transform transition">Preview</span>
                         </div>
                     </div>
                 </a>
@@ -245,13 +246,13 @@
         <div class="bg-white border border-gray-200 rounded-3xl p-6 sm:p-8 shadow-sm">
             <div class="pb-5 mb-6 border-b border-gray-100">
                 <h2 class="text-lg sm:text-xl font-black text-gray-900">
-                    Spring Boot Alerts &amp; Evaluator Feedback (<span th:text="${#lists.size(feedbacks)}">0</span>)
+                    Rolboxers Alerts &amp; Feedback (<span th:text="${#lists.size(feedbacks)}">0</span>)
                 </h2>
-                <p class="text-xs sm:text-sm text-gray-500 mt-1">Messages submitted from any member's portfolio page appear here via Java.</p>
+                <p class="text-xs sm:text-sm text-gray-500 mt-1">Messages submitted from any of the creator's worlds appear here.</p>
             </div>
 
             <p th:if="${#lists.isEmpty(feedbacks)}" class="text-sm text-gray-400 py-10 px-4 text-center border border-dashed border-gray-200 rounded-2xl bg-gray-50">
-                No feedback yet. Enter a creator's portfolio and submit the contact form!
+                No feedback yet. Enter a creator's world and share your experience!
             </p>
 
             <div th:if="${!#lists.isEmpty(feedbacks)}" class="space-y-4">

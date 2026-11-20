@@ -34,12 +34,13 @@ public class ProfilingController {
                 List.of("Meme reveal interactions", "Runaway secret button", "INULTIHAN counter", "Guestbook")
         ));
         teamMembers.add(new TeamMember(
-                "olivenn", "Olivenn", "Developer", "/portfolio/olivenn", "99 Nights ng Pagdurusa",
-                "92%", "https://play-lh.googleusercontent.com/viOjN7Ax5NtKXc3GdhAz4g8Ij8gq9eNnZv5cLFmYbDrQAu49qDuKYZS-kljLOzjefpgnL57CkkMRQKWcydqURA=w526-h296-rw",
-                "Atmosphere", "Neon-pink lightfalls and an atmospheric escape.",
-                "Explore Olivenn's forest-green world filled with falling lights, " +
-                "animated lettering, and a VOUCH button. Get to know the creator and send a message.",
-                List.of("Animated Lightfall background", "Shimmering typography", "VOUCH counter", "Guestbook")
+                "olivenn", "Olivenn", "Developer", "/portfolio/olivenn", "99 Nights ng Ano?",
+                "92%", "/images/99.png",
+                "Mystery", "Five missing people, 99 nights, one dark forest.",
+                "Scroll into Olivenn's forest, unlock the map, and find the five missing " +
+                        "people before Day 99. " +
+                        "Stay idle too long and the campfire fades to black.",
+                List.of("Unlockable map & day counter", "Idle blackout campfire")
         ));
         teamMembers.add(new TeamMember(
                 "rheician", "Rheician", "Developer", "/portfolio/rheician", "#UndasDanas",
