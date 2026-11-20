@@ -61,7 +61,7 @@ group-profiling/
                     ├── home.js            # Homepage interactions
                     ├── rheician.js        # Rheician's interactive effects
                     ├── chelsy.js          # Chelsy's interactive effects
-                    └── lightfall.js       # Olivenn's animated background
+                    └── olivenn.js       # Olivenn's animated background
 ```
 
 > The JavaScript files above belong to the **restored-interactions update**. If they are missing from your working copy, copy the `static/js/` folder from the update ZIP as well as the corresponding updated HTML and Java controller files.
