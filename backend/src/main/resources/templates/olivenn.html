@@ -210,6 +210,42 @@
             white-space: nowrap;
         }
 
+        .day {
+            position: absolute;
+            left: 50%;
+            top: 12.07svh;               /* Figma: y=152 centre of 1080 */
+            z-index: 2;
+            margin: 0;
+            font-weight: 400;
+            font-size: 2.5vw;            /* 48px at 1920 */
+            letter-spacing: 0.1em;
+            line-height: 1;
+            color: #fff;
+            transform: translate(-50%, -50%);
+            white-space: nowrap;
+        }
+
+        .loc h2.day-end {font-size: var(--hero-size);}
+        .day-end { animation: day-slide 1.6s ease-out both; }
+        .day-end .roll { --roll-d: 1.8s; }   /* roll after the slide is mostly done */
+
+        .roll { display: inline-grid; overflow: hidden; line-height: 1.3; text-align: center; vertical-align: bottom; }
+        .roll > span { grid-area: 1 / 1; }
+        .rolling .roll-old { animation: roll-out .5s cubic-bezier(.4, 0, 1, 1)   var(--roll-d, .3s) both; }
+        .rolling .roll-new { animation: roll-in  .7s cubic-bezier(.2, .7, .3, 1) calc(var(--roll-d, .3s) + .15s) both; }
+
+        @keyframes day-slide {
+            from { transform: translateY(-26vh) scale(.375); }   /* 48px → 128px */
+            to   { transform: none; }
+        }
+        @keyframes roll-out { to   { transform: translateY(100%);  opacity: 0; } }
+        @keyframes roll-in  { from { transform: translateY(-100%); opacity: 0; } }
+
+        @media (prefers-reduced-motion: reduce) {
+            .day-end, .rolling .roll-old, .rolling .roll-new { animation: none; }
+            .roll-old { display: none; }
+        }
+
         .board .pad  { top: 30.99%; width: 16.03%; height: 40.49%; object-fit: cover; }
         .board .face { width: 13.03%; aspect-ratio: 1; object-fit: cover; }
 
@@ -605,6 +641,12 @@
     <section id="screen-3" class="screen"
              th:classappend="${foundCount == 0 and message == null} ? 'is-hidden'"
              aria-label="Missing Adults">
+        <h2 class="day">
+            <span>DAY&nbsp;</span><span class="roll" th:classappend="${prevDay != null} ? 'rolling'">
+                <span class="roll-old" th:if="${prevDay != null}" th:text="${prevDay}">1</span>
+                <span class="roll-new" th:text="${day}">1</span>
+            </span>
+        </h2>
         <div class="board">
             <img class="bg" src="/images/woodboard.png" alt="" />
             <h2>MISSING ADULTS</h2>
@@ -643,8 +685,13 @@
     </section>
 
     <section id="ending" class="screen loc" th:if="${ending}">
-        <h2>THE END?</h2>
-        <p>Nahanap na silang lima. Ikaw na lang ang hindi pa nahahanap.</p>
+        <h2 class="day-end">
+            <span>DAY&nbsp;</span><span class="roll rolling">
+                <span class="roll-old" th:text="${endDay - 1}">99</span>
+                <span class="roll-new" th:text="${endDay}">100</span>
+            </span>
+        </h2>
+        <p>99 Nights ng Ano? 99 Nights ng Finding Me :D</p>
         <div class="endrow">
             <form method="post" th:action="@{/portfolio/olivenn/reset}">
                 <button type="submit" class="findbtn">Try Again</button>

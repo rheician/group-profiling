@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Controller
 @RequestMapping("/portfolio/olivenn")
@@ -23,6 +24,8 @@ public class OlivennController {
 
     private static final String FOUND_KEY = "olivennFound";
     private static final String BACK = "redirect:/portfolio/olivenn#screen-3";
+    private static final String DAY_KEY = "olivennDay";
+    private static final int FINAL_DAY = 99;
 
     // Order matches the map coordinates: 1 yellow, 2 green, 3 blue, 4 red, 5 purple.
     private final List<MissingEmotion> emotions = List.of(
@@ -67,6 +70,7 @@ public class OlivennController {
         if (foundSet(session).size() < emotions.size()) return BACK;
         fill(model, session, false);
         model.addAttribute("ending", true);
+        model.addAttribute("endDay", FINAL_DAY + 1);
         return "olivenn";
     }
 
@@ -77,7 +81,13 @@ public class OlivennController {
                 .filter(x -> x.slug().equals(slug))
                 .findFirst()
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unknown emotion"));
-        boolean isNew = foundSet(session).add(e.slug());
+        Set<String> found = foundSet(session);
+        int before = session.getAttribute(DAY_KEY) instanceof Integer d ? d : 1;
+        boolean isNew = found.add(e.slug());
+        if (isNew) {
+            advanceDay(session, emotions.size() - found.size());
+            ra.addFlashAttribute("prevDay", before);
+        }
         ra.addFlashAttribute("message",
                 isNew ? e.name() + " nahanap na! " + e.hint() : e.name() + " nahanap mo na, bes.");
         return BACK;
@@ -86,6 +96,7 @@ public class OlivennController {
     @PostMapping("/reset")
     public String reset(HttpSession session, RedirectAttributes ra) {
         foundSet(session).clear();
+        session.setAttribute(DAY_KEY, 1);
         ra.addFlashAttribute("message", "Asaan nanaman ang mga taong ito?!");
         return BACK;
     }
@@ -95,6 +106,19 @@ public class OlivennController {
         model.addAttribute("sent", sent);
         model.addAttribute("found", found);
         model.addAttribute("foundCount", found.size());
+        model.addAttribute("day", session.getAttribute(DAY_KEY) instanceof Integer d ? d : 1);
+    }
+
+    // Random jump, but always leaves room so the last find lands exactly on Day 99.
+    private void advanceDay(HttpSession session, int remaining) {
+        int day = session.getAttribute(DAY_KEY) instanceof Integer d ? d : 1;
+        if (remaining == 0) {
+            day = FINAL_DAY;
+        } else {
+            int maxStep = Math.max(1, (FINAL_DAY - day) / (remaining + 1));
+            day += 1 + ThreadLocalRandom.current().nextInt(maxStep);
+        }
+        session.setAttribute(DAY_KEY, day);
     }
 
     @SuppressWarnings("unchecked")
