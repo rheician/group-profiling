@@ -225,18 +225,18 @@
             white-space: nowrap;
         }
 
-        .loc h2.day-end {font-size: var(--hero-size);}
-        .day-end { animation: day-slide 1.6s ease-out both; }
-        .day-end .roll { --roll-d: 1.8s; }   /* roll after the slide is mostly done */
+        .loc h2.day-end { position: absolute; left: 50%; top: calc(12.07svh - 1.625vw); margin: 0; font-size: var(--hero-size); transform-origin: top center; transform: translateX(-50%); }
+        .day-end { animation: day-grow .8s ease-out both; }
+        .day-end .roll { --roll-d: 1s; }   /* roll after the grow finishes */
 
         .roll { display: inline-grid; overflow: hidden; line-height: 1.3; text-align: center; vertical-align: bottom; }
         .roll > span { grid-area: 1 / 1; }
         .rolling .roll-old { animation: roll-out .5s cubic-bezier(.4, 0, 1, 1)   var(--roll-d, .3s) both; }
         .rolling .roll-new { animation: roll-in  .7s cubic-bezier(.2, .7, .3, 1) calc(var(--roll-d, .3s) + .15s) both; }
 
-        @keyframes day-slide {
-            from { transform: translateY(-26vh) scale(.375); }   /* 48px → 128px */
-            to   { transform: none; }
+        @keyframes day-grow {
+            from { transform: translateX(-50%) scale(.375); }   /* 48px → 128px, same top edge, no sliding */
+            to   { transform: translateX(-50%); }
         }
         @keyframes roll-out { to   { transform: translateY(100%);  opacity: 0; } }
         @keyframes roll-in  { from { transform: translateY(-100%); opacity: 0; } }
@@ -504,6 +504,8 @@
 
         .loc h2 { margin: 0; font-size: min(var(--hero-size), 7vw, 10vh); white-space: nowrap; }
         .loc-photo { height: 50vh; width: auto; max-width: 88vw; aspect-ratio: 1027 / 577; object-fit: cover; margin: 1vh 0; }
+        #ending { justify-content: flex-start; padding-top: calc(12.07svh - 1.625vw + var(--hero-size) * 1.1 + 3.9svh); }
+        .end-photo { height: 51.94svh; width: auto; max-width: 88vw; aspect-ratio: 997 / 561; object-fit: cover; margin: 1vh 0; }
         .loc .findbtn { margin-top: 8px; padding: 8px 24px; }
 
         /* Leave Message section (last on the page) */
@@ -609,9 +611,11 @@
             color: var(--accent);
             text-shadow: 0 15px 35px rgba(255, 107, 53, 0.35);
         }
+
+        #blackout { position: fixed; inset: 0; z-index: 30; background: #000; opacity: 0; pointer-events: none; }
     </style>
 </head>
-<body class="no-js">
+<body class="no-js" th:attr="data-intro=${playIntro}">
 
 <div class="backdrop" aria-hidden="true"></div>
 
@@ -691,7 +695,8 @@
                 <span class="roll-new" th:text="${endDay}">100</span>
             </span>
         </h2>
-        <p>99 Nights ng Ano? 99 Nights ng Finding Me :D</p>
+        <img class="end-photo" src="/images/fm.png" alt="" />
+        <p>99 Nights ng Ano? 99 Nights ng Finding...</p>
         <div class="endrow">
             <form method="post" th:action="@{/portfolio/olivenn/reset}">
                 <button type="submit" class="findbtn">Try Again</button>
@@ -751,177 +756,11 @@
         <img src="/images/map.png" alt="" />
     </button>
 
+    <div id="blackout" aria-hidden="true"></div>
+
     <!-- Moves from screen 1's centre into screen 2's nav bar while scrolling -->
     <h1 id="name">JAHN OLIVENN ESMARIN</h1>
 </main>
-
-<script>
-    (function () {
-        document.body.classList.remove('no-js');
-
-        var name = document.getElementById('name');
-        var headline = document.getElementById('headline');
-        var nav = document.querySelector('.nav');
-        var navRow = document.getElementById('nav-row');
-        var screen2 = document.getElementById('screen-2');
-        var goBtn = document.getElementById('go-btn');
-        var screen3 = document.getElementById('screen-3');
-
-        var startY, endY, startSize, endSize, distance;
-
-        function clamp(v, a, b) { return Math.min(b, Math.max(a, v)); }
-        function lerp(a, b, t) { return a + (b - a) * t; }
-        function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
-
-        function measure() {
-            startSize = Math.min(128, window.innerWidth * 0.06667);
-            endSize = startSize / 2;
-            startY = window.innerHeight / 2;
-            var r = navRow.getBoundingClientRect();          // nav is fixed: viewport coords
-            endY = r.top + r.height / 2;
-            distance = Math.max(1, screen2.offsetTop);
-        }
-
-        function update() {
-            var p = clamp(window.scrollY / distance, 0, 1);
-            var e = ease(p);
-
-            name.style.top = lerp(startY, endY, e) + 'px';
-            name.style.fontSize = lerp(startSize, endSize, e) + 'px';
-
-            // nav gets a backdrop as it becomes the persistent header
-            nav.style.background = 'rgba(7, 11, 24, ' + (0.88 * e) + ')';
-            var blur = 'blur(' + (8 * e) + 'px)';
-            nav.style.backdropFilter = blur;
-            nav.style.webkitBackdropFilter = blur;
-
-            // second text fades/rises in during the last part of the scroll
-            var t = clamp((p - 0.55) / 0.45, 0, 1);
-            headline.style.opacity = t;
-            headline.style.transform =
-                'translate(-50%, calc(-50% + ' + (1 - t) * 24 + 'px))';
-
-            // the button fades/rises in together with the headline
-            goBtn.style.opacity = t;
-            goBtn.style.transform =
-                'translate(-50%, calc(-50% + ' + (1 - t) * 24 + 'px))';
-            goBtn.style.pointerEvents = t > 0.9 ? 'auto' : 'none';
-        }
-
-        var ticking = false;
-        function onScroll() {
-            if (ticking) return;
-            ticking = true;
-            requestAnimationFrame(function () { ticking = false; update(); });
-        }
-
-        function onResize() { measure(); update(); }
-
-        window.addEventListener('scroll', onScroll, { passive: true });
-        window.addEventListener('resize', onResize);
-        if (document.fonts && document.fonts.ready) document.fonts.ready.then(onResize);
-        onResize();
-
-        // Frame 2 button: reveal Frame 3, then scroll down to it.
-        goBtn.addEventListener('click', function () {
-            screen3.classList.remove('is-hidden');
-            screen3.classList.add('reveal');
-            var reduce = window.matchMedia &&
-                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            screen3.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
-        });
-
-        // Frame 3.1 / 3.2: first #Hanapin click of the session unlocks the map.
-        // The popup disappears after ~2s and leaves the map icon (in every section).
-        var hanapin = document.getElementById('hanapin');
-        var unlockEl = document.getElementById('unlock');
-        var mapBtn = document.getElementById('map-btn');
-        var mapEl = document.getElementById('map');
-        var confirmEl = document.getElementById('confirm');
-        var confirmText = document.getElementById('confirm-text');
-        var pending = null;
-        var unlocking = false;
-        var unlockedNow = mapEl.getAttribute('data-unlocked') === 'true';   // server tells us after a reload
-        if (unlockedNow) document.body.classList.add('unlocked');
-
-        function isUnlocked() { return unlockedNow; }
-        function markUnlocked() { unlockedNow = true; }
-
-        // Frames 3.2.1 / 3.2.2: open / close the map
-        function openMap() {
-            mapEl.classList.add('show');
-            mapEl.setAttribute('aria-hidden', 'false');
-            document.documentElement.style.overflow = 'hidden';
-        }
-        function closeConfirm() {
-            confirmEl.classList.remove('show');
-            pending = null;
-        }
-        function closeMap() {
-            closeConfirm();
-            mapEl.classList.remove('show');
-            mapEl.setAttribute('aria-hidden', 'true');
-            document.documentElement.style.overflow = '';
-        }
-
-        if (hanapin) hanapin.addEventListener('click', function () {
-            if (unlocking) return;
-            if (isUnlocked()) { openMap(); return; }       // 3.2.1: clicked again
-            markUnlocked();
-            unlocking = true;
-            unlockEl.classList.add('show');
-            setTimeout(function () {
-                unlockEl.classList.remove('show');
-                document.body.classList.add('unlocked');
-                unlocking = false;
-            }, 2000);
-        });
-
-        mapBtn.addEventListener('click', function () {
-            if (mapEl.classList.contains('show')) closeMap(); else openMap();   // 3.2.2 / close
-        });
-
-        // Frame 3.3: clicking a coordinate asks first, then jumps to that section
-        var coords = mapEl.querySelectorAll('.coord');
-        for (var i = 0; i < coords.length; i++) {
-            coords[i].addEventListener('click', function (ev) {
-                pending = ev.currentTarget;
-                // place the box next to the clicked dot (offsets taken from Figma 3.3)
-                var field = mapEl.querySelector('.mapfield');
-                var k = Math.max(0.6, field.getBoundingClientRect().width / 1035);
-                var r = pending.getBoundingClientRect();
-                var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-                var w = 322 * k, h = 118 * k;
-                confirmEl.style.setProperty('--k', k);
-                confirmEl.style.left = Math.min(Math.max(8, cx + 39 * k), window.innerWidth - w - 8) + 'px';
-                confirmEl.style.top = Math.min(Math.max(8, cy - 133 * k), window.innerHeight - h - 8) + 'px';
-                confirmEl.classList.add('show');
-            });
-        }
-
-        document.getElementById('confirm-no').addEventListener('click', closeConfirm);
-        document.getElementById('confirm-yes').addEventListener('click', function () {
-            var target = pending && document.getElementById(pending.getAttribute('data-target'));
-            closeMap();
-            if (!target) return;
-            target.classList.remove('is-hidden');
-            var reduce = window.matchMedia &&
-                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
-        });
-
-        document.addEventListener('keydown', function (ev) {
-            if (ev.key !== 'Escape') return;
-            if (confirmEl.classList.contains('show')) closeConfirm();
-            else if (mapEl.classList.contains('show')) closeMap();
-        });
-
-        // After submitting the form the page reloads at the top; jump back to it.
-        var leave = document.getElementById('leave-message');
-        if (leave && leave.getAttribute('data-sent') === 'true') {
-            leave.scrollIntoView();
-        }
-    })();
-</script>
+<script th:src="@{/js/olivenn.js}"></script>
 </body>
 </html>

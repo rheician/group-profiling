@@ -61,6 +61,7 @@ public class OlivennController {
     @GetMapping
     public String showPortfolio(@RequestParam(required = false) Boolean sent, HttpSession session, Model model) {
         fill(model, session, sent != null && sent);
+        model.addAttribute("playIntro", !(sent != null && sent) && !model.containsAttribute("message"));
         return "olivenn";
     }
 
