@@ -7,625 +7,137 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Covered+By+Your+Grace&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
-        :root {
-            --bg: #070b18;
-            --accent: #ff6b35;
-            --sage: #aec3b0;
-            --font: 'Covered By Your Grace', cursive;
-            /* Figma frame is 1920 wide: 1vw = 19.2 design px */
-            --hero-size: min(128px, 6.667vw);
-            --nav-size: clamp(14px, 1.667vw, 32px);
-            --nav-h: calc(var(--hero-size) * 0.5 + 24px);   /* approx. nav height, used for spacing below it */
-        }
-
+        :root { --bg: #070b18; --accent: #ff6b35; --sage: #aec3b0; --font: 'Covered By Your Grace', cursive; --hero-size: min(128px, 6.667vw); --nav-size: clamp(14px, 1.667vw, 32px); --nav-h: calc(var(--hero-size) * 0.5 + 24px); }
         * { box-sizing: border-box; }
-
-        html, body {
-            margin: 0;
-            background: var(--bg);
-            color: #fff;
-            font-family: var(--font);
-        }
-
+        html, body { margin: 0; background: var(--bg); color: #fff; font-family: var(--font); line-height: normal; }
         body { overflow-x: hidden; }
-
         html { scroll-snap-type: y proximity; }
-
         main { position: relative; z-index: 1; }
-
         /* Every section fills the whole viewport, like the landing page */
-        .screen {
-            position: relative;
-            height: 100vh;
-            height: 100svh;
-            min-height: 100vh;
-            min-height: 100svh;
-            overflow: hidden;
-            background: transparent;
-            scroll-snap-align: start;
-        }
-
-        /* One fixed forest backdrop (Figma "forest" layer, 15% opacity) shared by
-           every section, so it never re-appears or scrolls while you move down */
-        .backdrop {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            background: url('/images/forest.png') center / cover no-repeat;
-            opacity: 0.15;
-            pointer-events: none;
-        }
-
+        .screen { position: relative; height: 100vh; height: 100svh; min-height: 100vh; min-height: 100svh; overflow: hidden; background: transparent; scroll-snap-align: start; }
+        /* One fixed forest backdrop */
+        .backdrop { background: url('/images/forest.png') center / cover no-repeat; opacity: 0.15; }
         /* Floating nav: stays on screen for the whole page */
-        .nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 10;
-            padding: 0 2vw;
-            background: rgba(7, 11, 24, 0);          /* fades in with scroll (JS) */
-            -webkit-backdrop-filter: blur(0px);
-            backdrop-filter: blur(0px);
-        }
-
-        .nav-inner {
-            position: relative;
-            padding: 10px 0 4px;                       /* tight space above the line */
-            border-bottom: 1px solid rgba(174, 195, 176, 0.55);
-        }
-
-        .nav-row {
-            min-height: calc(var(--hero-size) * 0.5);  /* room for the title once it docks */
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: var(--nav-size);
-            line-height: 1;
-            color: var(--sage);
-        }
-
-        .nav-row a { color: inherit; text-decoration: none; }
-        .nav-row a:hover { text-decoration: underline; }
-
-        /* Single title element that travels from the hero centre (screen 1)
-           into the floating nav bar as the page scrolls. */
-        #name {
-            position: fixed;
-            left: 50%;
-            top: 50vh;
-            z-index: 11;
-            margin: 0;
-            font-weight: 400;
-            font-size: var(--hero-size);
-            letter-spacing: 0.1em;
-            line-height: 1;
-            white-space: nowrap;
-            text-align: center;
-            color: var(--accent);
-            text-shadow: 0 15px 35px rgba(255, 107, 53, 0.35);
-            transform: translate(-50%, -50%);
-            will-change: top, font-size;
-            pointer-events: none;
-        }
-
-        /* Second text that appears once the name has moved up */
-        #headline {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            z-index: 2;
-            margin: 0;
-            width: 92%;
-            font-weight: 400;
-            font-size: var(--hero-size);
-            letter-spacing: 0.1em;
-            line-height: 1.1;
-            text-align: center;
-            color: #fff;
-            opacity: 0;
-            transform: translate(-50%, calc(-50% + 24px));
-            will-change: opacity, transform;
-        }
-
-
-        /* Frame 2 button ("1, 2, 3...") — sits under the headline, fades in with it */
-        #go-btn {
-            position: absolute;
-            left: 50%;
-            top: calc(50% + var(--hero-size) * 1.086);
-            z-index: 2;
-            min-width: min(437px, 90vw);
-            height: calc(var(--nav-size) * 1.9);
-            padding: 0 1.5em;
-            font: inherit;
-            font-size: var(--nav-size);
-            letter-spacing: 0.1em;
-            color: var(--bg);
-            background: var(--accent);
-            border: 0;
-            border-radius: 10px;
-            cursor: pointer;
-            opacity: 0;
-            pointer-events: none;
-            transform: translate(-50%, calc(-50% + 24px));
-            will-change: opacity, transform;
-            transition: filter .15s;
-        }
-
+        .nav { padding: 0 2vw; background: rgba(7, 11, 24, 0); -webkit-backdrop-filter: blur(0px); backdrop-filter: blur(0px); }
+        .nav-inner { border-bottom: 1px solid rgba(174, 195, 176, 0.55); }
+        .nav-row { min-height: calc(var(--hero-size) * 0.5); font-size: var(--nav-size); color: var(--sage); }
+        /* Single title element from the hero into the floating nav bar as the page scrolls. */
+        #name { position: fixed; left: 50%; top: 50vh; z-index: 11; margin: 0; font-weight: 400; font-size: var(--hero-size); letter-spacing: 0.1em; line-height: 1; white-space: nowrap; text-align: center; color: var(--accent); text-shadow: 0 15px 35px rgba(255, 107, 53, 0.35); transform: translate(-50%, -50%); will-change: top, font-size; pointer-events: none; }
+        #headline { position: absolute; left: 50%; top: 50%; z-index: 2; margin: 0;  width: 92%; font-weight: 400;  font-size: var(--hero-size); letter-spacing: 0.1em;  line-height: 1.1; text-align: center; color: #fff; opacity: 0; transform: translate(-50%, calc(-50% + 24px)); will-change: opacity, transform; }
+        #go-btn { position: absolute; left: 50%; top: calc(50% + var(--hero-size) * 1.086); z-index: 2; min-width: min(437px, 90vw); height: calc(var(--nav-size) * 1.9); padding: 0 1.5em; font: inherit; font-size: var(--nav-size); letter-spacing: 0.1em; color: var(--bg); background: var(--accent); border: 0; border-radius: 10px; cursor: pointer; opacity: 0; pointer-events: none; transform: translate(-50%, calc(-50% + 24px)); will-change: opacity, transform; transition: filter .15s; }
         #go-btn:hover { filter: brightness(1.12); }
-
-        /* Frame 3 "Missing Adults" — hidden until the button above is clicked.
-           Everything inside the board is positioned in % / cqw of the Figma
-           board (1366 x 768), so it scales with the board. */
-        #screen-3 {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: calc(var(--nav-h) + 1vh) 2vw 2vh;
-        }
-
+        /* Frame 3 "Missing Adults" — hidden until the button above is clicked */
+        #screen-3 { padding: calc(var(--nav-h) + 1vh) 2vw 2vh; }
         #screen-3.is-hidden { display: none; }
-
         #screen-3.reveal .board { animation: board-in .7s ease both; }
-
         @keyframes board-in {
             from { opacity: 0; transform: translateY(32px); }
             to   { opacity: 1; transform: none; }
         }
+        .board { position: relative;z-index: 2;width: min(71.15vw, calc((100svh - var(--nav-h) - 3vh) * 1366 / 768));aspect-ratio: 1366 / 768;container-type: inline-size; }
+        .board h2 { top: 15.75%; font-size: 9.37cqw; }
 
-        .board {
-            position: relative;
-            z-index: 2;
-            width: min(71.15vw, calc((100svh - var(--nav-h) - 3vh) * 1366 / 768));
-            aspect-ratio: 1366 / 768;
-            container-type: inline-size;
-        }
-
-        .board > img.bg,
-        .board .pad,
-        .board .face {
-            position: absolute;
-            display: block;
-            pointer-events: none;
-            user-select: none;
-        }
-
-        .board > img.bg { inset: 0; width: 100%; height: 100%; object-fit: cover; }
-
-        .board h2 {
-            position: absolute;
-            left: 50%;
-            top: 15.75%;
-            margin: 0;
-            width: 100%;
-            font-weight: 400;
-            font-size: 9.37cqw;
-            letter-spacing: 0.1em;
-            line-height: 1;
-            text-align: center;
-            color: #fff;
-            transform: translate(-50%, -50%);
-            white-space: nowrap;
-        }
-
-        .day {
-            position: absolute;
-            left: 50%;
-            top: 12.07svh;               /* Figma: y=152 centre of 1080 */
-            z-index: 2;
-            margin: 0;
-            font-weight: 400;
-            font-size: 2.5vw;            /* 48px at 1920 */
-            letter-spacing: 0.1em;
-            line-height: 1;
-            color: #fff;
-            transform: translate(-50%, -50%);
-            white-space: nowrap;
-        }
-
+        .day { position: absolute; left: 50%; top: 12.07svh; z-index: 2; margin: 0; font-weight: 400; font-size: 2.5vw; letter-spacing: 0.1em; line-height: 1; color: #fff; transform: translate(-50%, -50%); white-space: nowrap; }
         .loc h2.day-end { position: absolute; left: 50%; top: calc(12.07svh - 1.625vw); margin: 0; font-size: var(--hero-size); transform-origin: top center; transform: translateX(-50%); }
         .day-end { animation: day-grow .8s ease-out both; }
         .day-end .roll { --roll-d: 1s; }   /* roll after the grow finishes */
-
         .roll { display: inline-grid; overflow: hidden; line-height: 1.3; text-align: center; vertical-align: bottom; }
         .roll > span { grid-area: 1 / 1; }
         .rolling .roll-old { animation: roll-out .5s cubic-bezier(.4, 0, 1, 1)   var(--roll-d, .3s) both; }
         .rolling .roll-new { animation: roll-in  .7s cubic-bezier(.2, .7, .3, 1) calc(var(--roll-d, .3s) + .15s) both; }
-
         @keyframes day-grow {
             from { transform: translateX(-50%) scale(.375); }   /* 48px → 128px, same top edge, no sliding */
             to   { transform: translateX(-50%); }
         }
         @keyframes roll-out { to   { transform: translateY(100%);  opacity: 0; } }
         @keyframes roll-in  { from { transform: translateY(-100%); opacity: 0; } }
-
         @media (prefers-reduced-motion: reduce) {
             .day-end, .rolling .roll-old, .rolling .roll-new { animation: none; }
             .roll-old { display: none; }
         }
-
         .board .pad  { top: 30.99%; width: 16.03%; height: 40.49%; object-fit: cover; }
         .board .face { width: 13.03%; aspect-ratio: 1; object-fit: cover; }
-
-        .board .mark {
-            position: absolute;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 15.74%;
-            font-size: 14.35cqw;
-            line-height: 1;
-            letter-spacing: 0.01em;
-            color: var(--bg);
-            text-shadow: 0 15px 35px rgba(255, 107, 53, 0.35);
-            transform: translate(-50%, -50%) rotate(-45deg);
-            pointer-events: none;
-            user-select: none;
-        }
-
-        .board .hanapin {
-            position: absolute;
-            left: 41.36%;
-            top: 78%;
-            width: 17.28%;
-            height: 7.94%;
-            padding: 0;
-            font: inherit;
-            font-size: 2.34cqw;
-            letter-spacing: 0.1em;
-            color: var(--bg);
-            background: var(--accent);
-            border: 0;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: filter .15s;
-        }
-
+        .board .mark { width: 15.74%; font-size: 14.35cqw; letter-spacing: 0.01em; color: var(--bg); text-shadow: 0 15px 35px rgba(255,107,53,.35); }
+        .board .hanapin { position: absolute; left: 41.36%; top: 78%; width: 17.28%; height: 7.94%; padding: 0; font: inherit; font-size: 2.34cqw; letter-spacing: 0.1em; color: var(--bg); background: var(--accent); border: 0; border-radius: 10px; cursor: pointer; transition: filter .15s; }
         .board .hanapin:hover { filter: brightness(1.12); }
-
-        .board .tally {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 5%;
-            margin: 0;
-            text-align: center;
-            font-size: 2cqw;
-            line-height: 1.25;
-            letter-spacing: 0.05em;
-            color: var(--sage);
-        }
+        .board .tally { bottom: 5%; font-size: 2cqw; color: var(--sage); }
         .board a.hanapin { display: flex; align-items: center; justify-content: center; text-decoration: none; }
         .board .tally-msg { animation: tally-out .4s ease 3.5s forwards; }
         .board .tally-count.delayed { opacity: 0; animation: tally-in .4s ease 3.9s forwards; }
         @keyframes tally-out { to { opacity: 0; visibility: hidden; } }
         @keyframes tally-in  { to { opacity: 1; } }
-
-        .findbtn {
-            display: inline-block; margin-top: 24px; padding: 12px 28px;
-            font: inherit; font-size: clamp(18px, 1.8vw, 30px); letter-spacing: 0.1em;
-            color: var(--bg); background: var(--accent);
-            border: 0; border-radius: 10px; cursor: pointer; text-decoration: none;
-        }
+        .findbtn { display: inline-block; margin-top: 24px; padding: 12px 28px; font: inherit; font-size: clamp(18px, 1.8vw, 30px); letter-spacing: 0.1em; color: var(--bg); background: var(--accent); border: 0; border-radius: 10px; cursor: pointer; text-decoration: none; }
         .findbtn:hover { filter: brightness(1.12); }
-        .endrow { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
-        .endrow form { margin: 0; }
-
-        /* Frame 3.1: "UNLOCKED" popup (full-screen dim, covers the nav too) */
-        .unlock {
-            position: fixed;
-            inset: 0;
-            z-index: 20;
-            background: rgba(30, 30, 30, 0.84);
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            transition: opacity .4s ease, visibility 0s linear .4s;
-        }
-
-        .unlock.show {
-            opacity: 1;
-            visibility: visible;
-            pointer-events: auto;
-            transition: opacity .4s ease;
-        }
-
-        .unlock h2 {
-            position: absolute;
-            left: 50%;
-            top: 30.28%;
-            margin: 0;
-            width: 100%;
-            font-weight: 400;
-            font-size: var(--hero-size);
-            letter-spacing: 0.1em;
-            line-height: 1;
-            text-align: center;
-            color: #fff;
-            transform: translate(-50%, -50%);
-        }
-
-        .unlock img {
-            position: absolute;
-            left: 50%;
-            top: 56.94%;
-            width: min(19.79vw, 35.2vh);
-            aspect-ratio: 1;
-            object-fit: contain;
-            transform: translate(-50%, -50%);
-        }
-
-        /* Frame 3.2: map icon. Once unlocked it floats bottom-right in EVERY
-           section and acts like a nav link (opens / closes the map). */
-        .map-btn {
-            display: none;
-            position: fixed;
-            z-index: 16;
-            right: 2.76vw;
-            bottom: 3.98vh;
-            width: min(4.9vw, 8.7vh);
-            aspect-ratio: 1;
-            padding: 0;
-            border: 0;
-            background: none;
-            cursor: pointer;
-            transition: transform .15s;
-        }
-
-        .map-btn img { display: block; width: 100%; height: 100%; object-fit: contain; }
+        .unlock { position: fixed; inset: 0; z-index: 20; background: rgba(30, 30, 30, 0.84); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .4s ease, visibility 0s linear .4s; }
+        .unlock.show { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity .4s ease; }
+        .unlock h2 { top: 30.28%; font-size: var(--hero-size); }
+        .unlock img { top: 56.94%; width: min(19.79vw, 35.2vh); aspect-ratio: 1; }
+        /* Floats bottom-right in every section and acts like a nav link (opens / closes the map) */
+        .map-btn { display: none; position: fixed; z-index: 16; right: 2.76vw; bottom: 3.98vh; width: min(4.9vw, 8.7vh); aspect-ratio: 1; padding: 0; border: 0; background: none; cursor: pointer; transition: transform .15s; }
         .map-btn:hover { transform: scale(1.08); }
-
         body.unlocked .map-btn { display: block; animation: icon-in .5s ease both; }
-
         @keyframes icon-in {
             from { opacity: 0; transform: scale(.6); }
             to   { opacity: 1; transform: none; }
         }
-
-        /* Frames 3.2.1 / 3.2.2: the map (dim backdrop + map field + 5 coordinates) */
-        .mapview {
-            position: fixed;
-            inset: 0;
-            z-index: 15;
-            background: rgba(30, 30, 30, 0.84);
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            transition: opacity .35s ease, visibility 0s linear .35s;
-        }
-
-        .mapview.show {
-            opacity: 1;
-            visibility: visible;
-            pointer-events: auto;
-            transition: opacity .35s ease;
-        }
-
-        .mapfield {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            width: min(53.9vw, 95.83vh);
-            aspect-ratio: 1;
-            transform: translate(-50%, -50%);
-        }
-
-        .mapfield > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
-
-        /* Dot colours: Base = brown (Missing Adults); coordinates 1-5 = yellow,
-           green, blue, red, purple. Hex values are my best match; tweak if needed. */
+        .mapview { position: fixed; inset: 0; z-index: 15; background: rgba(30, 30, 30, 0.84); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .35s ease, visibility 0s linear .35s; }
+        .mapview.show { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity .35s ease; }
+        .mapfield { width: min(53.9vw, 95.83vh); aspect-ratio: 1; }
         .mapfield { --c0: #8b5a2b; --c1: #f2c94c; --c2: #5fae5b; --c3: #4f8fe0; --c4: #e0524f; --c5: #9b6bd3; }
-
-        .coord {
-            position: absolute;
-            width: 4.83%;
-            aspect-ratio: 1;
-            padding: 0;
-            border: 0;
-            border-radius: 50%;
-            background: var(--c);
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, .7);
-            cursor: pointer;
-            transform: translate(-50%, -50%);
-            transition: transform .15s;
-        }
-
+        .coord { position: absolute; width: 4.83%; aspect-ratio: 1; padding: 0; border: 0; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 2px rgba(255, 255, 255, .7); cursor: pointer; transform: translate(-50%, -50%); transition: transform .15s; }
         .coord:hover, .coord:focus-visible { transform: translate(-50%, -50%) scale(1.25); outline: none; }
-
-        /* Frame 3.3: "Go to this location?" box (322 x 118 in Figma, placed next to
-           the clicked dot; --k is the map's scale factor, set from JS) */
-        .confirm {
-            --k: 1;
-            position: fixed;
-            left: 0;
-            top: 0;
-            z-index: 17;
-            width: calc(322px * var(--k));
-            height: calc(118px * var(--k));
-            background: #0f2a1d;
-            border-radius: calc(10px * var(--k));
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity .2s ease, visibility 0s linear .2s;
-        }
-
+        .confirm { --k: 1; position: fixed; left: 0; top: 0; z-index: 17; width: calc(322px * var(--k)); height: calc(118px * var(--k)); background: #0f2a1d; border-radius: calc(10px * var(--k)); opacity: 0; visibility: hidden; transition: opacity .2s ease, visibility 0s linear .2s; }
         .confirm.show { opacity: 1; visibility: visible; transition: opacity .2s ease; }
-
-        .confirm p {
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: calc(12px * var(--k));
-            margin: 0;
-            text-align: center;
-            font-size: calc(32px * var(--k));
-            letter-spacing: 0.1em;
-            line-height: 1;
-            white-space: nowrap;
-            color: #fff;
-        }
-
-        .confirm button {
-            position: absolute;
-            top: calc(54px * var(--k));
-            width: calc(140px * var(--k));
-            height: calc(47px * var(--k));
-            padding: 0;
-            font: inherit;
-            font-size: calc(32px * var(--k));
-            letter-spacing: 0.1em;
-            line-height: 1;
-            color: var(--bg);
-            border: 0;
-            border-radius: calc(5px * var(--k));
-            cursor: pointer;
-            transition: filter .15s;
-        }
-
+        .confirm p { position: absolute; left: 0; right: 0; top: calc(12px * var(--k)); margin: 0; text-align: center; font-size: calc(32px * var(--k)); letter-spacing: 0.1em; line-height: 1; white-space: nowrap; color: #fff; }
+        .confirm button { position: absolute; top: calc(54px * var(--k)); width: calc(140px * var(--k)); height: calc(47px * var(--k)); padding: 0; font: inherit; font-size: calc(32px * var(--k)); letter-spacing: 0.1em; line-height: 1; color: var(--bg); border: 0; border-radius: calc(5px * var(--k)); cursor: pointer; transition: filter .15s; }
         .confirm button:hover { filter: brightness(1.12); }
         .confirm .no  { left: calc(17px * var(--k));  background: var(--sage); }
         .confirm .yes { left: calc(164px * var(--k)); background: var(--accent); }
-
-        /* Empty placeholder sections for coordinates 2-5 (hidden until visited) */
-        .loc {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: calc(var(--nav-h) + 1vh) 6vw 3vh;
-        }
-
+        .loc { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: calc(var(--nav-h) + 1vh) 6vw 3vh; }
         .loc.is-hidden { display: none; }
         .loc h2 { margin: 0 0 8px; font-weight: 400; font-size: var(--hero-size); letter-spacing: 0.1em; line-height: 1.1; color: #fff; }
         .loc p { margin: 0; font-size: clamp(16px, 1.667vw, 28px); color: var(--sage); }
-
         .loc h2 { margin: 0; font-size: min(var(--hero-size), 7vw, 10vh); white-space: nowrap; }
         .loc-photo { height: 50vh; width: auto; max-width: 88vw; aspect-ratio: 1027 / 577; object-fit: cover; margin: 1vh 0; }
         #ending { justify-content: flex-start; padding-top: calc(12.07svh - 1.625vw + var(--hero-size) * 1.1 + 3.9svh); }
         .end-photo { height: 51.94svh; width: auto; max-width: 88vw; aspect-ratio: 997 / 561; object-fit: cover; margin: 1vh 0; }
         .loc .findbtn { margin-top: 8px; padding: 8px 24px; }
-
-        /* Leave Message section (last on the page) */
-        #leave-message {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow-y: auto;
-            padding: calc(var(--nav-h) + 4vh) 6vw 6vh;
-        }
-
-        .message-card {
-            position: relative;
-            z-index: 2;
-            width: 100%;
-            max-width: 560px;
-        }
-
-        .message-card h2 {
-            margin: 0 0 8px;
-            font-weight: 400;
-            font-size: clamp(36px, 4.4vw, 84px);
-            letter-spacing: 0.1em;
-            line-height: 1.1;
-            text-align: center;
-            color: #fff;
-        }
-
-        .message-card p.sub {
-            margin: 0 0 28px;
-            text-align: center;
-            font-size: clamp(16px, 1.667vw, 28px);
-            color: var(--sage);
-        }
-
-        .status {
-            margin: 0 0 20px;
-            padding: 10px 18px;
-            border: 1px solid var(--sage);
-            border-radius: 9999px;
-            text-align: center;
-            font-size: clamp(15px, 1.4vw, 24px);
-            color: var(--accent);
-            background: rgba(7, 11, 24, 0.85);
-        }
-
+        #leave-message { overflow-y: auto; padding: calc(var(--nav-h) + 4vh) 6vw 6vh; }
+        .message-card { position: relative; z-index: 2; width: 100%; max-width: 560px; }
+        .message-card h2 { margin: 0 0 8px; font-weight: 400; font-size: clamp(36px, 4.4vw, 84px); letter-spacing: 0.1em; line-height: 1.1; text-align: center; color: #fff; }
+        .message-card p.sub { margin: 0 0 28px; text-align: center; font-size: clamp(16px, 1.667vw, 28px); color: var(--sage); }
+        .status { margin: 0 0 20px; padding: 10px 18px; border: 1px solid var(--sage); border-radius: 9999px; text-align: center; font-size: clamp(15px, 1.4vw, 24px); color: var(--accent); background: rgba(7, 11, 24, 0.85); }
         .status a { color: inherit; font-weight: 700; }
-
-        .message-card form { display: grid; gap: 14px; }
-
         .message-card input,
-        .message-card textarea {
-            width: 100%;
-            padding: 12px 14px;
-            font: inherit;
-            font-size: clamp(16px, 1.5vw, 26px);
-            color: #fff;
-            background: rgba(174, 195, 176, 0.08);
-            border: 1px solid rgba(174, 195, 176, 0.55);
-            border-radius: 10px;
-            outline: none;
-        }
-
+        .message-card textarea { width: 100%; padding: 12px 14px; font: inherit; font-size: clamp(16px, 1.5vw, 26px); color: #fff; background: rgba(174, 195, 176, 0.08); border: 1px solid rgba(174, 195, 176, 0.55); border-radius: 10px; outline: none; }
         .message-card input::placeholder,
         .message-card textarea::placeholder { color: rgba(174, 195, 176, 0.7); }
-
         .message-card input:focus,
         .message-card textarea:focus { border-color: var(--accent); }
-
         .message-card textarea { resize: vertical; min-height: 120px; }
-
-        .message-card button {
-            padding: 12px 18px;
-            font: inherit;
-            font-size: clamp(18px, 1.8vw, 30px);
-            letter-spacing: 0.1em;
-            color: var(--bg);
-            background: var(--accent);
-            border: 0;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: filter .15s;
-        }
-
+        .message-card button { padding: 12px 18px; font: inherit; font-size: clamp(18px, 1.8vw, 30px); letter-spacing: 0.1em; color: var(--bg); background: var(--accent); border: 0; border-radius: 10px;cursor: pointer; transition: filter .15s; }
         .message-card button:hover { filter: brightness(1.12); }
-
-        /* No JavaScript: show the final state of screen 2 */
         .no-js #name { display: none; }
         .no-js #headline { opacity: 1; transform: translate(-50%, -50%); }
         .no-js .nav-title { display: block; }
         .no-js #go-btn { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%); }
         .no-js #screen-3.is-hidden { display: flex; }
-
-        .nav-title {
-            display: none;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            font-size: calc(var(--hero-size) / 2);
-            letter-spacing: 0.1em;
-            white-space: nowrap;
-            color: var(--accent);
-            text-shadow: 0 15px 35px rgba(255, 107, 53, 0.35);
-        }
-
-        #blackout { position: fixed; inset: 0; z-index: 30; background: #000; opacity: 0; pointer-events: none; }
+        .nav-title { display: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: calc(var(--hero-size) / 2); letter-spacing: 0.1em; white-space: nowrap; color: var(--accent); text-shadow: 0 15px 35px rgba(255, 107, 53, 0.35); }
     </style>
 </head>
 <body class="no-js" th:attr="data-intro=${playIntro}">
 
-<div class="backdrop" aria-hidden="true"></div>
+<div class="backdrop fixed inset-0 z-0 pointer-events-none" aria-hidden="true"></div>
 
 <main id="stage">
 
     <!-- Floating nav (always visible) -->
-    <header class="nav">
-        <div class="nav-inner">
-            <div class="nav-row" id="nav-row">
-                <a href="/">Back to Home</a>
+    <header class="nav fixed top-0 inset-x-0 z-10">
+        <div class="nav-inner relative pt-2.5 pb-1">
+            <div class="nav-row flex items-center justify-between leading-none" id="nav-row">
+                <a href="/" class="hover:underline">Back to Home</a>
                 <span>November 2026</span>
             </div>
             <span class="nav-title">JAHN OLIVENN ESMARIN</span>
@@ -642,9 +154,7 @@
     </section>
 
     <!-- Group Profiling 3: Missing Adults (revealed by the button in screen 2) -->
-    <section id="screen-3" class="screen"
-             th:classappend="${foundCount == 0 and message == null} ? 'is-hidden'"
-             aria-label="Missing Adults">
+    <section id="screen-3" class="screen flex items-center justify-center" th:classappend="${foundCount == 0 and message == null} ? 'is-hidden'" aria-label="Missing Adults">
         <h2 class="day">
             <span>DAY&nbsp;</span><span class="roll" th:classappend="${prevDay != null} ? 'rolling'">
                 <span class="roll-old" th:if="${prevDay != null}" th:text="${prevDay}">1</span>
@@ -652,14 +162,14 @@
             </span>
         </h2>
         <div class="board">
-            <img class="bg" src="/images/woodboard.png" alt="" />
-            <h2>MISSING ADULTS</h2>
+            <img class="bg absolute inset-0 block w-full h-full object-cover pointer-events-none select-none" src="/images/woodboard.png" alt="" />
+            <h2 class="absolute left-1/2 m-0 w-full font-normal tracking-widest leading-none text-center text-white whitespace-nowrap transform -translate-x-1/2 -translate-y-1/2">MISSING ADULTS</h2>
 
             <th:block th:each="e : ${emotions}">
-                <img class="pad" th:style="'left:' + ${e.padLeft} + '%'" src="/images/yellowpad.png" alt="" />
-                <img class="face" th:src="${e.image}" th:alt="${e.name}"
+                <img class="pad absolute block pointer-events-none select-none" th:style="'left:' + ${e.padLeft} + '%'" src="/images/yellowpad.png" alt="" />
+                <img class="face absolute block pointer-events-none select-none" th:src="${e.image}" th:alt="${e.name}"
                      th:style="'left:' + ${e.faceLeft} + '%;top:' + ${e.faceTop} + '%'" />
-                <span class="mark" aria-hidden="true" th:unless="${found.contains(e.slug)}"
+                <span class="mark absolute flex items-center justify-center leading-none pointer-events-none select-none transform -translate-x-1/2 -translate-y-1/2 -rotate-45" aria-hidden="true" th:unless="${found.contains(e.slug)}"
                       th:style="'left:' + ${e.markLeft} + '%;top:' + ${e.markTop} + '%'">???</span>
             </th:block>
 
@@ -670,8 +180,8 @@
                 <a class="hanapin" th:href="@{/portfolio/olivenn/ending#ending}">#Found</a>
             </th:block>
 
-            <p class="tally tally-msg" th:if="${message != null}" th:text="${message}"></p>
-            <p class="tally tally-count" th:classappend="${message != null} ? 'delayed'"
+            <p class="absolute inset-x-0 m-0 text-center tracking-wider leading-tight tally tally-msg" th:if="${message != null}" th:text="${message}"></p>
+            <p class="absolute inset-x-0 m-0 text-center tracking-wider leading-tight tally tally-count" th:classappend="${message != null} ? 'delayed'"
                th:text="'Found: ' + ${foundCount} + ' / ' + ${#lists.size(emotions)}"></p>
         </div>
     </section>
@@ -697,44 +207,44 @@
         </h2>
         <img class="end-photo" src="/images/fm.png" alt="" />
         <p>99 Nights ng Ano? 99 Nights ng Finding...</p>
-        <div class="endrow">
-            <form method="post" th:action="@{/portfolio/olivenn/reset}">
+        <div class="flex flex-wrap justify-center gap-4">
+            <form class="m-0" method="post" th:action="@{/portfolio/olivenn/reset}">
                 <button type="submit" class="findbtn">Try Again</button>
             </form>
         </div>
     </section>
 
     <!-- Leave Message (very end of the page) -->
-    <section id="leave-message" class="screen" th:attr="data-sent=${sent}">
+    <section id="leave-message" class="screen flex items-center justify-center" th:attr="data-sent=${sent}">
         <div class="message-card">
             <h2>Leave a Message</h2>
             <p class="sub">Say something to Olivenn.</p>
 
             <div class="status" th:if="${sent}">
-                Message saved in Spring Boot! View it on the <a href="/">Dashboard Alerts</a>.
+                Message Saved! View it on the <a href="/">Dashboard</a>.
             </div>
 
-            <form action="/feedback" method="post">
+            <form class="grid gap-3.5" action="/feedback" method="post">
                 <input type="hidden" name="recipient" value="Olivenn" />
                 <input type="text" name="name" required placeholder="Your Name" />
                 <input type="email" name="email" required placeholder="Your Email" />
                 <textarea name="message" required rows="4" placeholder="Write a message..."></textarea>
-                <button type="submit">Send to Spring Boot</button>
+                <button type="submit">Send</button>
             </form>
         </div>
     </section>
 
     <!-- Group Profiling 3.1: unlock popup (shown on the first #Hanapin click of the session) -->
     <div id="unlock" class="unlock" aria-hidden="true">
-        <h2>UNLOCKED</h2>
-        <img src="/images/map.png" alt="" />
+        <h2 class="absolute left-1/2 m-0 w-full font-normal tracking-widest leading-none text-center text-white transform -translate-x-1/2 -translate-y-1/2">UNLOCKED</h2>
+        <img class="absolute left-1/2 object-contain transform -translate-x-1/2 -translate-y-1/2" src="/images/map.png" alt="" />
     </div>
 
     <!-- Frames 3.2.1 / 3.2.2: map (opened by #Hanapin or the map icon) -->
     <div id="map" class="mapview" aria-hidden="true"
          th:attr="data-unlocked=${foundCount > 0 or message != null}">
-        <div class="mapfield">
-            <img src="/images/mapfield.png" alt="" />
+        <div class="mapfield absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <img class="absolute inset-0 w-full h-full object-contain pointer-events-none" src="/images/mapfield.png" alt="" />
             <button type="button" class="coord" style="--c:var(--c0);left:50.05%;top:50.05%" data-target="screen-3" aria-label="Missing Adults (Base)"></button>
             <button type="button" class="coord" style="--c:var(--c1);left:50.05%;top:20.19%" data-target="loc-1" aria-label="Coordinate 1"></button>
             <button type="button" class="coord" style="--c:var(--c2);left:81.55%;top:50.05%" data-target="loc-2" aria-label="Coordinate 2"></button>
@@ -753,10 +263,10 @@
 
     <!-- Map icon: visible in every section once unlocked (acts like a nav link) -->
     <button type="button" class="map-btn" id="map-btn" aria-label="Open map">
-        <img src="/images/map.png" alt="" />
+        <img class="block w-full h-full object-contain" src="/images/map.png" alt="" />
     </button>
 
-    <div id="blackout" aria-hidden="true"></div>
+    <div id="blackout" class="fixed inset-0 z-30 bg-black opacity-0 pointer-events-none" aria-hidden="true"></div>
 
     <!-- Moves from screen 1's centre into screen 2's nav bar while scrolling -->
     <h1 id="name">JAHN OLIVENN ESMARIN</h1>
