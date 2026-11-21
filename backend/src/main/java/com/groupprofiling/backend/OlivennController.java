@@ -27,7 +27,6 @@ public class OlivennController {
     private static final String DAY_KEY = "olivennDay";
     private static final int FINAL_DAY = 99;
 
-    // Order matches the map coordinates: 1 yellow, 2 green, 3 blue, 4 red, 5 purple.
     private final List<MissingEmotion> emotions = List.of(
             new MissingEmotion("joy", "Joy", "/images/joy.png",
                     "Deserve daw niya kasi, ket indi pa naman?!", 4.1, 5.64, 38.41, 12.14, 51.15,
@@ -51,13 +50,11 @@ public class OlivennController {
                     "Goodluck?", "/images/present.png")
     );
 
-    // Runs before every handler in this controller and puts "emotions" into the Model.
     @ModelAttribute("emotions")
     public List<MissingEmotion> emotions() {
         return emotions;
     }
 
-    // `sent` is set by ProfilingController after the Leave Message form is submitted.
     @GetMapping
     public String showPortfolio(@RequestParam(required = false) Boolean sent, HttpSession session, Model model) {
         fill(model, session, sent != null && sent);
@@ -65,7 +62,6 @@ public class OlivennController {
         return "olivenn";
     }
 
-    // Only reachable once all 5 are found; otherwise bounce back to the base.
     @GetMapping("/ending")
     public String ending(HttpSession session, Model model) {
         if (foundSet(session).size() < emotions.size()) return BACK;
@@ -75,7 +71,6 @@ public class OlivennController {
         return "olivenn";
     }
 
-    // "Hanapin si X" button inside a location section; the slug comes from the URL path.
     @PostMapping("/find/{slug}")
     public String find(@PathVariable String slug, HttpSession session, RedirectAttributes ra) {
         MissingEmotion e = emotions.stream()
@@ -110,7 +105,6 @@ public class OlivennController {
         model.addAttribute("day", session.getAttribute(DAY_KEY) instanceof Integer d ? d : 1);
     }
 
-    // Random jump, but always leaves room so the last find lands exactly on Day 99.
     private void advanceDay(HttpSession session, int remaining) {
         int day = session.getAttribute(DAY_KEY) instanceof Integer d ? d : 1;
         if (remaining == 0) {
@@ -122,7 +116,6 @@ public class OlivennController {
         session.setAttribute(DAY_KEY, day);
     }
 
-    @SuppressWarnings("unchecked")
     private Set<String> foundSet(HttpSession session) {
         Set<String> found = (Set<String>) session.getAttribute(FOUND_KEY);
         if (found == null) {

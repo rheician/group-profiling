@@ -18,13 +18,10 @@ import org.springframework.web.server.ResponseStatusException;
 public class ProfilingController {
 
     private final List<TeamMember> teamMembers = new ArrayList<>();
-    // Safe for concurrent visits; still intentionally in-memory (no database).
     private final List<FeedbackMessage> feedbackList = new CopyOnWriteArrayList<>();
     private final AtomicLong feedbackIds = new AtomicLong();
 
     public ProfilingController() {
-        // The "games" are creative portfolio experiences. Ratings are demo display values,
-        // not scores gathered from real players.
         teamMembers.add(new TeamMember(
                 "chelsy", "Chelsy", "Developer", "/portfolio/chelsy/launch", "Steal a Chelsy",
                 "95%", ChelsyBodies.COVER_IMAGE,
@@ -60,7 +57,7 @@ public class ProfilingController {
         ));
     }
 
-    // Game details are served by Java + Thymeleaf; profile routes stay unchanged.
+
     @GetMapping("/games/{slug}")
     public String gamePreview(@PathVariable String slug, Model model) {
         TeamMember game = teamMembers.stream()
@@ -88,7 +85,7 @@ public class ProfilingController {
             @RequestParam String email,
             @RequestParam String message) {
 
-        // An allowed portfolio route is required, so a forged recipient cannot redirect anywhere else.
+
         String slug = recipient.trim().toLowerCase(Locale.ROOT);
         if (!List.of("chelsy", "olivenn", "rheician", "radcliff").contains(slug)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unknown member");
