@@ -1,0 +1,316 @@
+2026.11.21 04:20:31 INFO  Started: Metals version 1.6.9 in folders 'C:\Users\ADMIN\Downloads\group-profiling' for client Visual Studio Code 1.146.0.
+2026.11.21 04:20:31 INFO  Memory monitor started
+2026.11.21 04:20:33 WARN  Using H2 2.5.250 which is newer than the version Flyway has been verified with. The latest verified version of H2 is 2.3.232.
+Nov 21, 2026 4:22:00 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTrace
+Nov 21, 2026 4:22:01 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTrace
+Nov 21, 2026 4:22:01 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTrace
+Nov 21, 2026 4:22:05 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTrace
+Nov 21, 2026 4:22:06 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTrace
+Nov 21, 2026 4:22:06 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTrace
+Nov 21, 2026 4:22:06 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTrace
+2026.11.21 04:36:32 WARN  no build target for: C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java
+2026.11.21 05:02:34 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:02:38 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:02:41 WARN  no build target for: C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java
+2026.11.21 05:17:49 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:17:50 WARN  no build target for: C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java
+Nov 21, 2026 5:17:50 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 8
+2026.11.21 05:17:50 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+Nov 21, 2026 5:17:50 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 9
+2026.11.21 05:17:50 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:17:50 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+Nov 21, 2026 5:17:51 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 12
+2026.11.21 05:17:50 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:17:50 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+Nov 21, 2026 5:17:51 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint fallbackResponseError
+SEVERE: Internal error: java.lang.StringIndexOutOfBoundsException: begin -1, end 6000, length 6115
+java.util.concurrent.CompletionException: java.lang.StringIndexOutOfBoundsException: begin -1, end 6000, length 6115
+	at java.base/java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:332)
+	at java.base/java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:347)
+	at java.base/java.util.concurrent.CompletableFuture$UniAccept.tryFire(CompletableFuture.java:708)
+	at java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:510)
+	at java.base/java.util.concurrent.CompletableFuture.completeExceptionally(CompletableFuture.java:2162)
+	at scala.meta.internal.metals.CancelTokens$.$anonfun$future$1(CancelTokens.scala:40)
+	at scala.meta.internal.metals.CancelTokens$.$anonfun$future$1$adapted(CancelTokens.scala:38)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:517)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: java.lang.StringIndexOutOfBoundsException: begin -1, end 6000, length 6115
+	at java.base/java.lang.String.checkBoundsBeginEnd(String.java:4606)
+	at java.base/java.lang.String.substring(String.java:2709)
+	at scala.meta.internal.pc.JavaMetalsGlobal.findIndentifierStartAndEnd(JavaMetalsGlobal.scala:87)
+	at scala.meta.internal.pc.JavaDefinitionProvider.$anonfun$definitionImpl$5(JavaDefinitionProvider.scala:122)
+	at scala.Option$WithFilter.map(Option.scala:242)
+	at scala.meta.internal.pc.JavaDefinitionProvider.definitionImpl(JavaDefinitionProvider.scala:70)
+	at scala.meta.internal.pc.JavaDefinitionProvider.definitionOffset(JavaDefinitionProvider.scala:53)
+	at scala.meta.internal.pc.JavaDefinitionProvider.definition(JavaDefinitionProvider.scala:31)
+	at scala.meta.internal.pc.JavaPresentationCompiler.definition(JavaPresentationCompiler.scala:98)
+	at scala.meta.internal.metals.Compilers.$anonfun$definition$1(Compilers.scala:1230)
+	at scala.meta.internal.metals.Compilers.$anonfun$withPCAndAdjustLsp$4(Compilers.scala:1543)
+	at scala.Option.map(Option.scala:242)
+	at scala.meta.internal.metals.Compilers.$anonfun$withPCAndAdjustLsp$3(Compilers.scala:1543)
+	at scala.Option.flatMap(Option.scala:283)
+	at scala.meta.internal.metals.Compilers.withPCAndAdjustLsp(Compilers.scala:1535)
+	at scala.meta.internal.metals.Compilers.definition(Compilers.scala:1221)
+	at scala.meta.internal.metals.Compilers.definition(Compilers.scala:1182)
+	at scala.meta.internal.metals.DefinitionProvider.fromCompiler$1(DefinitionProvider.scala:97)
+	at scala.meta.internal.metals.DefinitionProvider.$anonfun$definition$10(DefinitionProvider.scala:146)
+	at scala.meta.internal.metals.DefinitionProvider.$anonfun$definition$15(DefinitionProvider.scala:153)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:503)
+	... 3 more
+
+Nov 21, 2026 5:17:51 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 16
+2026.11.21 05:17:50 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:17:50 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:17:50 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:17:50 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:17:51 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:17:51 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:17:51 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:17:52 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:17:51 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:17:51 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:17:57 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:17:57 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:17:57 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:17:57 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:17:57 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:00 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:00 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:00 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:06 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+Nov 21, 2026 5:18:06 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 88
+2026.11.21 05:18:06 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:06 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:06 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:16 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:17 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:17 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:17 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:19 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:19 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:21 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:21 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:23 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:23 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:23 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:23 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:24 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:24 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:24 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:24 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:24 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:24 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:25 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:24 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:24 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:25 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:26 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:25 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:25 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:25 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:26 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:27 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:27 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:27 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:27 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:27 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:27 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:27 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:27 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:28 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:28 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:28 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:28 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:28 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:28 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:28 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:28 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:28 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:29 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:28 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:29 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:29 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:29 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:29 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:29 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:29 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:30 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:30 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:30 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:30 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:30 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:30 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:30 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:30 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:31 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:32 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:34 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:34 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:34 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:34 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:35 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:35 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:35 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:35 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:35 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:35 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:35 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:35 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:35 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:36 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:36 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:36 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:35 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:36 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:36 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:36 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:37 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:37 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:37 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:37 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:37 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:37 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:37 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:38 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:37 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:37 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:38 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:18:40 WARN  no build target for: C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java
+2026.11.21 05:18:40 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:19:15 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:19:28 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:20:03 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:25:36 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:25:39 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:26:27 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:27:19 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:27:54 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:30:10 WARN  no build target for: C:\Users\ADMIN\Downloads\group-profiling\backend\src\test\java\com\groupprofiling\backend\BackendApplicationTests.java
+2026.11.21 05:30:14 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\test\java\com\groupprofiling\backend\BackendApplicationTests.java. Using fallback presentation compiler.
+2026.11.21 05:30:51 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\test\java\com\groupprofiling\backend\BackendApplicationTests.java. Using fallback presentation compiler.
+2026.11.21 05:32:12 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:32:13 WARN  no build target for: C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java
+2026.11.21 05:32:12 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+Nov 21, 2026 5:32:13 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 325
+2026.11.21 05:32:12 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:32:12 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:32:13 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:32:12 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 05:38:17 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:17 WARN  no build target for: C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java
+2026.11.21 05:38:17 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:17 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:17 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:18 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:18 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:18 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:19 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:20 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:20 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:24 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:24 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:27 WARN  no build target for: C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java
+2026.11.21 05:38:27 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+Nov 21, 2026 5:38:27 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 364
+2026.11.21 05:38:27 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:27 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:27 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:28 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:27 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:30 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:30 WARN  no build target for: C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java
+2026.11.21 05:38:30 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:30 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:31 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:32 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\test\java\com\groupprofiling\backend\BackendApplicationTests.java. Using fallback presentation compiler.
+2026.11.21 05:38:32 WARN  no build target for: C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java
+2026.11.21 05:38:32 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:32 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:32 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:32 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:32 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:33 WARN  no build target for: C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java
+2026.11.21 05:38:32 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:33 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:33 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:34 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:34 WARN  no build target for: C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java
+2026.11.21 05:38:34 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:34 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:35 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:36 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:36 WARN  no build target for: C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java
+2026.11.21 05:38:36 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:36 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:36 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:38 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:38 WARN  no build target for: C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java
+2026.11.21 05:38:38 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:38 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:38 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:41 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:41 WARN  no build target for: C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java
+2026.11.21 05:38:41 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:41 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:41 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:43 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:43 WARN  no build target for: C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java
+2026.11.21 05:38:43 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:43 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:44 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:47 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:47 WARN  no build target for: C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java
+2026.11.21 05:38:47 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:47 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:47 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:50 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:50 WARN  no build target for: C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java
+2026.11.21 05:38:50 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:50 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:50 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:51 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RheicianController.java. Using fallback presentation compiler.
+2026.11.21 05:38:51 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:51 WARN  no build target for: C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java
+2026.11.21 05:38:51 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:51 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:38:51 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 05:39:00 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 06:03:31 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 06:04:04 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 06:04:32 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\test\java\com\groupprofiling\backend\BackendApplicationTests.java. Using fallback presentation compiler.
+2026.11.21 06:05:38 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\test\java\com\groupprofiling\backend\BackendApplicationTests.java. Using fallback presentation compiler.
+2026.11.21 06:06:21 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\test\java\com\groupprofiling\backend\BackendApplicationTests.java. Using fallback presentation compiler.
+2026.11.21 06:06:50 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\test\java\com\groupprofiling\backend\BackendApplicationTests.java. Using fallback presentation compiler.
+2026.11.21 06:06:54 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\test\java\com\groupprofiling\backend\BackendApplicationTests.java. Using fallback presentation compiler.
+2026.11.21 06:15:19 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 06:15:19 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\test\java\com\groupprofiling\backend\BackendApplicationTests.java. Using fallback presentation compiler.
+2026.11.21 06:15:24 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\test\java\com\groupprofiling\backend\BackendApplicationTests.java. Using fallback presentation compiler.
+2026.11.21 06:18:02 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 06:22:32 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 06:25:39 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 06:29:02 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 06:29:02 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\test\java\com\groupprofiling\backend\BackendApplicationTests.java. Using fallback presentation compiler.
+2026.11.21 06:32:03 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\RadcliffController.java. Using fallback presentation compiler.
+2026.11.21 06:32:03 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\test\java\com\groupprofiling\backend\BackendApplicationTests.java. Using fallback presentation compiler.
+2026.11.21 06:41:38 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\test\java\com\groupprofiling\backend\BackendApplicationTests.java. Using fallback presentation compiler.
+2026.11.21 06:50:24 INFO  no build target found for C:\Users\ADMIN\Downloads\group-profiling\backend\src\main\java\com\groupprofiling\backend\ProfilingController.java. Using fallback presentation compiler.
+2026.11.21 06:54:55 INFO  Shutting down server
+2026.11.21 06:54:55 INFO  Memory monitor stopped
+2026.11.21 06:54:55 INFO  shutting down Metals
+2026.11.21 06:54:55 INFO  Exiting server

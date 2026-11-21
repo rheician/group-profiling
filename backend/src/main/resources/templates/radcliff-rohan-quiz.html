@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rohan's Guessing Game</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            min-height: 100%;
+            margin: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #111;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        .rohan-backdrop {
+            position: fixed;
+            z-index: 0;
+            inset: 0;
+            background:
+                linear-gradient(rgba(7, 9, 14, .72), rgba(7, 9, 14, .88)),
+                url("/images/Rohan.png") center 24% / cover no-repeat;
+        }
+
+        .quiz-page {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1.5rem;
+        }
+
+        .quiz-brand {
+            margin: 0;
+            font-size: clamp(1.4rem, 4vw, 2.4rem);
+            font-weight: 900;
+            letter-spacing: .12em;
+            text-align: center;
+            text-shadow: 0 2px 8px #000;
+            text-transform: uppercase;
+        }
+
+        .quiz-card,
+        .completion-card {
+            width: min(100%, 900px);
+            border: 2px solid rgba(255, 255, 255, .9);
+            background: rgba(8, 10, 14, .92);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, .45);
+            padding: clamp(1rem, 3vw, 2rem);
+        }
+
+        .round-label {
+            margin: 0 0 1rem;
+            color: #ffe96b;
+            font-size: .8rem;
+            font-weight: 900;
+            letter-spacing: .14em;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .question-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .question-image-frame {
+            display: grid;
+            min-height: 260px;
+            place-items: center;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, .55);
+            background: rgba(255, 255, 255, .07);
+            padding: 1rem;
+        }
+
+        .question-image {
+            display: block;
+            width: 100%;
+            height: 300px;
+            object-fit: contain;
+        }
+
+        .question-title {
+            margin: 0 0 1rem;
+            font-size: clamp(1.4rem, 4vw, 2rem);
+            font-weight: 900;
+        }
+
+        .answer-list {
+            display: grid;
+            gap: .65rem;
+        }
+
+        .answer-choice {
+            width: 100%;
+            border: 2px solid #fff;
+            background: #f8fafc;
+            color: #111827;
+            padding: .8rem 1rem;
+            font-size: .95rem;
+            font-weight: 800;
+            text-align: left;
+            cursor: pointer;
+            transition: background-color .15s ease, color .15s ease;
+        }
+
+        .answer-choice:hover:not(:disabled),
+        .answer-choice:focus-visible:not(:disabled) {
+            background: #dbeafe;
+        }
+
+        .answer-choice:disabled {
+            cursor: default;
+        }
+
+        .answer-choice.answer-correct {
+            border-color: #166534;
+            background: #15803d;
+            color: #fff;
+        }
+
+        .answer-choice.answer-wrong {
+            border-color: #991b1b;
+            background: #b91c1c;
+            color: #fff;
+        }
+
+        .round-note {
+            margin: 1rem 0 0;
+            color: #ffe96b;
+            font-size: .9rem;
+            font-weight: 700;
+        }
+
+        .next-round,
+        .return-link {
+            display: inline-block;
+            border: 2px solid #ffe96b;
+            background: #ffe96b;
+            color: #111;
+            padding: .8rem 1.2rem;
+            font-size: .8rem;
+            font-weight: 900;
+            letter-spacing: .12em;
+            text-decoration: none;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .next-round-form {
+            margin-top: 1rem;
+        }
+
+        .next-round:hover,
+        .return-link:hover,
+        .next-round:focus-visible,
+        .return-link:focus-visible {
+            border-color: #fff;
+            background: #fff;
+        }
+
+        .completion-card {
+            text-align: center;
+        }
+
+        .completion-card p {
+            margin: 0 auto 1.5rem;
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-weight: 800;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 680px) {
+            .quiz-page {
+                justify-content: flex-start;
+                padding: 1rem;
+            }
+
+            .question-layout {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .question-image-frame {
+                min-height: 180px;
+            }
+
+            .question-image {
+                height: 220px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="rohan-backdrop" aria-hidden="true"></div>
+<main class="quiz-page">
+    <h1 class="quiz-brand">Rohan's Guessing Game</h1>
+
+    <section class="quiz-card">
+        <p class="round-label" th:text="|ROUND ${roundNumber} / 6|">ROUND 1 / 6</p>
+        <div class="question-layout">
+            <div class="question-image-frame">
+                <img class="question-image" th:src="${questionImage}" alt="Who is this?">
+            </div>
+            <div>
+                <h2 class="question-title">Who is this?</h2>
+                <form method="post" th:action="@{/portfolio/radcliff/games/mystery/answer}">
+                    <div class="answer-list">
+                        <button th:each="choice : ${choices}" type="submit" name="answer" th:value="${choice}"
+                                class="answer-choice"
+                                th:classappend="${correctAnswer != null and correctAnswers.contains(choice)} ? ' answer-correct' : (${wrongAnswers.contains(choice)} ? ' answer-wrong' : '')"
+                                th:disabled="${correctAnswer != null}"
+                                th:text="${choice}">Answer choice</button>
+                    </div>
+                </form>
+                <p th:if="${correctAnswer != null and roundNote != null}" class="round-note" th:text="${roundNote}"></p>
+                <form th:if="${correctAnswer != null and not completed}" class="next-round-form"
+                      method="post" th:action="@{/portfolio/radcliff/games/mystery/next}">
+                    <button class="next-round" type="submit">Next Round</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section th:if="${completed}" class="completion-card">
+        <p>Good job. I had already used Heaven's Door to read your memories btw</p>
+        <a class="return-link" href="/portfolio/radcliff">RETURN TO PROFILE</a>
+    </section>
+</main>
+</body>
+</html>
