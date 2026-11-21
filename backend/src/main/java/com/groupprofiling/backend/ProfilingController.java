@@ -100,7 +100,7 @@ public class ProfilingController {
                 timestamp
         ));
 
-        return "redirect:/portfolio/" + slug + "?sent=true" + (slug.equals("rheician") ? "#connect" : "");
+        return "redirect:/portfolio/" + slug + "?sent=true";
     }
 
     @PostMapping("/feedback/delete")
