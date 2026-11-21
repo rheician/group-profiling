@@ -113,6 +113,7 @@ public class ProfilingController {
     }
 }
 
+
 record TeamMember(
         String slug, String name, String role, String link, String gameTitle,
         String rating, String image, String genre, String tagline,
