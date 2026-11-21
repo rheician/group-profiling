@@ -1,227 +1,1487 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chelsy Kaye C. Ilagan — Portfolio</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Steal a Chelsy · Chelsy's Portfolio</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
     <style>
-        details > summary { list-style: none; }
-        details > summary::-webkit-details-marker { display: none; }
-
-        @keyframes marquee-slide {
-            0%   { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+        :root{--ink:#172c55;--blue:#164ed3;--sky:#e6f8ff;--edge:#b7d8f5;--yellow:#ffdc4b}
+        *{box-sizing:border-box}
+        [hidden]{display:none!important}
+        body{margin:0;background:linear-gradient(#def6ff,#f2f9ff 620px);color:var(--ink);font:16px/1.5 system-ui,sans-serif}
+        h1,h2,h3,p{margin:0}
+        a{color:inherit}
+        button{font:inherit}
+        button:focus-visible,a:focus-visible,canvas:focus-visible{outline:3px solid #0847cf;outline-offset:3px}
+        #game{background:#eaf7ff}
+        .game-frame{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh}
+        .game-frame:fullscreen,.game-frame.full-page{width:100%;height:100%;min-height:0;background:#eaf7ff}
+        .game-frame.full-page{position:fixed;inset:0;z-index:80}
+        body.game-expanded{overflow:hidden}
+        .bar{background:#fff;color:#111827;border-bottom:1px solid #e5e7eb}
+        .bar nav{min-height:64px;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px clamp(12px,3vw,24px)}
+        .brand{font-size:1.5rem;font-weight:900;letter-spacing:-.055em;text-decoration:none;color:#000}
+        .nav{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:7px}
+        .nav .chip{min-height:34px;border-color:#e5e7eb;color:#111827}
+        .nav .chip:hover{background:#f3f4f6}
+        .chip{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:6px 11px;border:1px solid #b1cfef;border-radius:8px;background:white;color:#18427c;font-weight:800;cursor:pointer;text-decoration:none}
+        .chip:hover{background:#e2f4ff}
+        .chip:disabled{opacity:.65;cursor:wait}
+        .yellow{background:var(--yellow);border-color:#e8ac24;color:#382604;box-shadow:0 3px 0 #c2891a}
+        .yellow:hover{background:#ffe989}
+        .game{flex:1;display:flex;flex-direction:column;min-height:0}
+        .game-top,.controls{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px clamp(10px,3vw,24px);flex-wrap:wrap}
+        .game-top h1{font-size:clamp(1.1rem,4vw,1.55rem);font-weight:900;line-height:1.15}
+        .game-top>div{display:flex;gap:7px;flex-wrap:wrap}
+        .scene{position:relative;flex:1;min-height:440px;background:#70d6ff;isolation:isolate}
+        .game-frame:fullscreen .scene,.game-frame.full-page .scene{min-height:0}
+        #arena{position:absolute;inset:0;width:100%;height:100%;display:block;outline-offset:-4px}
+        #hud{position:absolute;inset:9px 9px auto;display:flex;align-items:center;gap:7px;pointer-events:none}
+        #hud span{background:#ffffffeb;border-radius:7px;padding:5px 8px;font-size:.85rem;font-weight:800}
+        #hud span:first-child{margin-right:auto}
+        progress{accent-color:#178844}
+        #energy{width:46px}
+        #start-card{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:15px;text-align:center;pointer-events:none}
+        #start-card h2{font-weight:1000;font-size:clamp(2rem,7vw,5.75rem);letter-spacing:-.065em;color:#172c55;line-height:.95;text-shadow:0 3px #beefff}
+        #start-card p{margin:8px 0 0;max-width:360px;font-weight:700;color:#122748;background:#edfaffed;border-radius:6px;padding:5px 9px}
+        #play-track{position:relative;width:min(100%,380px);height:108px;margin-top:6px}
+        #start{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:auto;white-space:nowrap;font-size:1.15rem;min-height:44px;padding-inline:18px}
+        #alert{color:#8e300b;font-weight:700}
+        #interact{position:absolute;right:10px;bottom:10px}
+        #status{font-size:.92rem;font-weight:700}
+        .controls{background:#f6fbff;border-top:1px solid var(--edge)}
+        #touch{display:flex;gap:4px;flex-wrap:wrap}
+        #touch button{touch-action:none;min-width:40px}
+        #touch .held{background:#d3f0a8}
+        .invite{max-width:840px;margin:auto;padding:38px 18px 56px;scroll-margin-top:12px}
+        .invite h2{font-size:clamp(1.6rem,6vw,2.55rem);line-height:1.09;letter-spacing:-.04em;font-weight:950}
+        .invite p{margin-top:8px}
+        .invite form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:20px}
+        .invite label{display:grid;gap:5px;font-weight:800;min-width:0}
+        .invite input,.invite select{width:100%;min-height:43px;padding:7px 9px;border:1px solid #b1cfef;border-radius:8px;background:white;color:var(--ink);font:inherit;font-weight:500}
+        .invite .chip,.invite .wide{grid-column:1/-1}
+        .invite .chip{justify-self:start}
+        .invite .field-error{font-size:.85rem;color:#aa2430}
+        .invite .receipt{background:#d9f6dd;padding:10px 14px;border-radius:8px}
+        dialog{position:fixed;inset:0;margin:auto;width:min(540px,calc(100% - 24px));max-height:95vh;overflow:auto;background:white;color:var(--ink);padding:17px;border:2px solid var(--edge);border-radius:14px}
+        dialog::backdrop{background:#14284eaf}
+        dialog h2{font-size:1.65rem;font-weight:900;padding-right:30px}
+        dialog #close{position:absolute;top:9px;right:9px}
+        dialog p{margin:6px 0}
+        dialog ol{list-style:decimal;padding-left:22px;margin-top:7px}
+        #smoke-screen{
+            width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:0;
+            border:0;border-radius:0;outline:none;background:transparent;overflow:hidden
         }
-
-        @keyframes red-alert {
-            0%, 100% { box-shadow: 0 0 0px rgba(220, 38, 38, 0.4); }
-            50%      { box-shadow: 0 0 24px rgba(220, 38, 38, 0.95); }
+        #smoke-screen::backdrop{background:transparent}
+        body:has(#smoke-screen[open]){overflow:hidden}
+        .smoke-stage {
+            --smoke-duration: 5s;
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            background: #13233e30;
         }
-
-        @keyframes flash-shake {
-            0%, 100% { transform: translateX(0); }
-            20% { transform: translateX(-8px); }
-            40% { transform: translateX(8px); }
-            60% { transform: translateX(-5px); }
-            80% { transform: translateX(5px); }
+        .smoke-stage::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: #d3dceb;
+            animation: smoke-veil var(--smoke-duration) ease-in-out both;
         }
-
-        .animate-marquee {
-            display: inline-block;
-            white-space: nowrap;
-            animation: marquee-slide 14s linear infinite;
+        .smoke-stage i {
+            --size: 64vmax;
+            --x: 50%;
+            --y: 60%;
+            --delay: 0ms;
+            --drift: 0vw;
+            position: absolute;
+            width: var(--size);
+            aspect-ratio: 1;
+            left: var(--x);
+            top: var(--y);
+            border-radius: 50%;
+            background: radial-gradient(#f7faffd9, #c6d0e795 31%, #94a5c340 53%, transparent 70%);
+            animation: smoke-drift 2.85s var(--delay) ease-out both;
         }
-
-        .animate-alert-box {
-            animation: red-alert 2.5s ease-in-out infinite;
+        @keyframes smoke-veil{
+            0%,20%{opacity:0}
+            68%{opacity:.34}
+            94%,100%{opacity:.94}
         }
-
-        .ulti-hit {
-            animation: flash-shake 0.4s ease-in-out 2;
+        @keyframes smoke-drift{
+            from{opacity:0;transform:translate(-50%,-24%) scale(.35)}
+            36%{opacity:1}
+            to{opacity:0;transform:translate(calc(-50% + var(--drift)),-84%) scale(1.8)}
         }
-
-        .runaway-btn { position: absolute; transition: transform .15s ease-out; box-shadow: 4px 4px 0 rgb(220,38,38); }
-        .runaway-box { overflow: visible; }
-        .ulti-hit { animation: flash-shake .12s linear 5; }
-        #meme-popup[hidden] { display: none; }
-        @media (prefers-reduced-motion: reduce) { .ulti-hit, .runaway-btn { animation: none; transition: none; } }
+        dialog.photo-only,dialog.story,dialog.scene-dialog{
+            border:0;background:transparent;box-shadow:none;color:white
+        }
+        dialog.photo-only{width:max-content;max-width:calc(100vw - 24px);padding:0;border-radius:0;overflow:visible}
+        dialog.photo-only:focus{outline:none}
+        dialog.story,dialog.scene-dialog{width:min(780px,calc(100% - 24px));padding:20px 10px}
+        dialog.photo-only::backdrop,dialog.story::backdrop,dialog.scene-dialog::backdrop{background:#10121be8}
+        dialog.photo-only #close,dialog.story #close,dialog.scene-dialog #close{
+            z-index:1;min-height:0;padding:0 5px;border:0;background:#121522c2;color:white;font-size:1.5rem
+        }
+        .sr-only{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+        @keyframes pop{from{opacity:.45;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+        .photo{display:block;padding:0;border:0;background:transparent;color:white;cursor:pointer}
+        .photo img{display:block;width:auto;height:auto;max-width:min(92vw,710px);max-height:82vh;object-fit:contain}
+        .photo span{display:block;padding:14px 50px 14px 10px;font-size:clamp(1.3rem,6vw,2.6rem);font-weight:900}
+        .photo.pop{animation:pop .22s ease-out}
+        .story-layout{
+            display:grid;grid-template-columns:minmax(104px,2fr) minmax(0,3fr);
+            gap:clamp(12px,4vw,32px);align-items:center
+        }
+        .story-copy{min-width:0;padding:20px 0;overflow-wrap:anywhere}
+        .story-copy h3{font-size:clamp(1.3rem,5vw,2.4rem);font-weight:900;line-height:1.06;margin-bottom:8px}
+        .story-copy a{color:#c8e2ff}
+        .runner{
+            display:block;width:min(100%,40.5vh);aspect-ratio:9/16;
+            height:auto;object-fit:cover;margin:auto;background:#101c37
+        }
+        .runner-fallback{display:grid;place-items:center;overflow:hidden;background:linear-gradient(#74daff 65%,#75c84d 65%)}
+        .runner-link{display:block;text-align:center;color:#c8e2ff}
+        .caption{font-size:clamp(1.08rem,4vw,1.34rem);font-weight:800}
+        .story-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+        .journal-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:10px}
+        @media(max-width:550px){
+            .bar nav{padding-inline:10px}.nav{gap:4px}.nav .chip{padding:5px 7px;font-size:.76rem}
+            .brand{font-size:1.12rem}.scene{min-height:390px}.invite form{grid-template-columns:1fr}
+        }
+        @media(max-height:500px){.game-frame:fullscreen .controls,.game-frame.full-page .controls{padding-block:3px}}
+        @media(prefers-reduced-motion:reduce){
+            .photo.pop,.smoke-stage::after,.smoke-stage i{animation:none}
+            .smoke-stage::after{opacity:.62}
+        }
+        .photo[data-time]::after{
+            content:attr(data-time);position:absolute;top:10px;left:12px;
+            background:#131523a8;color:white;border-radius:5px;padding:3px 7px;font-weight:800
+        }
+        .photo[data-time]{position:relative}
+        .chelsy-scene{width:min(100%,520px);margin:auto}
+        .scene-photo{
+            display:grid;place-items:center;min-height:110px;position:relative;
+            overflow:hidden;background:#10121b;isolation:isolate
+        }
+        .scene-photo img{display:block;width:100%;max-height:51vh;object-fit:contain}
+        .scene-photo.screen-light{box-shadow:0 0 26px #8ac5ff6b}
+        .scene-status{font-size:clamp(1.1rem,4vw,1.5rem);font-weight:850;min-height:1.5em}
+        .scene-buttons{display:flex;flex-wrap:wrap;gap:8px}
+        .scene-skip{margin-top:10px;background:transparent;border:0;color:#bdd6ff;text-decoration:underline}
+        .scene-skip:hover{background:#18233b}
+        .scene-inventory{position:absolute;inset:0;display:grid;place-items:center;font-size:1.5rem;font-weight:900}
+        .scene-grid{width:min(100%,420px);aspect-ratio:1;display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
+        .scene-grid button{border:0;padding:0;border-radius:0;font-size:0;background-size:300% 300%;background-repeat:no-repeat}
+        .scene-grid button.marked{outline:3px solid #ffdc4b;outline-offset:-3px}
+        .pixel-runner{
+            width:38px;height:50px;display:block;
+            background:
+                    linear-gradient(#172b48 0 0) center top / 24px 7px,
+                    linear-gradient(#ffd8b9 0 0) center 7px / 20px 14px,
+                    linear-gradient(#f75586 0 0) center 21px / 30px 17px,
+                    linear-gradient(#2d51ab 0 0) left 8px top 38px / 8px 12px,
+                    linear-gradient(#2d51ab 0 0) right 8px top 38px / 8px 12px;
+            background-repeat:no-repeat
+        }
+        .campus-run{position:absolute;bottom:12px}
+        .story-text{position:relative}
+        .cringe-stamp{position:absolute;top:55%;right:0;transform:rotate(-7deg);background:#ff4f82;color:#140916;padding:3px 9px;font-weight:1000}
     </style>
 </head>
-<body class="min-h-screen bg-black text-gray-100 font-mono pb-24 overflow-x-hidden">
+<body>
+<main id="game" th:attr="data-context=${contextPath}">
+    <div class="game-frame" id="game-frame">
+        <header class="bar">
+            <nav aria-label="Main navigation">
+                <a class="brand" href="/" th:href="@{/}">ROLBOX</a>
+                <div class="nav">
+                    <button type="button" class="chip" id="sound" aria-pressed="true"
+                            title="Toggle drumrolls, reveal audio, and game effects">Sound on</button>
+                    <button type="button" class="chip" id="fullscreen" aria-pressed="false">Fullscreen</button>
+                    <button type="button" class="chip" id="journal-open">Journal <span>&nbsp;(<span id="count"
+                                                                                                    th:text="${recoveredCount}">0</span>/<span th:text="${bodyCount}">12</span>)</span></button>
+                    <a class="chip" href="/" th:href="@{/}">Lobby</a>
+                </div>
+            </nav>
+        </header>
 
-<!-- Top Moving Marquee Ticker -->
-<div class="bg-red-600 text-black py-1 font-black text-xs uppercase tracking-widest overflow-hidden whitespace-nowrap border-b-2 border-black">
-    <div class="animate-marquee">
-        *** Hindi po *** masama ang aking *** ginawa *** dahil ang *** aking *** konsensya *** ay *** clear *** Hindi po *** masama ang aking *** ginawa *** dahil ang *** aking *** konsensya *** ay *** clear ***
+        <section class="game" aria-label="Steal a Chelsy game">
+            <div class="game-top">
+                <h1>Steal a Chelsy</h1>
+                <div>
+                    <button type="button" class="chip" id="help">How to play</button>
+                    <button type="button" class="chip" id="exit" hidden>Exit run</button>
+                </div>
+            </div>
+            <div class="scene">
+                <canvas id="arena" tabindex="0" aria-label="Game arena. WASD or arrows to move, Shift to sprint, E to interact."></canvas>
+                <div id="hud" hidden>
+                    <span id="place">Base</span>
+                    <span>Sprint <progress id="energy" value="100" max="100" aria-label="Sprint energy"></progress></span>
+                </div>
+                <div id="start-card">
+                    <h2>Steal a Chelsy</h2>
+                    <p>Grab a bundle. Outrun The Reserve. See which Chelsy you caught.</p>
+                    <div id="play-track"><button type="button" class="chip yellow" id="start" disabled>Loading game…</button></div>
+                    <p id="alert" hidden></p>
+                    <noscript><p>Enable JavaScript to play.</p></noscript>
+                </div>
+                <button type="button" class="chip yellow" id="interact" hidden>Pick up</button>
+            </div>
+            <div class="controls">
+                <p id="status" role="status">Loading the game…</p>
+                <div id="touch" hidden aria-label="Game controls">
+                    <button type="button" class="chip" data-key="a">Left</button>
+                    <button type="button" class="chip" data-key="w">Up</button>
+                    <button type="button" class="chip" data-key="s">Down</button>
+                    <button type="button" class="chip" data-key="d">Right</button>
+                    <button type="button" class="chip" data-key="shift">Sprint</button>
+                </div>
+            </div>
+        </section>
+
+        <dialog id="smoke-screen" aria-label="Unwrapping the mystery bundle"></dialog>
+        <dialog id="dialog" aria-labelledby="dialog-title">
+            <form method="dialog"><button class="chip" id="close" aria-label="Close">×</button></form>
+            <div id="popup"></div>
+        </dialog>
+
+        <div id="zones" hidden aria-hidden="true">
+            <i th:each="z : ${zones}" th:attr="data-id=${z.id()},data-name=${z.label()},data-color=${z.color()}"></i>
+        </div>
     </div>
-</div>
 
-<!-- Nav -->
-<nav class="p-4 max-w-5xl mx-auto flex justify-between items-center border-b border-gray-800">
-    <a href="/" class="text-gray-400 hover:text-white text-xs underline uppercase tracking-wider">
-        [ &lt;-- BACK TO BASE ]
-    </a>
-    <span class="text-xs bg-gray-900 border border-gray-700 text-red-500 px-3 py-1 font-bold">
-            SYSTEM STATUS: <span th:text="${count > 0 ? 'INULTIHAN (' + count + 'x)' : 'READY'}">READY</span>
-        </span>
-</nav>
-
-<main class="max-w-4xl mx-auto px-4 mt-8">
-
-    <!-- Hero Header -->
-    <section class="text-center py-8 border-b-2 border-gray-800 relative">
-        <div class="inline-block bg-gray-900 border-2 border-gray-700 p-2 mb-4">
-            <img src="/images/kiyo.jpg" alt="Kiyo" class="w-32 h-32 object-cover border border-gray-800" />
-        </div>
-
-        <h1 class="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white mb-2">
-            CHELSY KAYE C. ILAGAN
-        </h1>
-        <p class="text-xs md:text-sm text-red-500 font-bold uppercase tracking-widest bg-gray-900 inline-block px-3 py-1 border border-gray-800">
-            OFFICIAL TRIBUTE FOR RENE
-        </p>
-
-        <!-- Runaway Button -->
-        <div class="runaway-box mt-8 relative h-16 flex justify-center items-center">
-            <button type="button"
-                    id="secret-button"
-                    class="runaway-btn bg-white text-black font-black text-xs uppercase px-6 py-3 border-2 border-red-600 transition duration-200 cursor-pointer">
-                CLICK HERE TO KNOW CHELSY's SECRET
-            </button>
-        </div>
-    </section>
-
-    <!-- Viral Comments / Q&A Screenshot Vault -->
-    <section class="my-10">
-        <h2 class="text-sm font-bold uppercase tracking-widest text-red-500 mb-4 bg-gray-900 p-2 border-l-4 border-red-600">
-            Hindi ko rin alam
-        </h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-gray-900 border border-gray-800 p-4 hover:border-red-600 transition">
-                <p class="text-xs text-gray-400 mb-2 font-bold">Q: Pag nagka std po ang seaman may posibilidad na pauwiin?</p>
-                <div class="bg-black p-3 border border-gray-800 text-xs text-white">
-                    <span class="text-red-500 font-bold">A:</span> Hindi. Bat ka pauuwin eh std ka nga. Wag ka gumalaw std kalang jan.
-                </div>
-            </div>
-
-            <div class="bg-gray-900 border border-gray-800 p-4 hover:border-red-600 transition">
-                <p class="text-xs text-gray-400 mb-2 font-bold">Q: Ano ang similarities ng utot at tula?</p>
-                <div class="bg-black p-3 border border-gray-800 text-xs text-white">
-                    <span class="text-red-500 font-bold">A:</span> Galing sila sa poet.
-                </div>
-            </div>
-
-            <div class="bg-gray-900 border border-gray-800 p-4 hover:border-red-600 transition">
-                <p class="text-xs text-gray-400 mb-2 font-bold">Q: Sige nga ano tagalog ng clinic?</p>
-                <div class="bg-black p-3 border border-gray-800 text-xs text-white">
-                    <span class="text-red-500 font-bold">A:</span> Pinindot.
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Hard Truth Skills -->
-    <section class="my-10 bg-gray-900 border border-gray-800 p-6">
-        <h2 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">
-            PAPANSIN LANG
-        </h2>
-        <ul class="space-y-3 text-xs md:text-sm">
-            <li class="flex items-center gap-3 bg-black p-2 border border-gray-800">
-                <span class="text-red-500 font-bold">[!]</span>
-                <span><strong>SA UNA LANG MAGALING:</strong> mag paka-.</span>
-            </li>
-            <li class="flex items-center gap-3 bg-black p-2 border border-gray-800">
-                <span class="text-red-500 font-bold">[!]</span>
-                <span><strong>MATULOG NG ISANG BUONG ARAW:</strong> Palong palo ang palamunin.</span>
-            </li>
-            <li class="flex items-center gap-3 bg-black p-2 border border-gray-800">
-                <span class="text-red-500 font-bold">[!]</span>
-                <span><strong>GUMASTOS NG ILANG LIBO SA ISANG ARAW:</strong> Hanggat walang pinapadede, gasta lang.</span>
-            </li>
-            <li class="flex items-center gap-3 bg-black p-2 border border-gray-800">
-                <span class="text-red-500 font-bold">[!]</span>
-                <span><strong>PROGRAMMING LANGUAGE:</strong> Japanese... pwede rin Acts of Service hehe.</span>
-            </li>
-        </ul>
-    </section>
-
-    <!-- Interactive Meme Grid -->
-    <section class="my-10">
-        <h2 class="text-sm font-bold uppercase tracking-widest text-red-500 mb-4 bg-gray-900 p-2 border-l-4 border-red-600">
-            WEIRDO (Click to reveal)
-        </h2>
-
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <button type="button" data-meme="DEPENDE KUNG 3 YAN" class="meme-button bg-gray-900 hover:bg-red-600 border border-gray-800 text-white text-xs font-bold p-4 uppercase hover:scale-105 transition text-center">May kaliwa ba sa right?!?!</button>
-            <button type="button" data-meme="WALANG KANIN BUSSENG!" class="meme-button bg-gray-900 hover:bg-red-600 border border-gray-800 text-white text-xs font-bold p-4 uppercase hover:scale-105 transition text-center">Posposro head</button>
-            <button type="button" data-meme="KAIN PO TAYO TEAM RYZZA" class="meme-button bg-gray-900 hover:bg-red-600 border border-gray-800 text-white text-xs font-bold p-4 uppercase hover:scale-105 transition text-center">Legends lang nakakaalam</button>
-            <button type="button" data-meme="DINUROBONG TUBO DANCE" class="meme-button bg-gray-900 hover:bg-red-600 border border-gray-800 text-white text-xs font-bold p-4 uppercase hover:scale-105 transition text-center">Alam mo ha</button>
-        </div>
-    </section>
-
-    <!-- Ultimate Trigger Connected to Spring Boot @PostMapping("/portfolio/chelsy/interact") -->
-    <section id="ulti-zone"
-             th:classappend="${triggered} ? 'ulti-hit' : ''"
-             class="animate-alert-box bg-red-900 bg-opacity-40 border-2 border-red-600 p-8 text-center my-12">
-        <h3 class="text-xl font-black text-white uppercase mb-2">
-            PRESS BUTTON IF INULTIHAN KA TODAY
-        </h3>
-        <p class="text-xs text-gray-400 mb-4 uppercase">
-            Warning: Recorded directly in Java Spring Boot
-        </p>
-
-        <!-- Dynamic Java Status Banner when triggered -->
-        <div th:if="${triggered or count > 0}"
-             class="max-w-md mx-auto mb-6 bg-black border-2 border-red-500 p-4 text-center">
-            <p class="text-xs text-red-400 font-bold uppercase">
-                ULTI LOG #<span th:text="${count}">1</span>:
-            </p>
-            <p class="text-sm font-black text-white mt-1" th:text="${statusMessage}">
-                ARAY KO BOSSING!
-            </p>
-        </div>
-
-        <form id="inultiForm" action="/portfolio/chelsy/interact" method="post">
-            <button type="button"
-                    onclick="triggerInulti()"
-                    class="bg-red-600 hover:bg-red-500 text-white font-black text-sm uppercase px-8 py-4 border-2 border-white transition cursor-pointer">
-                INULTIHAN AKO BOSSING (<span th:text="${count}">0</span>)
-            </button>
+    <section class="invite" id="invite" aria-labelledby="invite-title">
+        <h2 id="invite-title">Book the one and only Chelsy</h2>
+        <p>Busy ako doing nothing. By appointment only, please.</p>
+        <p class="receipt" role="status" th:if="${receipt}"
+           th:text="|${receipt.name()}, request saved for ${receipt.choice()} on ${receipt.schedule()} PHT. Pending hanggang maubos ang ginagawa kong wala.|"></p>
+        <form method="post" th:action="@{/portfolio/chelsy/invite#invite}" id="invite-form">
+            <label>Your name
+                <input name="name" id="invite-name" autocomplete="name" required
+                       th:minlength="${minNameLength}" th:maxlength="${maxNameLength}" th:pattern="${namePattern}"
+                       th:value="${form['name']}" th:attr="aria-invalid=${errors.containsKey('name')}"
+                       aria-describedby="name-rules error-name">
+                <small id="name-rules" th:text="${nameRules}" th:hidden="${errors.containsKey('name')}"></small>
+                <span class="field-error" id="error-name" th:text="${errors['name']}"></span>
+            </label>
+            <label>What are we doing?
+                <select name="activity" id="invite-activity" required th:attr="aria-invalid=${errors.containsKey('activity')}" aria-describedby="error-activity">
+                    <option value="">Choose an activity</option>
+                    <option value="play" th:selected="${form['activity'] == 'play'}">Play a game</option>
+                    <option value="hangout" th:selected="${form['activity'] == 'hangout'}">Hang out</option>
+                </select>
+                <span class="field-error" id="error-activity" th:text="${errors['activity']}"></span>
+            </label>
+            <label id="game-choice">Game
+                <select name="game" id="invite-game" th:attr="aria-invalid=${errors.containsKey('game')}" aria-describedby="error-game">
+                    <option value="">Choose a game</option>
+                    <option th:each="choice : ${games}" th:value="${choice}" th:text="${choice}" th:selected="${choice == form['game']}"></option>
+                </select>
+                <span class="field-error" id="error-game" th:text="${errors['game']}"></span>
+            </label>
+            <label id="place-choice">Where?
+                <select name="place" id="invite-place" th:attr="aria-invalid=${errors.containsKey('place')}" aria-describedby="error-place">
+                    <option value="">Choose a place</option>
+                    <optgroup label="NCR"><option th:each="choice : ${ncr}" th:value="${choice}" th:text="${choice}" th:selected="${choice == form['place']}"></option></optgroup>
+                    <optgroup label="CALABARZON"><option th:each="choice : ${calabarzon}" th:value="${choice}" th:text="${choice}" th:selected="${choice == form['place']}"></option></optgroup>
+                </select>
+                <span class="field-error" id="error-place" th:text="${errors['place']}"></span>
+            </label>
+            <label>Day
+                <input name="day" id="invite-day" type="date" required th:min="${earliest}" th:value="${form['day']}"
+                       th:attr="aria-invalid=${errors.containsKey('day')}" aria-describedby="error-day">
+                <span class="field-error" id="error-day" th:text="${errors['day']}"></span>
+            </label>
+            <label>Time (Philippine time)
+                <input name="time" id="invite-time" type="time" required th:value="${form['time']}"
+                       th:attr="aria-invalid=${errors.containsKey('time')}" aria-describedby="error-time">
+                <span class="field-error" id="error-time" th:text="${errors['time']}"></span>
+            </label>
+            <button class="chip yellow" type="submit">Request an appointment</button>
         </form>
     </section>
-
-    <!-- Guestbook Form Connected to Spring Boot @PostMapping("/feedback") -->
-    <section class="bg-gray-900 border border-gray-800 p-6 my-10">
-        <h3 class="text-sm font-bold uppercase tracking-widest text-red-500 mb-4">LEAVE A MESSAGE FOR CHELSY</h3>
-        <div th:if="${sent}" class="mb-4 p-3 bg-black border border-red-500 text-xs text-red-400">
-            STATUS: Message saved in Spring Boot! View on <a href="/" class="underline font-bold">Dashboard</a>.
-        </div>
-        <form action="/feedback" method="post" class="space-y-3">
-            <input type="hidden" name="recipient" value="Chelsy" />
-            <input type="text" name="name" required placeholder="YOUR NAME" class="w-full bg-black border border-gray-700 p-2 text-xs text-white" />
-            <input type="email" name="email" required placeholder="YOUR EMAIL" class="w-full bg-black border border-gray-700 p-2 text-xs text-white" />
-            <textarea name="message" required rows="2" placeholder="YOUR MESSAGE" class="w-full bg-black border border-gray-700 p-2 text-xs text-white"></textarea>
-            <button type="submit" class="bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase px-6 py-2.5 cursor-pointer">
-                Send to Java
-            </button>
-        </form>
-    </section>
-
-    <div id="meme-popup" hidden class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-labelledby="meme-popup-title">
-    <div class="bg-gray-900 border-2 border-red-600 p-6 max-w-sm w-full text-center relative shadow-2xl">
-        <h4 id="meme-popup-title" class="text-lg font-black text-white uppercase mb-4"></h4>
-        <p class="text-xs text-gray-400 mb-6 uppercase">sana ngayong pasko ay maka uno rin ako</p>
-        <button type="button" id="meme-close" class="bg-red-600 text-white font-bold text-xs uppercase px-4 py-2 border border-white">CLOSE [ X ]</button>
-    </div>
-</div>
-<footer class="text-center pt-8 border-t border-gray-800 text-gray-600 text-xs font-bold uppercase tracking-widest">
-        GG FRICKING EZ
-    </footer>
 </main>
 
-<script src="/js/common.js" defer></script>
-<script src="/js/chelsy.js" defer></script>
+<script th:inline="none">
+    (() => {
+        'use strict';
+
+        // The game supplies the unlocked photo and opens the story after each scene.
+        function open({item, photo, awake, popup, finish, audio, reducedMotion}) {
+            const scenes = {recitation, doomscroll, gutom, 'ipad-kid': ipadKid, adik, chismosa,
+                weirdo, uwi, backrider, pogi};
+            if (!scenes[item.id]) return false;
+
+            const root = make('div', '', 'chelsy-scene');
+            const stage = make('div', '', 'scene-photo');
+            const picture = make('img');
+            picture.alt = item.name + ' selfie';
+            if (photo) picture.src = photo;
+            else picture.hidden = true;
+
+            const status = make('p', '', 'scene-status');
+            status.setAttribute('role', 'status');
+            const actions = make('div', '', 'scene-buttons');
+            const skip = button('Skip to story', finish);
+            skip.classList.add('scene-skip');
+            stage.append(picture);
+            root.append(stage, status, actions, skip);
+            popup(item.name, root, 'scene');
+
+            const isOpen = () => root.isConnected;
+            const wait = (callback, ms) => setTimeout(() => {
+                if (isOpen()) callback();
+            }, ms);
+            const say = (line) => { status.textContent = line; };
+            const choose = (...options) => {
+                actions.replaceChildren(...options.map(([label, callback]) =>
+                    button(label, () => {
+                        actions.replaceChildren();
+                        callback();
+                    })));
+                actions.firstElementChild?.focus();
+            };
+            const end = (ms = 1400) => wait(finish, ms);
+            const animate = (frames, duration, origin = 'center') => {
+                picture.style.transformOrigin = origin;
+                if (!reducedMotion && photo) {
+                    return picture.animate(frames, {duration, fill: 'forwards'});
+                }
+            };
+            const zoom = (scale, ms, origin) =>
+                animate([{transform: 'scale(1)'}, {transform: 'scale(' + scale + ')'}], ms, origin);
+            const resetPhoto = () => picture.getAnimations().forEach(animation => animation.cancel());
+            const play = (effect) => playEffect(audio, effect);
+
+            scenes[item.id]();
+            return true;
+
+            function recitation() {
+                say('Ma’am: Chelsy, ikaw naman.');
+                choose(['Unmute', () => {
+                    say('Reconnecting...');
+                    end(2500);
+                }], ['Pretend to lag', () => {
+                    say('Reconnecting...');
+                    const move = zoom(1.4, 4600);
+                    wait(() => {
+                        say('Ma’am: Chelsy, nakikita kitang gumagalaw.');
+                        move?.pause();
+                        end(1600);
+                    }, 2100);
+                }]);
+            }
+
+            function doomscroll() {
+                say('8:00 PM');
+                wait(async () => {
+                    const awakePhoto = await awake;
+                    if (!isOpen()) return;
+                    if (awakePhoto) {
+                        picture.src = awakePhoto;
+                        picture.hidden = false;
+                    }
+                    stage.classList.add('screen-light');
+                    say('3:00 AM');
+                    end(5500);
+                }, 3000);
+            }
+
+            function gutom() {
+                choose(['Patikim', () => {
+                    zoom(2.1, 270, '45% 50%');
+                    play('clink');
+                    say('Loot unavailable. Nauna na si Chelsy.');
+                    end(1650);
+                }]);
+            }
+
+            function ipadKid() {
+                say('Chelsy, may progress ka na?');
+                choose(['Send proof', () => {
+                    zoom(2.05, 420, '75% 52%');
+                    say('WORKING PO');
+                    wait(() => {
+                        resetPhoto();
+                        say('');
+                    }, 950);
+                    wait(() => {
+                        picture.style.clipPath = 'inset(0 12% 0 0)';
+                        say('Photo sent.');
+                        end(1500);
+                    }, 1550);
+                }]);
+            }
+
+            function adik() {
+                say('Amoy damo ata?');
+                choose(['Buksan ’yung bintana', () => {
+                    const inventory = make('div', '1 item found', 'scene-inventory');
+                    stage.prepend(inventory);
+                    picture.style.position = 'relative';
+                    if (reducedMotion) picture.hidden = true;
+                    else animate([{transform: 'translateY(0)'}, {transform: 'translateY(105%)'}], 380);
+                    say('');
+                    wait(() => {
+                        inventory.textContent = 'Inhaler';
+                        end(2200);
+                    }, 750);
+                }]);
+            }
+
+            function chismosa() {
+                say('GC: May kwento ako guys');
+                choose(['Ano ’yon?', () => {
+                    say('GC is typing…');
+                    wait(() => {
+                        say('GC: Ay sa Monday na lang, long story.');
+                        zoom(1.18, 100, '48% 48%');
+                        end(1700);
+                    }, 2000);
+                }]);
+            }
+
+            function weirdo() {
+                say('Select all squares containing a normal selfie.');
+                if (photo) {
+                    const grid = make('div', '', 'scene-grid');
+                    for (let i = 0; i < 9; i++) {
+                        const tile = button('Square ' + (i + 1), () => {
+                            const marked = tile.classList.toggle('marked');
+                            tile.setAttribute('aria-pressed', String(marked));
+                        });
+                        tile.setAttribute('aria-label', 'Square ' + (i + 1));
+                        tile.setAttribute('aria-pressed', 'false');
+                        tile.style.backgroundImage = 'url("' + photo + '")';
+                        tile.style.backgroundPosition = (i % 3 * 50) + '% ' + (Math.floor(i / 3) * 50) + '%';
+                        grid.append(tile);
+                    }
+                    stage.replaceChildren(grid);
+                }
+
+                choose(['Wala', () => {
+                    say('Correct. Welcome back, Chelsy.');
+                    end();
+                }]);
+            }
+
+            function uwi() {
+                say('Campus exit: 00:00.00');
+                const run = make('span', '', 'pixel-runner campus-run');
+                run.setAttribute('aria-hidden', 'true');
+                stage.append(run);
+                if (!reducedMotion) {
+                    run.animate([{transform:'translateX(-110px)'}, {transform:'translateX(110px)'}], {duration: 820, fill: 'forwards'});
+                }
+
+                wait(() => say('Campus exit: 00:00.82 — PERSONAL BEST'), 820);
+                wait(() => {
+                    run.remove();
+                    say('Jeep pa-Dimasalang: naghihintay pa rin · 00:00');
+                }, 1480);
+                wait(() => say('Jeep pa-Dimasalang: naghihintay pa rin · 00:01'), 2480);
+                wait(() => say('Jeep passing… ibang ruta.'), 3480);
+                wait(finish, 4830);
+            }
+
+            function backrider() {
+                say('30mins na byahe nagiging 2 hours sa traffic. Nabaliw na sa commute, nabasa pa ng ulan!');
+                play('rain');
+                wait(() => {
+                    say('Umulan, bumagyo, danas na danas');
+                    end(2500);
+                }, 3400);
+            }
+
+            function pogi() {
+                play('bass');
+                zoom(1.17, 1800);
+                say('RIZZ LEVEL: MAX');
+                wait(() => {
+                    resetPhoto();
+                    say('Hallo, how are you habibi?');
+                    end(2400);
+                }, 1900);
+            }
+        }
+
+        function make(tag, text = '', className = '') {
+            const node = document.createElement(tag);
+            node.textContent = text;
+            node.className = className;
+            return node;
+        }
+
+        function button(label, callback) {
+            const control = make('button', label, 'chip');
+            control.type = 'button';
+            control.addEventListener('click', callback);
+            return control;
+        }
+
+        function playEffect(audio, effect) {
+            if (audio?.state !== 'running') return;
+
+            const start = audio.currentTime;
+            const level = audio.createGain();
+            const seconds = effect === 'rain' ? 2.1 : effect === 'bass' ? .65 : .16;
+            level.gain.setValueAtTime(effect === 'rain' ? .14 : .21, start);
+            level.gain.exponentialRampToValueAtTime(.001, start + seconds);
+            level.connect(audio.destination);
+
+            if (effect === 'rain') {
+                const buffer = audio.createBuffer(1, Math.floor(audio.sampleRate * seconds), audio.sampleRate);
+                const samples = buffer.getChannelData(0);
+                for (let i = 0; i < samples.length; i++) samples[i] = Math.random() * 2 - 1;
+                const rain = audio.createBufferSource();
+                rain.buffer = buffer;
+                rain.connect(level);
+                rain.start();
+                return;
+            }
+
+            const wave = audio.createOscillator();
+            wave.type = effect === 'bass' ? 'sine' : 'triangle';
+            wave.frequency.setValueAtTime(effect === 'bass' ? 102 : 1380, start);
+            wave.frequency.exponentialRampToValueAtTime(effect === 'bass' ? 43 : 780, start + seconds);
+            wave.connect(level);
+            wave.start();
+            wave.stop(start + seconds);
+        }
+
+        window.ChelsyScenes = {open};
+    })();
+</script>
+<script th:inline="none">
+    (() => {
+        'use strict';
+
+        const $ = id => document.getElementById(id);
+        const start = $('start');
+        const status = $('status');
+        const canvas = $('arena');
+        const context = canvas.getContext('2d');
+        const dialog = $('dialog');
+        const smokeScreen = $('smoke-screen');
+        const action = $('interact');
+        const basePath = $('game').dataset.context || '';
+        const positions = [
+            [395, 244], [715, 226], [1040, 270], [1375, 235],
+            [1720, 265], [2080, 245], [535, 291]
+        ];
+        const zones = [...document.querySelectorAll('#zones [data-id]')].map((row, index) => {
+            const [x, y] = positions[index];
+            return {row, ...row.dataset, index, x, y};
+        });
+        if (!context || zones.length !== positions.length) {
+            const text = 'Open /portfolio/chelsy through Spring Boot. Check that ChelsyController.java and ChelsyBodies.java are in the Java package, then restart the app.';
+            $('alert').textContent = text;
+            $('alert').hidden = false;
+            status.textContent = 'Game setup needs attention.';
+            return;
+        }
+
+        const keys = new Set();
+        const journal = new Map();
+        const soundCache = new Map();
+        const photoCache = new Map();
+        const player = {x: 90, y: 246, energy: 100, facing: 1, stride: 0};
+        const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const gameFrame = $('game-frame');
+        const screenButton = $('fullscreen');
+        let shyUntil = 0;
+        let shyTimer;
+        let running = false, busy = false, sound = true, sprint = false;
+        let run, token, carrying, reserve, audio, playingClip;
+        let clipVersion = 0, revealAttempts = 0, retryRevealAt = 0;
+        let camera = -27, previous = 0, noteUntil = 0, note = '';
+        const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
+        const gap = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+        const near = () => zones.find(zone => gap(zone, player) < 48);
+        const inBase = () => player.x <= 171;
+        const text = (node, value) => { if (node.textContent !== value) node.textContent = value; };
+
+        function runId() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, char => {
+                const n = Math.floor(Math.random() * 16);
+                return (char === 'x' ? n : (n & 3) + 8).toString(16);
+            });
+        }
+
+        async function api(path, fields) {
+            const response = await fetch(basePath + '/portfolio/chelsy/' + path, {
+                signal: AbortSignal.timeout?.(8000),
+                method: fields ? 'POST' : 'GET',
+                body: fields ? new URLSearchParams(fields) : undefined,
+                headers: {Accept: 'application/json'},
+                cache: 'no-store'
+            });
+            if (!response.ok) throw new Error(String(response.status));
+            return path === 'drop' ? null : response.json();
+        }
+
+        function enableAudio() {
+            if (!sound || !window.AudioContext) return;
+            audio ??= new AudioContext();
+            audio.resume().catch(() => {});
+        }
+
+        function loadClip(path) {
+            if (!audio) return Promise.resolve(null);
+            if (!soundCache.has(path)) {
+                const buffer = fetch(basePath + path)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Sound unavailable');
+                        return response.arrayBuffer();
+                    })
+                    .then(bytes => audio.decodeAudioData(bytes))
+                    .catch(() => null);
+                soundCache.set(path, buffer);
+            }
+            return soundCache.get(path);
+        }
+
+        function stopClip() {
+            clipVersion++;
+            if (playingClip) {
+                playingClip.stop();
+                playingClip = null;
+            }
+        }
+
+        async function findSound(item) {
+            if (!audio) return null;
+            const id = encodeURIComponent(item.id);
+            const paths = new Set([item.sound, '/sounds/' + id + '.mp3']);
+            for (const path of paths) {
+                if (!path) continue;
+                const buffer = await loadClip(path);
+                if (buffer) return {path, buffer};
+            }
+            return null;
+        }
+
+        async function revealSound(item) {
+            if (!sound) return;
+            stopClip();
+            const version = clipVersion;
+            const media = await findSound(item);
+            if (version !== clipVersion || !sound || !dialog.open) return;
+
+            if (!media) {
+                chime([392, 494, 587, 784]);
+                return;
+            }
+
+            const clip = audio.createBufferSource();
+            clip.buffer = media.buffer;
+            clip.connect(audio.destination);
+            clip.onended = () => {
+                if (playingClip === clip) playingClip = null;
+            };
+            playingClip = clip;
+            clip.start();
+        }
+
+        function chime(notes) {
+            if (!sound || audio?.state !== 'running') return;
+            notes.forEach((frequency, index) => {
+                const wave = audio.createOscillator();
+                const level = audio.createGain();
+                const at = audio.currentTime + index * .075;
+                wave.frequency.value = frequency;
+                level.gain.setValueAtTime(.10, at);
+                level.gain.exponentialRampToValueAtTime(.001, at + .22);
+                wave.connect(level).connect(audio.destination);
+                wave.start(at);
+                wave.stop(at + .23);
+            });
+        }
+
+        function clearKeys() {
+            keys.clear();
+            document.querySelectorAll('.held').forEach(button => button.classList.remove('held'));
+        }
+
+        function reset() {
+            clearKeys();
+            Object.assign(player, {x: 90, y: 246, energy: 100, facing: 1, stride: 0});
+            token = carrying = reserve = null;
+            run = runId();
+            revealAttempts = 0;
+            retryRevealAt = 0;
+            sprint = false;
+            camera = -27;
+        }
+
+        function notify(message) {
+            note = message;
+            noteUntil = performance.now() + 3200;
+        }
+
+        function drop() {
+            if (token) api('drop', {token}).catch(() => {});
+        }
+
+        function move(dt, width) {
+            const dx = Number(keys.has('d')) - Number(keys.has('a'));
+            const dy = Number(keys.has('s')) - Number(keys.has('w'));
+            const magnitude = Math.hypot(dx, dy);
+            sprint = keys.has('shift') && magnitude > 0 && player.energy > (sprint ? 0 : 13);
+            const speed = sprint ? 304 : carrying ? 176 : 222;
+            player.energy = clamp(player.energy + dt * (sprint ? -26 : 22), 0, 100);
+            if (magnitude) {
+                player.x = clamp(player.x + dx * speed * dt / magnitude, 28, 2200);
+                player.y = clamp(player.y + dy * speed * dt * .7 / magnitude, 194, 305);
+                player.stride += dt * (sprint ? 22 : 15);
+                if (dx) player.facing = Math.sign(dx);
+            } else {
+                player.stride = 0;
+            }
+
+            const lead = width * (player.facing > 0 ? .38 : .62);
+            const target = clamp(player.x - lead, -52, Math.max(-52, 2245 - width));
+            camera += (target - camera) * Math.min(1, dt * 6);
+            if (inBase()) reserve = null;
+            if (!reserve) return;
+
+            const distance = gap(player, reserve);
+            if (distance < 26) {
+                drop();
+                reset();
+                notify('Caught by The Reserve! The bundle dropped.');
+                chime([330, 247, 147]);
+                return;
+            }
+            const chase = 161 + Math.min(carrying.index, 5) * 7;
+            reserve.x += (player.x - reserve.x) * dt * chase / distance;
+            reserve.y += (player.y - reserve.y) * dt * chase / distance;
+        }
+
+        function box(color, x, y, width, height) {
+            context.fillStyle = color;
+            context.fillRect(x, y, width, height);
+        }
+
+        function label(value, x, y, size, color) {
+            context.textAlign = 'center';
+            context.font = '900 ' + size + 'px system-ui';
+            context.fillStyle = color;
+            context.fillText(value, x, y);
+        }
+
+        function tree(x, y, size) {
+            box('#815438', x - size / 10, y - size * .57, size / 5, size * .55);
+            for (let tier = 0; tier < 3; tier++) {
+                const leaf = size * (.85 - tier * .19);
+                box(tier % 2 ? '#28954d' : '#3dae43', x - leaf / 2, y - size * (.45 + tier * .23), leaf, size * .28);
+                box('#70ce4e', x - leaf / 2, y - size * (.45 + tier * .23), leaf, size * .07);
+            }
+        }
+
+        function bundle(x, y, color) {
+            context.fillStyle = '#322b53';
+            context.beginPath();
+            context.moveTo(x - 26, y - 6);
+            context.lineTo(x - 17, y - 16);
+            context.lineTo(x + 13, y - 16);
+            context.lineTo(x + 25, y - 6);
+            context.lineTo(x + 20, y + 4);
+            context.lineTo(x - 21, y + 4);
+            context.closePath();
+            context.fill();
+            box('#655d7c', x - 18, y - 14, 35, 3);
+            box(color, x - 11, y - 14, 4, 17);
+            box(color, x + 9, y - 14, 4, 17);
+        }
+
+        function draw(width, time) {
+            const sky = context.createLinearGradient(0, 0, 0, 230);
+            sky.addColorStop(0, '#1768ef');
+            sky.addColorStop(1, '#91edff');
+            box(sky, 0, 0, width, 400);
+            const sun = width * .81;
+            context.fillStyle = '#fff193';
+            context.beginPath();
+            context.arc(sun, 65, 29, 0, Math.PI * 2);
+            context.fill();
+
+            for (let i = 0; i < 6; i++) {
+                const span = width + 160;
+                const x = ((i * 183 + time * .014 - camera * .16) % span + span) % span - 65;
+                const y = 36 + i * 31 % 80;
+                box('#fff9ee', x, y, 70, 12);
+                box('#fff9ee', x + 12, y - 9, 38, 13);
+                box('#dff9ff', x + 6, y + 11, 61, 5);
+            }
+
+            for (let i = 0; i < 24; i++) {
+                const x = i * 97 - camera * .35 - 74;
+                const hill = 75 + i * 47 % 63;
+                if (x < -110 || x > width + 40) continue;
+                box('#bc8645', x, 190 - hill * .7, 83, hill);
+                box('#e9ab58', x, 190 - hill * .7, 13, hill);
+                box('#6ccc46', x - 4, 185 - hill * .7, 89, 15);
+                tree(x + 46, 187 - hill * .7, 38 + i * 7 % 30);
+            }
+
+            box('#69c746', 0, 183, width, 217);
+            box('#84db50', 0, 192, width, 116);
+            box('#53ab37', 0, 309, width, 91);
+
+            context.save();
+            context.translate(-camera, 0);
+            for (let i = 0; i < 120; i++) {
+                const x = i * 20;
+                if (x < camera - 24 || x > camera + width) continue;
+                box(i % 2 ? '#98e661' : '#75c942', x, 198 + i * 47 % 105, 8 + i % 8, 3);
+                if (i % 6 === 0) box(i % 3 ? '#fff681' : '#fff0bd', x, 323 + i * 17 % 30, 5, 5);
+            }
+
+            box('#d4ff85', 10, 198, 161, 109);
+            context.strokeStyle = '#38752b';
+            context.setLineDash([6, 5]);
+            context.strokeRect(10, 198, 161, 109);
+            context.setLineDash([]);
+            label('SAFE BASE', 90, 221, 13, '#254b24');
+
+            for (const zone of zones) {
+                if (carrying === zone) continue;
+                const bob = Math.sin(time / 260 + zone.index) * 5;
+                box('#fff7bc', zone.x - 24, zone.y + 5, 48, 4);
+                bundle(zone.x, zone.y + bob, zone.color);
+                label('?', zone.x, zone.y - 23 + bob, 21, '#3f2878');
+            }
+
+            if (reserve) {
+                const {x, y} = reserve;
+                box('#51318d', x - 23, y - 46, 46, 44);
+                box('#7652b3', x - 22, y - 55, 11, 13);
+                box('#7652b3', x + 11, y - 55, 11, 13);
+                box('#ffe262', x - 14, y - 32, 8, 5);
+                box('#ffe262', x + 6, y - 32, 8, 5);
+                label('THE RESERVE', x, y - 63, 13, '#43276c');
+            }
+
+            const heroX = running ? player.x : width * .52;
+            const bob = running ? Math.sin(player.stride) * 2 : Math.sin(time / 210) * 4;
+            const y = player.y + bob;
+            const step = running ? Math.sin(player.stride) * 7 : 0;
+            const size = running ? 1 : 1.52;
+            context.save();
+            context.translate(heroX, y);
+            context.scale(size * player.facing, size);
+            box('#42862c', -16, 0, 32, 4);
+            box('#2e8d83', -11 + step, -11, 9, 12);
+            box('#26685e', 2 - step, -11, 9, 12);
+            box('#d63776', -14, -29, 27, 19);
+            box('#55d7ac', -14, -17, 27, 4);
+            box('#203453', -15, -51, 28, 23);
+            box('#203453', -14, -55, 8, 9);
+            box('#203453', 5, -55, 8, 9);
+            box('#ffd2a3', -7, -43, 18, 13);
+            box('#1b3553', 4, -40, 3, 4);
+            if (carrying || !running) bundle(-20, -24, carrying?.color || '#ffdc4b');
+            context.restore();
+            context.restore();
+        }
+
+        function hud(time) {
+            const zone = near();
+            const canPick = Boolean(!token && zone);
+            const location = inBase() ? null : (zone || zones.slice(0, 6).reduce((first, next) =>
+                Math.abs(first.x - player.x) < Math.abs(next.x - player.x) ? first : next));
+            text($('place'), location?.name || 'Base');
+            $('energy').value = player.energy;
+            action.hidden = !canPick || busy;
+            action.disabled = $('exit').disabled = busy;
+            if (time < noteUntil) text(status, note);
+            else if (busy) text(status, 'Checking your bundle…');
+            else if (token && inBase()) text(status, 'Bundle secured at base.');
+            else if (token) text(status, 'The Reserve is chasing you. Sprint left to base!');
+            else if (canPick) text(status, 'Mystery body nearby. Press E or tap Pick up.');
+            else text(status, 'Move right to find a bundle. WASD / arrows · Shift to sprint.');
+        }
+
+        function frame(time) {
+            const width = canvas.clientWidth / canvas.clientHeight * 400;
+            const dt = Math.min((time - (previous || time)) / 1000, .04);
+            previous = time;
+            if (width > 0) {
+                const ratio = Math.min(devicePixelRatio || 1, 2);
+                const pixels = Math.round(canvas.clientWidth * ratio);
+                const height = Math.round(canvas.clientHeight * ratio);
+                if (canvas.width !== pixels || canvas.height !== height) {
+                    canvas.width = pixels;
+                    canvas.height = height;
+                }
+                context.setTransform(pixels / width, 0, 0, height / 400, 0, 0);
+                if (running && !busy && !dialog.open && !document.hidden) {
+                    move(dt, width);
+                    if (token && inBase() && time >= retryRevealAt) revealAtBase();
+                }
+                draw(width, reducedMotion && !running ? 0 : time);
+                if (running) hud(time);
+            }
+            requestAnimationFrame(frame);
+        }
+
+        function element(tag, value, className) {
+            const node = document.createElement(tag);
+            if (value) node.textContent = value;
+            if (className) node.className = className;
+            return node;
+        }
+
+        function popup(title, content, mode = '') {
+            clearKeys();
+            dialog.classList.toggle('photo-only', mode === 'photo');
+            dialog.classList.toggle('story', mode === 'story');
+            dialog.classList.toggle('scene-dialog', mode === 'scene');
+            const heading = element('h2', title, ['photo', 'story', 'scene'].includes(mode) ? 'sr-only' : '');
+            heading.id = 'dialog-title';
+            $('popup').replaceChildren(heading, content);
+            if (!dialog.open) dialog.showModal();
+            $('close').focus();
+        }
+
+        function external(url, name) {
+            const anchor = element('a', name);
+            anchor.href = url;
+            anchor.target = '_blank';
+            anchor.rel = 'noopener noreferrer';
+            return anchor;
+        }
+
+        function showSmoke(duration) {
+            clearKeys();
+            const stage = element('div', '', 'smoke-stage');
+            stage.setAttribute('aria-hidden', 'true');
+            stage.style.setProperty('--smoke-duration', duration + 'ms');
+            if (!reducedMotion) {
+                for (let i = 0; i < 16; i++) {
+                    const puff = element('i');
+                    puff.style.setProperty('--x', (i * 37 % 105) + '%');
+                    puff.style.setProperty('--y', (25 + i * 29 % 76) + '%');
+                    puff.style.setProperty('--size', (58 + i * 11 % 34) + 'vmax');
+                    puff.style.setProperty('--delay', i * 140 + 'ms');
+                    puff.style.setProperty('--drift', (i % 2 ? 18 : -18) + 'vw');
+                    stage.append(puff);
+                }
+            }
+            smokeScreen.replaceChildren(stage);
+            smokeScreen.showModal();
+        }
+
+        function findPhoto(item) {
+            if (!photoCache.has(item.id)) {
+                const id = encodeURIComponent(item.id);
+                const paths = [item.photo];
+                for (const extension of ['jpg', 'png', 'jpeg', 'webp']) {
+                    paths.push('/images/' + id + '.' + extension, '/images/chelsy/' + id + '.' + extension);
+                }
+
+                const load = async () => {
+                    for (const path of new Set(paths)) {
+                        if (!path) continue;
+                        const image = new Image();
+                        image.src = basePath + path;
+                        try {
+                            await image.decode();
+                            return image.src;
+                        } catch {
+                            // Keep looking if this filename or format was not found.
+                        }
+                    }
+                    return '';
+                };
+
+                photoCache.set(item.id, load());
+            }
+            return photoCache.get(item.id);
+        }
+
+        function showPhoto(item, fresh) {
+            const photo = element('button', '', fresh ? 'photo pop' : 'photo');
+            photo.type = 'button';
+            photo.setAttribute('aria-label', 'Open ' + item.name + ' reveal');
+
+            const fallback = element('span', item.name);
+            photo.append(fallback);
+            findPhoto(item).then(src => {
+                if (!src || !photo.isConnected) return;
+                const image = element('img');
+                image.alt = 'Reveal photo for ' + item.name;
+                image.src = src;
+                image.onerror = () => photo.replaceChildren(fallback);
+                photo.replaceChildren(image);
+            });
+
+            const awake = item.id === 'doomscroll' ? findPhoto({id: 'doomscroll-awake'}) : null;
+            if (item.id === 'doomscroll') photo.dataset.time = '8:00 PM';
+
+            photo.onclick = () => {
+                photo.disabled = true;
+                enableAudio();
+
+                const finish = () => showStory(item, fresh);
+                const opened = window.ChelsyScenes?.open({
+                    item,
+                    photo: photo.querySelector('img')?.src || '',
+                    awake,
+                    popup,
+                    finish,
+                    audio: sound ? audio : null,
+                    reducedMotion
+                });
+                if (!opened) finish();
+            };
+            popup('Body revealed', photo, 'photo');
+        }
+
+        function showStory(item, fresh) {
+            const card = element('div', '', 'story-layout');
+            const left = element('div');
+            const right = element('div', '', 'story-copy');
+            const relation = item.id === 'rene' ? 'Internet cameo' : item.group;
+            const joke = item.description;
+
+            const storyText = element('div', '', 'story-text');
+            storyText.append(element('p', joke, 'caption'));
+            right.append(element('strong', relation), element('h3', item.name), storyText);
+
+            const runner = element('video', '', 'runner');
+            runner.muted = true;
+            runner.defaultMuted = true;
+            runner.loop = true;
+            runner.autoplay = !reducedMotion;
+            runner.playsInline = true;
+            runner.preload = 'auto';
+            runner.controls = true;
+            runner.hidden = true;
+            runner.setAttribute('aria-label', 'Muted runner gameplay');
+
+            const fallback = element('div', '', 'runner runner-fallback');
+            fallback.setAttribute('aria-hidden', 'true');
+            const sprite = element('span', '', 'pixel-runner');
+            fallback.append(sprite);
+            if (!reducedMotion) {
+                sprite.animate?.(
+                    [{transform:'translate(-15px,8px)'}, {transform:'translate(15px,-8px)'}],
+                    {duration:460, iterations:Infinity, direction:'alternate'}
+                );
+            }
+
+            const paths = ['/video/runner-loop.mp4', '/videos/chelsy/runner-loop.mp4', '/videos/runner-loop.mp4'];
+            const hint = external(basePath + paths[0], 'Open runner MP4');
+            hint.className = 'runner-link';
+            hint.hidden = true;
+            let attempt = 0;
+
+            function loadRunner() {
+                if (!left.isConnected) return;
+                if (attempt === paths.length) {
+                    hint.hidden = false;
+                    return;
+                }
+                runner.src = basePath + paths[attempt++];
+                if (!reducedMotion) runner.play().catch(() => {});
+            }
+
+            runner.addEventListener('loadedmetadata', () => {
+                runner.hidden = false;
+                fallback.hidden = true;
+                hint.hidden = true;
+            });
+            runner.addEventListener('error', () => {
+                runner.hidden = true;
+                fallback.hidden = false;
+                loadRunner();
+            });
+
+            left.append(fallback, runner, hint);
+            const actions = element('div', '', 'story-actions');
+            const back = element('button', fresh ? 'Back to game' : 'Back to journal', 'chip yellow');
+            back.onclick = fresh ? () => dialog.close() : showJournal;
+            actions.append(back);
+            right.append(actions);
+
+            card.append(left, right);
+            popup(item.name, card, 'story');
+            if (item.id === 'pacute') {
+                setTimeout(() => {
+                    if (storyText.isConnected) storyText.append(element('strong', 'YUCK CRINGE', 'cringe-stamp'));
+                }, 500);
+            }
+            loadRunner();
+            setTimeout(() => {
+                if (left.isConnected && runner.hidden) hint.hidden = false;
+            }, 4000);
+        }
+
+        function count() {
+            text($('count'), String(journal.size));
+        }
+
+        async function refreshJournal() {
+            const result = await api('journal');
+            for (const item of result.items) journal.set(item.id, item);
+            count();
+        }
+
+        function showJournal() {
+            const list = element('div', '', 'journal-list');
+            if (!journal.size) list.append(element('p', 'Bring a bundle to base to meet your first Chelsy.'));
+            for (const item of journal.values()) {
+                const button = element('button', item.name, 'chip');
+                button.onclick = () => showPhoto(item, false);
+                list.append(button);
+            }
+            popup('Field Journal', list);
+        }
+
+        function explain(error) {
+            if (error.message === '404') return 'Spring’s game route was missing. Check ChelsyController.java and restart Spring Boot.';
+            if (error.message === '403') return 'Spring blocked the request. Reload from the ROLBOX lobby and try again.';
+            return 'Could not reach Spring Boot. Check that BackendApplication is running and try again.';
+        }
+
+        function drumroll(seconds) {
+            if (!sound || audio?.state !== 'running') return () => {};
+
+            const output = audio.createGain();
+            output.gain.value = .52;
+            output.connect(audio.destination);
+            const noise = audio.createBuffer(1, Math.floor(audio.sampleRate * .13), audio.sampleRate);
+            const data = noise.getChannelData(0);
+            for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+
+            const start = audio.currentTime + .03;
+            for (let beat = 0; beat < seconds - .12; beat += .22 - .14 * beat / seconds) {
+                const hit = audio.createBufferSource();
+                const tone = audio.createBiquadFilter();
+                const volume = audio.createGain();
+                const at = start + beat;
+
+                hit.buffer = noise;
+                tone.type = 'bandpass';
+                tone.frequency.value = 1400;
+                volume.gain.setValueAtTime(.12 + .16 * beat / seconds, at);
+                volume.gain.exponentialRampToValueAtTime(.001, at + .12);
+                hit.connect(tone).connect(volume).connect(output);
+                hit.start(at);
+            }
+            return () => output.disconnect();
+        }
+
+        async function revealAtBase() {
+            busy = true;
+            revealAttempts++;
+            reserve = null;
+            noteUntil = 0;
+            const duration = 5000;
+            showSmoke(duration);
+            const photoAt = performance.now() + duration;
+            const stopRoll = drumroll(duration / 1000);
+
+            try {
+                const item = await api('reveal', {token});
+                token = carrying = null;
+                journal.set(item.id, item);
+                count();
+                findPhoto(item);
+                if (item.id === 'doomscroll') findPhoto({id: 'doomscroll-awake'});
+                if (sound) findSound(item);
+
+                await new Promise(resolve => setTimeout(resolve, Math.max(0, photoAt - performance.now())));
+                smokeScreen.close();
+                showPhoto(item, true);
+                revealSound(item);
+            } catch (error) {
+                if (error.message === '409') {
+                    token = carrying = null;
+                    run = runId();
+                    notify('Your run expired. Pick up another bundle.');
+                } else if (revealAttempts < 2) {
+                    retryRevealAt = performance.now() + 2100;
+                    notify('The bundle is at base. Trying again…');
+                } else {
+                    retryRevealAt = Infinity;
+                    notify(explain(error) + ' Exit the run to start over.');
+                }
+            } finally {
+                stopRoll();
+                if (smokeScreen.open) smokeScreen.close();
+                busy = false;
+            }
+        }
+
+        async function interact() {
+            if (!running || busy || dialog.open || token) return;
+            const zone = near();
+            if (!zone) return;
+            enableAudio();
+            clearKeys();
+            busy = true;
+            noteUntil = 0;
+
+            try {
+                const data = await api('pickup', {zone: zone.id, run});
+                token = data.token;
+                carrying = zone;
+                revealAttempts = 0;
+                retryRevealAt = 0;
+                reserve = {x: player.x + 120, y: player.y - 20};
+                chime([440, 554, 659]);
+            } catch (error) {
+                if (error.message === '409') run = runId();
+                notify(explain(error));
+            } finally {
+                busy = false;
+                if (!dialog.open) canvas.focus({preventScroll: true});
+            }
+        }
+
+        function settlePlay() {
+            clearTimeout(shyTimer);
+            start.removeAttribute('style');
+            text(status, 'Okay na. Pwede mo na akong pindutin.');
+        }
+
+        function startShyTimer() {
+            if (shyUntil) return;
+            shyUntil = performance.now() + 10000;
+            shyTimer = setTimeout(settlePlay, 10000);
+        }
+
+        start.addEventListener('pointerenter', event => {
+            if (start.disabled || running || event.pointerType !== 'mouse') return;
+            if (shyUntil && performance.now() >= shyUntil) return;
+            startShyTimer();
+            text(status, 'Wait lang, nahihiya pa ako…');
+            if (reducedMotion) return;
+
+            const track = $('play-track').getBoundingClientRect();
+            const half = start.offsetWidth / 2;
+            const cursor = event.clientX - track.left;
+            start.style.left = (cursor < track.width / 2 ? track.width - half : half) + 'px';
+            start.style.top = event.clientY - track.top < track.height / 2 ? '72%' : '28%';
+        });
+
+        start.onclick = () => {
+            if (running || dialog.open || start.disabled) return;
+            startShyTimer();
+            if (performance.now() < shyUntil) {
+                text(status, 'Wait lang, nahihiya pa ako… Give me 10 seconds.');
+                return;
+            }
+            settlePlay();
+            enableAudio();
+            if (sound) loadClip('/sounds/rene.mp3');
+            findPhoto({id: 'rene'});
+            reset();
+            running = true;
+            noteUntil = 0;
+            for (const id of ['touch', 'exit', 'hud']) $(id).hidden = false;
+            $('start-card').hidden = true;
+            canvas.focus({preventScroll: true});
+        };
+        $('exit').onclick = () => {
+            if (busy) return;
+            drop();
+            reset();
+            running = false;
+            for (const id of ['touch', 'exit', 'hud', 'interact']) $(id).hidden = true;
+            $('start-card').hidden = false;
+            text(status, 'Ready to play.');
+            start.focus();
+        };
+        action.onclick = interact;
+
+        function syncScreen() {
+            const expanded = document.fullscreenElement === gameFrame || gameFrame.classList.contains('full-page');
+            screenButton.textContent = expanded ? 'Exit fullscreen' : 'Fullscreen';
+            screenButton.setAttribute('aria-pressed', String(expanded));
+        }
+
+        function setFullPage(active) {
+            gameFrame.classList.toggle('full-page', active);
+            document.body.classList.toggle('game-expanded', active);
+            syncScreen();
+        }
+
+        screenButton.addEventListener('click', async () => {
+            if (dialog.open || screenButton.disabled) return;
+            clearKeys();
+            screenButton.disabled = true;
+            try {
+                if (document.fullscreenElement === gameFrame) {
+                    await document.exitFullscreen();
+                } else if (gameFrame.classList.contains('full-page')) {
+                    setFullPage(false);
+                } else if (gameFrame.requestFullscreen && document.fullscreenEnabled) {
+                    await gameFrame.requestFullscreen();
+                } else {
+                    setFullPage(true);
+                }
+            } catch {
+                setFullPage(document.fullscreenElement !== gameFrame);
+            } finally {
+                screenButton.disabled = false;
+                syncScreen();
+                if (running) canvas.focus({preventScroll: true});
+            }
+        });
+        document.addEventListener('fullscreenchange', syncScreen);
+
+        $('help').onclick = () => {
+            const instructions = element('ol');
+            for (const step of [
+                'Move with WASD, the arrow keys, or the on-screen controls.',
+                'Press E or tap Pick up near a glowing bundle. The blue bundle has wild cards, including the René cameo.',
+                'Hold Shift or Sprint to run left and escape The Reserve.',
+                'Cross into the green base to reveal the photo automatically.',
+                'Tap the photo to meet that side of Chelsy.'
+            ]) instructions.append(element('li', step));
+            popup('How to play', instructions);
+        };
+        $('sound').onclick = event => {
+            sound = !sound;
+            event.currentTarget.textContent = sound ? 'Sound on' : 'Sound off';
+            event.currentTarget.setAttribute('aria-pressed', String(sound));
+            if (sound) enableAudio();
+            else stopClip();
+        };
+        $('journal-open').onclick = async () => {
+            popup('Field Journal', element('p', 'Loading your discoveries…'));
+            try {
+                await refreshJournal();
+                if (dialog.open && $('dialog-title')?.textContent === 'Field Journal') showJournal();
+            } catch (error) {
+                if (dialog.open && $('dialog-title')?.textContent === 'Field Journal') {
+                    popup('Field Journal', element('p', explain(error)));
+                }
+            }
+        };
+        smokeScreen.addEventListener('cancel', event => event.preventDefault());
+        dialog.addEventListener('close', () => {
+            stopClip();
+            $('popup').replaceChildren();
+            if (running) canvas.focus({preventScroll: true});
+        });
+
+        const arrows = {ArrowLeft: 'a', ArrowUp: 'w', ArrowDown: 's', ArrowRight: 'd'};
+        const keyName = key => arrows[key] || key.toLowerCase();
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && !dialog.open && !smokeScreen.open && gameFrame.classList.contains('full-page')) {
+                setFullPage(false);
+                return;
+            }
+            if (!running || busy || dialog.open || event.ctrlKey || event.metaKey || event.altKey ||
+                event.target.closest('input, select, textarea, button, a, [contenteditable]')) return;
+            const key = keyName(event.key);
+            if (['a', 'w', 's', 'd', 'shift'].includes(key)) {
+                event.preventDefault();
+                keys.add(key);
+            } else if (key === 'e' && !event.repeat) {
+                event.preventDefault();
+                interact();
+            }
+        });
+        document.addEventListener('keyup', event => keys.delete(keyName(event.key)));
+        window.addEventListener('blur', clearKeys);
+        document.addEventListener('visibilitychange', clearKeys);
+
+        for (const button of document.querySelectorAll('#touch button')) {
+            const key = button.dataset.key;
+            button.addEventListener('pointerdown', event => {
+                if (!running || busy || dialog.open) return;
+                event.preventDefault();
+                button.setPointerCapture(event.pointerId);
+                button.classList.add('held');
+                keys.add(key);
+            });
+            for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) {
+                button.addEventListener(type, () => {
+                    keys.delete(key);
+                    button.classList.remove('held');
+                });
+            }
+        }
+
+        start.disabled = false;
+        start.textContent = 'Play game';
+        text(status, 'Ready to play.');
+        refreshJournal().catch(() => {});
+        requestAnimationFrame(frame);
+    })();
+</script>
+<script th:inline="none">
+    (() => {
+        const form = document.getElementById('invite-form');
+        const {name, activity, game, place, day, time} = form.elements;
+        const manila = new Intl.DateTimeFormat('en-GB', {
+            timeZone: 'Asia/Manila', year: 'numeric', month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
+        });
+
+        function syncChoices() {
+            for (const [field, category] of [[game, 'play'], [place, 'hangout']]) {
+                const active = activity.value === category;
+                field.required = active;
+                field.disabled = !active;
+                field.closest('label').hidden = !active;
+                if (!active) field.value = '';
+            }
+        }
+
+        function validateName() {
+            const invalid = name.validity.patternMismatch || name.value.trim().length < name.minLength
+                || name.value.length > name.maxLength;
+            name.setCustomValidity(invalid ? document.getElementById('name-rules').textContent : '');
+        }
+
+        function validateTime() {
+            const parts = Object.fromEntries(manila.formatToParts(new Date()).map(part => [part.type, part.value]));
+            day.min = parts.year + '-' + parts.month + '-' + parts.day;
+            const now = day.min + 'T' + parts.hour + ':' + parts.minute;
+            time.setCustomValidity(day.value && time.value && day.value + 'T' + time.value <= now
+                ? 'Pick a future date and time in the Philippines.' : '');
+        }
+
+        function clearError(field) {
+            field.removeAttribute('aria-invalid');
+            document.getElementById('error-' + field.name).textContent = '';
+        }
+
+        form.addEventListener('input', event => {
+            clearError(event.target);
+            if (event.target === activity) {
+                syncChoices();
+                clearError(game);
+                clearError(place);
+            }
+            if (event.target === name) {
+                document.getElementById('name-rules').hidden = false;
+                validateName();
+            }
+            if (event.target === day || event.target === time) {
+                clearError(time);
+                validateTime();
+            }
+        });
+        form.addEventListener('submit', event => {
+            validateName();
+            validateTime();
+            if (!form.reportValidity()) event.preventDefault();
+        });
+        syncChoices();
+        validateTime();
+    })();
+</script>
 </body>
 </html>
